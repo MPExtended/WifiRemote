@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using MediaPortal.Configuration;
+using MediaPortal.GUI.Library;
 
 namespace WifiRemote
 {
@@ -11,7 +8,7 @@ namespace WifiRemote
     {
         string type = "welcome";
         int server_version = 1;
-        List<String> plugins;
+        Dictionary<String, int> plugins;
         MessageStatus status;
         MessageVolume volume;
 
@@ -25,7 +22,7 @@ namespace WifiRemote
             get { return server_version; }
         }
 
-        public List<String> Plugins
+        public Dictionary<String, int> Plugins
         {
             get { return plugins; }
         }
@@ -48,67 +45,22 @@ namespace WifiRemote
         /// </summary>
         public MessageWelcome()
         {
-            readActivePlugins();
+            plugins = new Dictionary<string, int>();
+            getActiveWindowPluginsAndIDs();
         }
 
         /// <summary>
-        /// Read all active plugins from the MediaPortal.xml
-        /// Those plugin names are sent in the welcome message. 
-        /// The client can choose to support those plugins (by
-        /// providing shortcuts to selected plugins, for example).
+        /// Get all active window plugins and the corresponding window IDs.
+        /// This can be used in the client to jump to a specific plugin.
         /// </summary>
-        private void readActivePlugins() 
+        private void getActiveWindowPluginsAndIDs()
         {
-            plugins = new List<string>();
-            bool inPluginSection = false;
-            String pluginName = String.Empty;
-
-            try
+            foreach (ISetupForm plugin in PluginManager.SetupForms)
             {
-                XmlTextReader reader = new XmlTextReader(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"));
-
-                while (reader.Read())
+                if (plugin.GetWindowId() != -1)
                 {
-                    // Look for <section name="plugins">
-                    if (!inPluginSection)
-                    {
-                        if (reader.NodeType == XmlNodeType.Element
-                            && reader.Name == "section"
-                            && reader.AttributeCount == 1
-                            && reader.GetAttribute(0) == "plugins")
-                        {
-                            inPluginSection = true;
-                        }
-                    }
-                    else
-                    {
-                        // End of <section name="plugins">
-                        if (reader.NodeType == XmlNodeType.EndElement
-                            && reader.Name == "section")
-                        {
-                            inPluginSection = false;
-                        }
-                        // Every plugin has an "entry" ...
-                        else if (reader.NodeType == XmlNodeType.Element
-                            && reader.HasAttributes
-                            && reader.Name == "entry")
-                        {
-                            pluginName = reader.GetAttribute(0);
-                        }
-                        // ... that we only add to the list if it is active (yes)
-                        else if (reader.NodeType == XmlNodeType.Text
-                            && pluginName != String.Empty
-                            && reader.Value == "yes")
-                        {
-                            plugins.Add(pluginName);
-                        }
-                    }
+                    plugins.Add(plugin.PluginName(), plugin.GetWindowId());
                 }
-            }
-            catch (Exception)
-            {
-                // XML Text Reader Exception
-
             }
         }
     }
