@@ -62,6 +62,9 @@ namespace WifiRemote
 
             // Initialize list to hold connected sockets
             connectedSockets = new List<AsyncSocket>();
+
+            String welcome = JsonConvert.SerializeObject(welcomeMessage);
+            WifiRemote.LogMessage("Client connected, sending welcome msg: " + welcome, WifiRemote.LogType.Debug);
         }
 
 

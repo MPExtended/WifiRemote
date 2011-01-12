@@ -411,12 +411,12 @@ namespace WifiRemote
         /// </summary>
         /// <param name="img"></param>
         /// <returns></returns>
-        public static byte[] imageToByteArray(Image img)
+        public static byte[] imageToByteArray(Image img, System.Drawing.Imaging.ImageFormat format)
         {
             byte[] byteArray = new byte[0];
             using (MemoryStream stream = new MemoryStream())
             {
-                img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(stream, format);
                 stream.Close();
                 byteArray = stream.ToArray();
             }
