@@ -58,6 +58,11 @@ namespace WifiRemote
         private bool servicePublished = false;
 
         /// <summary>
+        /// <code>true</code> to not publish the bonjour service
+        /// </summary>
+        private bool disableBonjour = false;
+
+        /// <summary>
         /// Mediaportal log type
         /// </summary>
         public enum LogType 
@@ -146,26 +151,20 @@ namespace WifiRemote
             using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
             {
                 port = (UInt16)reader.GetValueAsInt(PLUGIN_NAME, "port", DEFAULT_PORT);
+                disableBonjour = reader.GetValueAsBool(PLUGIN_NAME, "disableBonjour", false);
+                serviceName = reader.GetValueAsString(PLUGIN_NAME, "serviceName", "");
             }
 
             // Start listening for client connections
             socketServer = new SocketServer(port);
             socketServer.Start();
 
-            // Set the HOSTNAME as service name
-            try
-            {
-                this.serviceName = System.Environment.MachineName;
-            }
-            catch (InvalidOperationException)
-            {
-                this.serviceName = "MediaPortal Wifi Remote";
-            }
-
             // Publish the service via bonjour to the network
-            PublishBonjourService();
+            if (!disableBonjour)
+            {
+                PublishBonjourService();
+            }
         }
-
 
         /// <summary>
         /// Event handler when a GUI property was changed
@@ -404,6 +403,24 @@ namespace WifiRemote
                     break;
             }
         }
+
+
+        /// <summary>
+        /// Get the machine name or a fallback
+        /// </summary>
+        /// <returns></returns>
+        public static string GetServiceName()
+        {
+            try
+            {
+                return System.Environment.MachineName;
+            }
+            catch (InvalidOperationException)
+            {
+                return "MediaPortal Wifi Remote";
+            }
+        }
+
 
         /// <summary>
         /// Returns an image as its byte array representation.

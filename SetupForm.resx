@@ -120,4 +120,16 @@
   <metadata name="backgroundWorkerBonjourDownload.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Bonjour is a technology that can publish 
+services on your local network. 
+
+With this clients can connect to your 
+computer without configuration.
+
+For Bonjour to work you need to have it 
+installed. If you have iTunes, Bonjour is already 
+installed, otherwise please press the download 
+button above.</value>
+  </data>
 </root>

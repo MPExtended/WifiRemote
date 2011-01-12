@@ -32,6 +32,9 @@ namespace WifiRemote
             using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
             {
                 originalPort = reader.GetValue(WifiRemote.PLUGIN_NAME, "port");
+                checkBoxDisableBonjour.Checked = reader.GetValueAsBool(WifiRemote.PLUGIN_NAME, "disableBonjour", false);
+                textBoxName.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "serviceName", WifiRemote.GetServiceName());
+        
                 resetPort();
             }
 
@@ -41,6 +44,7 @@ namespace WifiRemote
                 //float bonjourVersion = ZeroconfService.NetService.GetVersion();
                 Version bonjourVersion = ZeroconfService.NetService.DaemonVersion;
                 buttonDownloadBonjour.Enabled = false;
+                checkBoxDisableBonjour.Enabled = false;
                 buttonDownloadBonjour.Text = "Bonjour already installed";
             }
             catch
@@ -50,6 +54,7 @@ namespace WifiRemote
                     // 64 bit windows
                     is64bit = true;
                     buttonDownloadBonjour.Enabled = true;
+                    checkBoxDisableBonjour.Enabled = true;
                     buttonDownloadBonjour.Text = "Download and install Bonjour (64 bit)";
                 }
                 else
@@ -57,6 +62,7 @@ namespace WifiRemote
                     // 32 bit windows
                     is64bit = false;
                     buttonDownloadBonjour.Enabled = true;
+                    checkBoxDisableBonjour.Enabled = true;
                     buttonDownloadBonjour.Text = "Download and install Bonjour (32 bit)";
                 }
             }
@@ -98,6 +104,8 @@ namespace WifiRemote
             using (MediaPortal.Profile.Settings xmlwriter = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
             {
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "port", textBoxPort.Text);
+                xmlwriter.SetValueAsBool(WifiRemote.PLUGIN_NAME, "disableBonjour", checkBoxDisableBonjour.Checked);
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "serviceName", textBoxName.Text);
             }
         }
 
@@ -231,5 +239,6 @@ namespace WifiRemote
         }
 
         #endregion
+
     }
 }
