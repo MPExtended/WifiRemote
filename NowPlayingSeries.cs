@@ -20,6 +20,13 @@ namespace WifiRemote
             get { return mediaType; }
         }
 
+        string series;
+        public string Series
+        {
+            get { return series; }
+            set { series = value; }
+        }
+
         string episode;
         public string Episode
         {
@@ -132,13 +139,31 @@ namespace WifiRemote
                     // AirDate = episodes[0].onlineEpisode[DBOnlineEpisode.cFirstAired];
                     AirDate = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cFirstAired").GetValue(null) }).ToString();
 
+                    
+                    // Get series information
+                    // DBSeries s = Helper.getCorrespondingSeries(episodes[0].onlineEpisode[DBOnlineEpisode.cSeriesID]);
+                    // s[DBOnlineSeries.cPrettyName].ToString()
+                    Type dbSeriesType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBSeries");
+                    Type onlineSeriesType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBOnlineSeries");
+                    
+                    // Get series object
+                    Type helperType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.Helper");
+                    MethodInfo getCorrespondingSeries = helperType.GetMethod("getCorrespondingSeries");
+                    int seriesId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cSeriesID").GetValue(null) }).ToString());
+                    object dbSeries = getCorrespondingSeries.Invoke(null, new object[] { seriesId });
+
+                    // Get pretty name
+                    PropertyInfo sItem = dbSeriesType.GetProperty("Item");
+                    Series = sItem.GetValue(dbSeries, new object[] { onlineSeriesType.GetField("cPrettyName").GetValue(null) }).ToString();
+                    
+
+
                     // Get season poster as thumb image
                     // DBSeason season = DBSeason.getRaw(seriesID, index);
                     // string posterFileName = WindowPlugins.GUITVSeries.ImageAllocator.GetSeasonBannerAsFilename(season);
                     Type dbSeasonType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBSeason");
                     Type imageAllocatorType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.ImageAllocator");
 
-                    int seriesId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cSeriesID").GetValue(null) }).ToString());
                     int seasonId = Int32.Parse(Season);
                     object season = dbSeasonType.InvokeMember("getRaw",
                         BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static,
@@ -180,7 +205,7 @@ namespace WifiRemote
                         // Clear handle to original file so that we can overwrite it if necessary
                         fullsizeImage.Dispose();
 
-                        Image = WifiRemote.imageToByteArray(newImage);
+                        Image = WifiRemote.imageToByteArray(newImage, System.Drawing.Imaging.ImageFormat.Jpeg);
                     }
                 }
               
