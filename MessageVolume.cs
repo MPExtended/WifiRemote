@@ -20,7 +20,17 @@ namespace WifiRemote
         /// </summary>
         public int Volume
         {
-            get { return VolumeHandler.Instance.Volume / (VolumeHandler.Instance.Maximum / 100); }
+            get
+            {
+                try
+                {
+                    return VolumeHandler.Instance.Volume / (VolumeHandler.Instance.Maximum / 100);
+                }
+                catch (Exception)
+                {
+                    return 101;
+                }
+            }
         }
 
         public bool IsMuted

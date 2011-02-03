@@ -32,7 +32,17 @@ namespace WifiRemote
         /// </summary>
         public string Title 
         {
-            get { return GUIPropertyManager.GetProperty("#Play.Current.Title"); }
+            get 
+            {
+                try
+                {
+                    return GUIPropertyManager.GetProperty("#Play.Current.Title");
+                }
+                catch (Exception)
+                {
+                    return "";
+                }
+            }
         }
 
         /// <summary>
@@ -40,7 +50,17 @@ namespace WifiRemote
         /// </summary>
         public string CurrentModule
         {
-            get { return GUIPropertyManager.GetProperty("#currentmodule"); }
+            get 
+            {
+                try
+                {
+                    return GUIPropertyManager.GetProperty("#currentmodule");
+                }
+                catch (Exception)
+                {
+                    return "";
+                }
+            }
         }
 
         /// <summary>
@@ -52,11 +72,16 @@ namespace WifiRemote
             {
                 // The currently selected item may hide in the property 
                 // #selecteditem or #highlightedbutton.
-                string selected = GUIPropertyManager.GetProperty("#selecteditem");
-                if (selected.Equals(String.Empty))
+                string selected = "";
+                try
                 {
-                    selected = GUIPropertyManager.GetProperty("#highlightedbutton");
+                    selected = GUIPropertyManager.GetProperty("#selecteditem");
+                    if (selected.Equals(String.Empty))
+                    {
+                        selected = GUIPropertyManager.GetProperty("#highlightedbutton");
+                    }
                 }
+                catch (Exception) {}
 
                 return selected;
             }
