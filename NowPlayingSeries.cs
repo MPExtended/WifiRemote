@@ -21,6 +21,9 @@ namespace WifiRemote
         }
 
         string series;
+        /// <summary>
+        /// Series name
+        /// </summary>
         public string Series
         {
             get { return series; }
@@ -28,6 +31,9 @@ namespace WifiRemote
         }
 
         string episode;
+        /// <summary>
+        /// Episode number
+        /// </summary>
         public string Episode
         {
             get { return episode; }
@@ -35,6 +41,9 @@ namespace WifiRemote
         }
 
         string season;
+        /// <summary>
+        /// Season number
+        /// </summary>
         public string Season
         {
             get { return season; }
@@ -42,6 +51,9 @@ namespace WifiRemote
         }
 
         string plot;
+        /// <summary>
+        /// Plot summary
+        /// </summary>
         public string Plot
         {
             get { return plot; }
@@ -49,27 +61,108 @@ namespace WifiRemote
         }
 
         string title;
+        /// <summary>
+        /// Episode title
+        /// </summary>
         public string Title
         {
             get { return title; }
             set { title = value; }
         }
 
+        string director;
+        /// <summary>
+        /// Director of this episode
+        /// </summary>
+        public string Director 
+        { 
+            get { return director; } 
+            set { director = value; } 
+        }
+
+        string writer;
+        /// <summary>
+        /// Writer of this episode
+        /// </summary>
+        public string Writer
+        {
+            get { return writer; }
+            set { writer = value; }
+        }
+
         string rating;
+        /// <summary>
+        /// Online episode rating
+        /// </summary>
         public string Rating
         {
             get { return rating; }
-            set { rating = value; }
+            set 
+            {
+                // Shorten to 3 chars, ie
+                // 5.67676767 to 5.6
+                if (value.Length > 3)
+                {
+                    value = value.Remove(2);
+                }
+                rating = value; 
+            }
+        }
+
+        string myRating;
+        /// <summary>
+        /// My episode rating
+        /// </summary>
+        public string MyRating
+        {
+            get { return myRating; }
+            set { myRating = value; }
+        }
+
+        string ratingCount;
+        /// <summary>
+        /// Number of online votes
+        /// </summary>
+        public string RatingCount 
+        { 
+            get { return ratingCount; }
+            set { ratingCount = value; }
         }
 
         string airDate;
+        /// <summary>
+        /// Episode air date
+        /// </summary>
         public string AirDate
         {
             get { return airDate; }
             set { airDate = value; }
         }
 
+        string status;
+        /// <summary>
+        /// Status of the series
+        /// </summary>
+        public string Status
+        {
+            get { return status; }
+            set { status = value; }
+        }
+
+        string genre;
+        /// <summary>
+        /// Genre of the series
+        /// </summary>
+        public string Genre
+        {
+            get { return genre; }
+            set { genre = value; }
+        }
+
         byte[] image;
+        /// <summary>
+        /// Season poster
+        /// </summary>
         public byte[] Image
         {
             get { return image; }
@@ -133,8 +226,20 @@ namespace WifiRemote
                     // Title = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeName];
                     Title = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cEpisodeName").GetValue(null) }).ToString();
 
+                    // Director = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                    Director = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cDirector").GetValue(null) }).ToString();
+
+                    // Writer = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                    Writer = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cWriter").GetValue(null) }).ToString();
+
                     // Rating = episodes[0].onlineEpisode[DBOnlineEpisode.cRating];
                     Rating = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cRating").GetValue(null) }).ToString();
+
+                    // MyRating = episodes[0].onlineEpisode[DBOnlineEpisode.cMyRating];
+                    MyRating = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cMyRating").GetValue(null) }).ToString();
+
+                    // RatingCount = episodes[0].onlineEpisode[DBOnlineEpisode.cRatingCount];
+                    RatingCount = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cRatingCount").GetValue(null) }).ToString();
 
                     // AirDate = episodes[0].onlineEpisode[DBOnlineEpisode.cFirstAired];
                     AirDate = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cFirstAired").GetValue(null) }).ToString();
@@ -156,7 +261,11 @@ namespace WifiRemote
                     PropertyInfo sItem = dbSeriesType.GetProperty("Item");
                     Series = sItem.GetValue(dbSeries, new object[] { onlineSeriesType.GetField("cPrettyName").GetValue(null) }).ToString();
                     
+                    // Status
+                    Status = sItem.GetValue(dbSeries, new object[] { onlineSeriesType.GetField("cStatus").GetValue(null) }).ToString();
 
+                    // Genre
+                    Genre = sItem.GetValue(dbSeries, new object[] { onlineSeriesType.GetField("cGenre").GetValue(null) }).ToString();
 
                     // Get season poster as thumb image
                     // DBSeason season = DBSeason.getRaw(seriesID, index);
