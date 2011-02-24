@@ -145,6 +145,10 @@ namespace WifiRemote
             g_Player.PlayBackEnded += new g_Player.EndedHandler(g_Player_PlayBackEnded);
             g_Player.PlayBackStopped += new g_Player.StoppedHandler(g_Player_PlayBackStopped);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(g_Player_PlayBackChanged);
+
+            System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
+            Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
+
             
 
             // Load port from config
@@ -163,6 +167,78 @@ namespace WifiRemote
             if (!disableBonjour)
             {
                 PublishBonjourService();
+            }
+        }
+
+        /// <summary>
+        /// System power mode has changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
+        {
+            // Resume from standby
+            if (e.Mode == Microsoft.Win32.PowerModes.Resume)
+            {
+                WifiRemote.LogMessage("Resuming WifiRemote, starting server", LogType.Debug);
+
+                // Restart the socket server
+                socketServer.Start();
+
+                // Restart bonjour service
+                if (!disableBonjour)
+                {
+                    PublishBonjourService();
+                }
+            }
+            // Going to standby
+            else if (e.Mode == Microsoft.Win32.PowerModes.Suspend)
+            {
+                WifiRemote.LogMessage("Suspending WifiRemote, stopping server", LogType.Debug);
+
+                // Stop bonjour service
+                if (!disableBonjour)
+                {
+                    publishService.Stop();
+                }
+
+                // Stop socket server
+                socketServer.Stop();
+            }
+        }
+
+        /// <summary>
+        /// Network status has changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+        {
+            if (e.IsAvailable)
+            {
+                WifiRemote.LogMessage("Network connected, starting server", LogType.Debug);
+
+                // Restart the socket server
+                socketServer.Start();
+
+                // Restart bonjour service
+                if (!disableBonjour)
+                {
+                    PublishBonjourService();
+                }
+            }
+            else
+            {
+                WifiRemote.LogMessage("Network lost, stopping server", LogType.Debug);
+
+                // Stop bonjour service
+                if (!disableBonjour)
+                {
+                    publishService.Stop();
+                }
+
+                // Stop socket server
+                socketServer.Stop();
             }
         }
 
@@ -442,5 +518,59 @@ namespace WifiRemote
         }
 
         #endregion
+
+        /// <summary>
+        /// Get all active window plugins and the corresponding window IDs.
+        /// This can be used in the client to jump to a specific plugin.
+        /// 
+        /// We are also sending the plugin icon as byte array if it exists.
+        /// </summary>
+        internal static ArrayList GetActiveWindowPluginsAndIDs()
+        {
+            ArrayList plugins = new ArrayList();
+            int[] ignoredPluginIds = new int[] { 
+                -1, 
+                0,          // home
+                3005,       // GUITopbar
+                730716      // fanart handler
+            }; 
+
+            foreach (ISetupForm plugin in PluginManager.SetupForms)
+            {
+                if (!ignoredPluginIds.Contains<int>(plugin.GetWindowId()))
+                {
+                    byte[] iconBytes = new byte[0];
+
+                    // Load plugin icon
+                    Type pluginType = plugin.GetType();
+                    PluginIconsAttribute[] icons = (PluginIconsAttribute[])pluginType.GetCustomAttributes(typeof(PluginIconsAttribute), false);
+                    if (icons.Length > 0)
+                    {
+                        string resourceName = icons[0].ActivatedResourceName;
+                        if (!string.IsNullOrEmpty(resourceName))
+                        {
+                            System.Drawing.Image icon = null;
+                            try
+                            {
+                                icon = System.Drawing.Image.FromStream(pluginType.Assembly.GetManifestResourceStream(resourceName));
+                            }
+                            catch (Exception e)
+                            {
+                                WifiRemote.LogMessage("Could not load plugin icon: " + e.Message, WifiRemote.LogType.Error);
+                            }
+
+                            if (icon != null)
+                            {
+                                iconBytes = WifiRemote.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
+                            }
+                        }
+                    }
+
+                    plugins.Add(new WindowPlugin(plugin.PluginName(), plugin.GetWindowId(), iconBytes));
+                }
+            }
+
+            return plugins;
+        }
     }
 }
