@@ -93,9 +93,12 @@ namespace WifiRemote
                                 
                                 if (isMovingPicturesAvailable)
                                 {
-                                    // Media is moving pictures movie?
-
-                                    //return new NowPlayingMovingPictures();
+                                    // Media is a movie managed by moving pictures?
+                                    NowPlayingMovingPictures movpics = new NowPlayingMovingPictures(g_Player.Player.CurrentFile);
+                                    if (movpics.IsMovingPicturesMovie())
+                                    {
+                                        return movpics;
+                                    }
                                 }
 
                                 return null;
