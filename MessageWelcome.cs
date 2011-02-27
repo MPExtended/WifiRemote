@@ -10,8 +10,7 @@ namespace WifiRemote
     class MessageWelcome
     {
         string type = "welcome";
-        int server_version = 1;
-        ArrayList plugins;
+        int server_version = 2;
         MessageStatus status;
         MessageVolume volume;
 
@@ -23,11 +22,6 @@ namespace WifiRemote
         public int Server_Version 
         { 
             get { return server_version; }
-        }
-
-        public ArrayList Plugins
-        {
-            get { return plugins; }
         }
 
         public MessageStatus Status
@@ -46,9 +40,6 @@ namespace WifiRemote
         /// <summary>
         /// Contructor.
         /// </summary>
-        public MessageWelcome()
-        {
-            plugins = WifiRemote.GetActiveWindowPluginsAndIDs();
-        }
+        public MessageWelcome() {}
     }
 }

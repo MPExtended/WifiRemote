@@ -288,15 +288,23 @@ namespace WifiRemote
                     string powerMode = (string)message["PowerMode"];
                     communication.SetPowerMode(powerMode);
                 }
+                // Directly set the volume to Volume percent
                 else if (type == "volume")
                 {
                     int volume = (int)message["Volume"];
                     communication.SetVolume(volume);
                 }
+                // Start to play a video identified by Filepath
                 else if (type == "video")
                 {
                     String video = (string)message["Filepath"];
                     communication.PlayVideoFile(video);
+                }
+                // Reply with a list of installed and active window plugins
+                // with icon and windowId
+                else if (type == "plugins")
+                {
+                    SendWindowPluginsList(sender);
                 }
                 else
                 {
@@ -319,6 +327,20 @@ namespace WifiRemote
    
             // Continue listening
             sender.Read(AsyncSocket.CRLFData, -1, 0);
+        }
+
+        /// <summary>
+        /// Sends a list of installed and active window plugins to the client.
+        /// This contains plugin name, icon and windowID.
+        /// </summary>
+        /// <param name="client">A connected socket client</param>
+        public void SendWindowPluginsList(AsyncSocket client)
+        {
+            MessagePlugins pluginsMessage = new MessagePlugins();
+            String plugins = JsonConvert.SerializeObject(pluginsMessage);
+
+            byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");
+            client.Write(data, -1, 0);
         }
     }
 }

@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="AsyncSocket.cs" />
     <Compile Include="Communication.cs" />
+    <Compile Include="MessagePlugins.cs" />
     <Compile Include="NowPlayingSeries.cs" />
     <Compile Include="NowPlayingMovingPictures.cs" />
     <Compile Include="NowPlayingDVD.cs" />
