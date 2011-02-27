@@ -7,26 +7,49 @@ using MediaPortal.GUI.Library;
 
 namespace WifiRemote
 {
+    /// <summary>
+    /// Contains status information about the MediaPortal instance.
+    /// </summary>
     class MessageStatus
     {
-        string type = "status";
 
+        string type = "status";
+        /// <summary>
+        /// Type is a required attribute for all messages. 
+        /// The client decides by this attribute what message was sent.
+        /// </summary>
         public string Type
         {
             get { return type; }
         }
 
+        private bool isPlaying;
+        /// <summary>
+        /// <code>true</code> if MediaPortal is playing a file
+        /// </summary>
         public bool IsPlaying
         {
-            get { return g_Player.Playing; }
+            get 
+            {
+                isPlaying = g_Player.Playing;
+                return isPlaying; 
+            }
         }
 
+        private bool isPaused;
+        /// <summary>
+        /// <code>true</code> if MediaPortal is playing a file but it's paused
+        /// </summary>
         public bool IsPaused
         {
-            get { return g_Player.Paused; }
+            get 
+            {
+                isPaused = g_Player.Paused;
+                return isPaused; 
+            }
         }
 
-
+        private string title;
         /// <summary>
         /// Media title
         /// </summary>
@@ -36,15 +59,18 @@ namespace WifiRemote
             {
                 try
                 {
-                    return GUIPropertyManager.GetProperty("#Play.Current.Title");
+                    title = GUIPropertyManager.GetProperty("#Play.Current.Title");
+                    return title;
                 }
                 catch (Exception)
                 {
+                    title = "";
                     return "";
                 }
             }
         }
 
+        private string currentModule;
         /// <summary>
         /// Currently active module
         /// </summary>
@@ -54,15 +80,18 @@ namespace WifiRemote
             {
                 try
                 {
-                    return GUIPropertyManager.GetProperty("#currentmodule");
+                    currentModule = GUIPropertyManager.GetProperty("#currentmodule");
+                    return currentModule;
                 }
                 catch (Exception)
                 {
+                    currentModule = "";
                     return "";
                 }
             }
         }
 
+        private string selectedItem;
         /// <summary>
         /// Currently selected GUI item label
         /// </summary>
@@ -83,9 +112,11 @@ namespace WifiRemote
                 }
                 catch (Exception) {}
 
+                selectedItem = selected;
                 return selected;
             }
         }
+
         
         /// <summary>
         /// Contructor.
@@ -93,6 +124,21 @@ namespace WifiRemote
         public MessageStatus()
         {
         
+        }
+
+
+        /// <summary>
+        /// Checks if the status message has changed since 
+        /// the last call.
+        /// </summary>
+        /// <returns>true if the status has changed, false otherwise</returns>
+        public bool IsChanged()
+        {
+            return (isPlaying != IsPlaying
+                || isPaused != IsPaused
+                || title != Title
+                || currentModule != CurrentModule
+                || selectedItem != SelectedItem);
         }
     }
 }

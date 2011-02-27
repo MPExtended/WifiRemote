@@ -118,6 +118,17 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// Send status to all clients only if it was changed
+        /// </summary>
+        public void SendStatusToAllClientsIfChanged()
+        {
+            if (statusMessage.IsChanged())
+            {
+                SendStatusToAllClients();
+            }
+        }
+
+        /// <summary>
         /// Send the current player status to all connected clients
         /// </summary>
         public void SendStatusToAllClients()
@@ -175,7 +186,7 @@ namespace WifiRemote
 
             // Send welcome message to client
             String welcome = JsonConvert.SerializeObject(welcomeMessage);
-            WifiRemote.LogMessage("Client connected, sending welcome msg: "+ welcome, WifiRemote.LogType.Debug);
+            WifiRemote.LogMessage("Client connected, sending welcome msg: "+ welcomeMessage.ToString(), WifiRemote.LogType.Debug);
 
             byte[] data = Encoding.UTF8.GetBytes(welcome + "\r\n");
             newSocket.Write(data, -1, 0);
