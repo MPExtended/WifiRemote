@@ -6,12 +6,19 @@ using MediaPortal.InputDevices;
 using System.Windows.Forms;
 using MediaPortal.GUI.Library;
 using MediaPortal.Util;
+using MediaPortal.Player;
+using System.Threading;
+using System.IO;
 
 namespace WifiRemote
 {
     class Communication
     {
-        InputHandler remoteHandler;
+        private InputHandler remoteHandler;
+        private Thread m_keyDownThread;
+        private String m_keyDownChar;
+        private int m_keyDownPauses;
+        private bool m_KeyDown;
 
         private enum RemoteButton
         {
@@ -319,7 +326,48 @@ namespace WifiRemote
             }
 
             remoteHandler.MapAction((int)button);
-            System.Threading.Thread.Sleep(100);
+            //System.Threading.Thread.Sleep(100);
+        }
+
+
+        /// <summary>
+        /// Sends a key repeatedly until it is stopped by a key-up command or the timeout is reached
+        /// </summary>
+        /// <param name="keyChar">the key that is being pressed</param>
+        /// <param name="msBetweenPresses">how much pause between presses</param>
+        public void SendKeyDown(String keyChar, int msBetweenPresses)
+        {
+            m_keyDownChar = keyChar;
+            m_keyDownPauses = msBetweenPresses;
+
+            if (!m_KeyDown)
+            {
+                m_keyDownThread = new Thread(new ThreadStart(DoKeyDown));
+                m_keyDownThread.Start();
+            }
+        }
+
+        /// <summary>
+        /// Sends key-up so a running key-down is cancelled
+        /// </summary>
+        public void SendKeyUp()
+        {
+            m_KeyDown = false;
+        }
+
+        /// <summary>
+        /// Thread for sending key-down
+        /// </summary>
+        private void DoKeyDown()
+        {
+            m_KeyDown = true;
+            while (m_KeyDown)
+            {
+                SendCommand(m_keyDownChar);
+                Thread.Sleep(m_keyDownPauses);
+            }
+
+            m_KeyDown = false;
         }
 
         /// <summary>
@@ -584,6 +632,31 @@ namespace WifiRemote
                     MediaPortal.GUI.Library.Action action = new MediaPortal.GUI.Library.Action(MediaPortal.GUI.Library.Action.ActionType.ACTION_EXIT, 0, 0);
                     GUIGraphicsContext.OnAction(action);
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Sets the volume of the client
+        /// </summary>
+        /// <param name="volume">The new volume, ranging from 0 to 100</param>
+        internal void SetVolume(int volume)
+        {
+            if (volume >= 0 && volume <= 100)
+            {
+                VolumeHandler.Instance.Volume = (int)Math.Floor(volume * VolumeHandler.Instance.Maximum / 100.0);
+            }
+        }
+
+        /// <summary>
+        /// Plays the local file on the MediaPortal client
+        /// </summary>
+        /// <param name="video">Path to the video</param>
+        internal void PlayVideoFile(string video)
+        {
+            if (video != null & File.Exists(video))
+            {
+                // Play File
+                g_Player.Play(video, g_Player.MediaType.Video);
             }
         }
     }

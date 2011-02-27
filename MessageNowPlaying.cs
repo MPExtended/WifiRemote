@@ -41,6 +41,15 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// The filename of the currently playing item
+        /// </summary>
+        public String File
+        {
+            get { return g_Player.currentFileName; }
+        }
+
+
+        /// <summary>
         /// Current position in the file in seconds
         /// </summary>
         public int Position

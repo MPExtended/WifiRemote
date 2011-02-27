@@ -253,6 +253,18 @@ namespace WifiRemote
                     string key = (string)message["Key"];
                     communication.SendKey(key);
                 }
+                // Send a key down
+                else if (type == "keydown")
+                {
+                    string key = (string)message["Key"];
+                    int pause = (int)message["Pause"];
+                    communication.SendKeyDown(key, pause);
+                }
+                // Send a key up
+                else if (type == "keyup")
+                {
+                    communication.SendKeyUp();
+                }
                 // Open a skin window
                 else if (type == "window")
                 {
@@ -264,6 +276,16 @@ namespace WifiRemote
                 {
                     string powerMode = (string)message["PowerMode"];
                     communication.SetPowerMode(powerMode);
+                }
+                else if (type == "volume")
+                {
+                    int volume = (int)message["Volume"];
+                    communication.SetVolume(volume);
+                }
+                else if (type == "video")
+                {
+                    String video = (string)message["Filepath"];
+                    communication.PlayVideoFile(video);
                 }
                 else
                 {
