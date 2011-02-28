@@ -103,7 +103,7 @@ namespace WifiRemote
                 // 5.67676767 to 5.6
                 if (value.Length > 3)
                 {
-                    value = value.Remove(2);
+                    value = value.Remove(3);
                 }
                 rating = value; 
             }
