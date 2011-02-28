@@ -353,7 +353,7 @@ namespace WifiRemote
         /// </summary>
         public void SendStatus()
         {
-            socketServer.SendStatusToAllClients();
+            socketServer.SendStatusToAllClientsIfChanged();
         }
 
         /// <summary>
