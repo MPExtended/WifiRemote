@@ -100,9 +100,9 @@
     <Compile Include="WindowPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\mediaportal\Configuration\MediaPortal.Configuration.csproj">
-      <Project>{68168FAA-A363-4F64-981C-32629A537900}</Project>
-      <Name>MediaPortal.Configuration</Name>
+    <ProjectReference Include="..\..\Common-MP-TVE3\Common.Utils\Common.Utils.csproj">
+      <Project>{F6EDA1F3-3DCD-43F4-8A90-E32DA70C8227}</Project>
+      <Name>Common.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\mediaportal\Core\Core.csproj">
       <Project>{02FFFC1F-2555-4B99-8B01-3432D0673855}</Project>
