@@ -582,7 +582,15 @@ namespace WifiRemote
                     break;
             }
 
-            Key key = new Key(keyCode + (modifiers * 32), 0);
+            Key key;
+            if (keyChar == "delete")
+            {
+                key = new Key(8, 0);
+            }
+            else
+            {
+                key = new Key(keyCode + (modifiers * 32), 0);
+            }
             MediaPortal.GUI.Library.Action action = new MediaPortal.GUI.Library.Action(key, MediaPortal.GUI.Library.Action.ActionType.ACTION_KEY_PRESSED, 0, 0);
 
             GUIWindowManager.OnAction(action);
