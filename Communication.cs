@@ -14,11 +14,13 @@ namespace WifiRemote
 {
     class Communication
     {
+        private const int KEY_DOWN_TIMEOUT = 2000;
         private InputHandler remoteHandler;
         private Thread m_keyDownThread;
         private String m_keyDownChar;
         private int m_keyDownPauses;
         private bool m_KeyDown;
+        private StopWatch m_keyDownTimer;
 
         private enum RemoteButton
         {
@@ -98,6 +100,7 @@ namespace WifiRemote
         public Communication()
         {
             remoteHandler = new InputHandler("WifiRemote");
+            m_keyDownTimer = new StopWatch();
         }
 
         /// <summary>
@@ -339,6 +342,7 @@ namespace WifiRemote
         {
             m_keyDownChar = keyChar;
             m_keyDownPauses = msBetweenPresses;
+            m_keyDownTimer.StartZero();
 
             if (!m_KeyDown)
             {
@@ -361,12 +365,12 @@ namespace WifiRemote
         private void DoKeyDown()
         {
             m_KeyDown = true;
-            while (m_KeyDown)
+            while (m_KeyDown || m_keyDownTimer.ElapsedMilliseconds > KEY_DOWN_TIMEOUT)
             {
                 SendCommand(m_keyDownChar);
                 Thread.Sleep(m_keyDownPauses);
             }
-
+            m_keyDownTimer.Stop();
             m_KeyDown = false;
         }
 
@@ -663,8 +667,18 @@ namespace WifiRemote
         {
             if (video != null & File.Exists(video))
             {
+                // from MP-TvSeries code:
+                // sometimes it takes up to 30+ secs to go to fullscreen even though the video is already playing
+                // lets force fullscreen here
+                // note: MP might still be unresponsive during this time, but at least we are in fullscreen and can see video should this happen
+                // I haven't actually found out why it happens, but I strongly believe it has something to do with the video database and the player doing something in the background
+                // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)           
+                GUIGraphicsContext.IsFullScreenVideo = true;
+                GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
+
                 // Play File
                 g_Player.Play(video, g_Player.MediaType.Video);
+                g_Player.ShowFullScreenWindowVideo();
             }
         }
     }
