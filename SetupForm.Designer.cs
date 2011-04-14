@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupForm));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -36,16 +37,23 @@
             this.backgroundWorkerBonjourDownload = new System.ComponentModel.BackgroundWorker();
             this.textBoxPort = new System.Windows.Forms.TextBox();
             this.checkBoxDisableBonjour = new System.Windows.Forms.CheckBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabControlNavigation = new System.Windows.Forms.TabControl();
+            this.tabPageNetwork = new System.Windows.Forms.TabPage();
+            this.textBoxName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBoxName = new System.Windows.Forms.TextBox();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.tabPagePlugins = new System.Windows.Forms.TabPage();
+            this.dataGridViewPluginList = new System.Windows.Forms.DataGridView();
+            this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.tabControlNavigation.SuspendLayout();
+            this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPagePlugins.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -109,31 +117,38 @@
             this.checkBoxDisableBonjour.Text = "Disable Bonjour (not recommended!)";
             this.checkBoxDisableBonjour.UseVisualStyleBackColor = true;
             // 
-            // tabControl1
+            // tabControlNavigation
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(1, 1);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(263, 361);
-            this.tabControl1.TabIndex = 8;
+            this.tabControlNavigation.Controls.Add(this.tabPageNetwork);
+            this.tabControlNavigation.Controls.Add(this.tabPagePlugins);
+            this.tabControlNavigation.Location = new System.Drawing.Point(1, 1);
+            this.tabControlNavigation.Name = "tabControlNavigation";
+            this.tabControlNavigation.SelectedIndex = 0;
+            this.tabControlNavigation.Size = new System.Drawing.Size(263, 361);
+            this.tabControlNavigation.TabIndex = 8;
             // 
-            // tabPage1
+            // tabPageNetwork
             // 
-            this.tabPage1.Controls.Add(this.textBoxName);
-            this.tabPage1.Controls.Add(this.label4);
-            this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.textBoxPort);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(255, 335);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Network";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPageNetwork.Controls.Add(this.textBoxName);
+            this.tabPageNetwork.Controls.Add(this.label4);
+            this.tabPageNetwork.Controls.Add(this.groupBox1);
+            this.tabPageNetwork.Controls.Add(this.label1);
+            this.tabPageNetwork.Controls.Add(this.label2);
+            this.tabPageNetwork.Controls.Add(this.textBoxPort);
+            this.tabPageNetwork.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNetwork.Name = "tabPageNetwork";
+            this.tabPageNetwork.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageNetwork.Size = new System.Drawing.Size(255, 335);
+            this.tabPageNetwork.TabIndex = 0;
+            this.tabPageNetwork.Text = "Network";
+            this.tabPageNetwork.UseVisualStyleBackColor = true;
+            // 
+            // textBoxName
+            // 
+            this.textBoxName.Location = new System.Drawing.Point(55, 36);
+            this.textBoxName.Name = "textBoxName";
+            this.textBoxName.Size = new System.Drawing.Size(191, 20);
+            this.textBoxName.TabIndex = 10;
             // 
             // label4
             // 
@@ -167,29 +182,40 @@
             this.label3.TabIndex = 8;
             this.label3.Text = resources.GetString("label3.Text");
             // 
-            // tabPage2
+            // tabPagePlugins
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(255, 335);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Plugins";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPagePlugins.Controls.Add(this.dataGridViewPluginList);
+            this.tabPagePlugins.Location = new System.Drawing.Point(4, 22);
+            this.tabPagePlugins.Name = "tabPagePlugins";
+            this.tabPagePlugins.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagePlugins.Size = new System.Drawing.Size(255, 335);
+            this.tabPagePlugins.TabIndex = 1;
+            this.tabPagePlugins.Text = "Plugins";
+            this.tabPagePlugins.UseVisualStyleBackColor = true;
             // 
-            // textBoxName
+            // dataGridViewPluginList
             // 
-            this.textBoxName.Location = new System.Drawing.Point(55, 36);
-            this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(191, 20);
-            this.textBoxName.TabIndex = 10;
+            this.dataGridViewPluginList.AllowUserToAddRows = false;
+            this.dataGridViewPluginList.AllowUserToDeleteRows = false;
+            this.dataGridViewPluginList.AllowUserToOrderColumns = true;
+            this.dataGridViewPluginList.AllowUserToResizeColumns = false;
+            this.dataGridViewPluginList.AllowUserToResizeRows = false;
+            this.dataGridViewPluginList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewPluginList.ColumnHeadersVisible = false;
+            this.dataGridViewPluginList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewPluginList.Location = new System.Drawing.Point(3, 3);
+            this.dataGridViewPluginList.Name = "dataGridViewPluginList";
+            this.dataGridViewPluginList.ReadOnly = true;
+            this.dataGridViewPluginList.RowHeadersVisible = false;
+            this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 329);
+            this.dataGridViewPluginList.TabIndex = 0;
             // 
             // SetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(264, 362);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabControlNavigation);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(280, 400);
             this.MinimumSize = new System.Drawing.Size(280, 400);
@@ -198,11 +224,15 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "WifiRemote Setup";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SetupForm_FormClosing);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabControlNavigation.ResumeLayout(false);
+            this.tabPageNetwork.ResumeLayout(false);
+            this.tabPageNetwork.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPagePlugins.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -216,12 +246,15 @@
         private System.ComponentModel.BackgroundWorker backgroundWorkerBonjourDownload;
         private System.Windows.Forms.TextBox textBoxPort;
         private System.Windows.Forms.CheckBox checkBoxDisableBonjour;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabControl tabControlNavigation;
+        private System.Windows.Forms.TabPage tabPageNetwork;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPagePlugins;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxName;
+        private System.Windows.Forms.DataGridView dataGridViewPluginList;
+        private System.Windows.Forms.BindingSource setupFormBindingSource;
+        private System.Windows.Forms.BindingSource setupFormBindingSource1;
     }
 }

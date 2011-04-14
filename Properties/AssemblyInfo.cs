@@ -1,7 +1,20 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+#if COMPILE_FOR_1_2_0
 using MediaPortal.Common.Utils;
+
+
+// Version Compatibility
+// http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/18_Contribute/6_Plugins/Plugin_Related_Changes/1.1.0_to_1.2.0/Version_Compatibility
+[assembly: CompatibleVersion("1.1.6.27644")]
+//[assembly: UsesSubsystem("MP.Config")]
+//[assembly: UsesSubsystem("MP.Input.Mapping")]
+//[assembly: UsesSubsystem("MP.Players")]
+//[assembly: UsesSubsystem("MP.DB")]
+//[assembly: UsesSubsystem("MP.Plugins")]
+#endif
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
@@ -22,15 +35,6 @@ using MediaPortal.Common.Utils;
 
 // Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
 [assembly: Guid("368e4054-fe4a-4490-9387-8b7474084a25")]
-
-// Version Compatibility
-// http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/18_Contribute/6_Plugins/Plugin_Related_Changes/1.1.0_to_1.2.0/Version_Compatibility
-[assembly: CompatibleVersion("1.1.6.27644")]
-//[assembly: UsesSubsystem("MP.Config")]
-//[assembly: UsesSubsystem("MP.Input.Mapping")]
-//[assembly: UsesSubsystem("MP.Players")]
-//[assembly: UsesSubsystem("MP.DB")]
-//[assembly: UsesSubsystem("MP.Plugins")]
 
 // Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
 //

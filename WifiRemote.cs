@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -12,9 +11,44 @@ using System.Net.NetworkInformation;
 using System.Collections;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 
 namespace WifiRemote
 {
+    /// <summary>
+    /// WifiRemote is a process plugin that does the following:
+    ///     * Publish a bonjour service with the network interface hardware 
+    ///       address as txtInfo
+    ///     * Accepts tcp socket connections
+    ///     * Sends status information about the current MediaPortal instance 
+    ///       to all connected clients
+    ///     * Receives messages from clients and forwards them to MediaPortal 
+    ///       (commands)
+    ///     
+    /// Google Code project page:
+    ///     * http://code.google.com/p/wifiremote/
+    ///       Please have a look at our wiki if you want to write a tcp client
+    ///     
+    /// Project contributors:
+    ///     * Shukuyen
+    ///     * DieBagger
+    ///     
+    /// 
+    /// NOTE:
+    /// You can specify which version of MediaPortal to compile this plugin for
+    /// by defining some conditional compilation symbols (in project build 
+    /// properties):
+    ///     * COMPILE_FOR_1_1_1 - Compiles for MediaPortal 1.1.1 (without
+    ///                           plugin compatibility check and MyVideos
+    ///                           now playing message)
+    ///                           
+    ///     * COMPILE_FOR_1_1_2 - Compile for MediaPortal 1.1.2 (without
+    ///                           plugin compatibility check)
+    ///                           
+    ///     * COMPILE_FOR_1_2_0 - Compile for MediaPortal 1.2.0 or later
+    ///
+    /// 
+    /// </summary>
     public class WifiRemote: ISetupForm, IPlugin
     {
         public const string PLUGIN_NAME = "WifiRemote";
@@ -61,6 +95,11 @@ namespace WifiRemote
         /// <code>true</code> to not publish the bonjour service
         /// </summary>
         private bool disableBonjour = false;
+
+        /// <summary>
+        /// <code>true</code> if the tv plugin is installed
+        /// </summary>
+        private bool isTvEnabled = false;
 
         /// <summary>
         /// Mediaportal log type
@@ -135,6 +174,10 @@ namespace WifiRemote
         /// </summary>
         public void Start()
         {
+            // Check if TV plugin is installed
+            isTvEnabled = IsAssemblyAvailable("TvControl", null);
+            
+
             Log.Debug(String.Format("{0} Started!", LOG_PREFIX));
             // register event handlers
             GUIWindowManager.OnNewAction += new OnActionHandler(GUIWindowManager_OnNewAction);
@@ -571,6 +614,42 @@ namespace WifiRemote
             }
 
             return plugins;
+        }
+
+        /// <summary>
+        /// Check if assembly is available
+        /// </summary>
+        /// <param name="name">Assembly name</param>
+        /// <param name="ver">Assembly version</param>
+        /// <returns>true if the assembly is available</returns>
+        internal static bool IsAssemblyAvailable(string name, Version ver)
+        {
+            bool result = false;
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly a in assemblies)
+            {
+                try
+                {
+                    if (a.GetName().Name == name)
+                    {
+                        if (ver == null || a.GetName().Version >= ver)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+                catch
+                {
+                    result = false;
+                }
+            }
+
+            return result;
         }
     }
 }

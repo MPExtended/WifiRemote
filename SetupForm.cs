@@ -9,6 +9,12 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
 using MediaPortal.Configuration;
+using System.Collections;
+using System.Reflection;
+using MediaPortal.GUI.Library;
+using MediaPortal.Profile;
+
+//using ThirstyCrow.WinForms.Controls;
 
 namespace WifiRemote
 {
@@ -22,6 +28,25 @@ namespace WifiRemote
         private String downloadUrl64Bit = "http://download.info.apple.com/Mac_OS_X/061-5788.20081215.5t9Uk/Bonjour64Setup.exe";
         private String downloadTarget;
 
+        private ArrayList availablePlugins;
+        private ArrayList plugins;
+        private ImageList pluginIcons;
+
+        private class ItemTag
+        {
+            public string DllName;
+            public ISetupForm SetupForm;
+            public string Type = string.Empty;
+            public int WindowId = -1;
+            private Image activeImage = null;
+            public bool IsEnabled;
+
+            public Image ActiveImage
+            {
+                get { return activeImage; }
+                set { activeImage = value; }
+            }
+        }
 
         public SetupForm()
         {
@@ -66,6 +91,48 @@ namespace WifiRemote
                     buttonDownloadBonjour.Text = "Download and install Bonjour (32 bit)";
                 }
             }
+
+            // Setup plugins list
+            availablePlugins = new ArrayList();
+            plugins = new ArrayList();
+            pluginIcons = new ImageList();
+            pluginIcons.ImageSize = new Size(30, 30);
+
+            EnumerateWindowPlugins();
+            LoadPlugins();
+            LoadSettings();
+            
+            DataGridViewImageColumn iconColumn = new DataGridViewImageColumn(false);
+            iconColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
+            iconColumn.Width = 20;
+            dataGridViewPluginList.Columns.Add(iconColumn);
+
+            DataGridViewColumn nameColumn = new DataGridViewTextBoxColumn();
+            dataGridViewPluginList.Columns.Add(nameColumn);
+
+
+            
+            foreach (ItemTag plugin in plugins)
+            {  
+                if (plugin.IsEnabled)
+                {
+                    int i = dataGridViewPluginList.Rows.Add();
+                    if (plugin.ActiveImage != null)
+                    {
+                        dataGridViewPluginList[0, i].Value = plugin.ActiveImage;
+                    }
+                    else
+                    {
+                        dataGridViewPluginList[0, i].Value = Properties.Resources.NoPluginImage;
+                    }
+                    
+                    
+                    dataGridViewPluginList[1, i].Value = plugin.SetupForm.PluginName();
+                    //StarRating stars = new StarRating();
+                }
+                
+            }
+            
         }
 
 
@@ -236,6 +303,223 @@ namespace WifiRemote
                 System.Diagnostics.Process.Start(downloadTarget);
             }
             catch (Exception) {}
+        }
+
+        #endregion
+
+        #region Plugin List
+
+
+        /// <summary>
+        /// List all window plugin dll's
+        /// </summary>
+        private void EnumerateWindowPlugins()
+        {
+            try
+            {
+                string directory = Config.GetSubFolder(Config.Dir.Plugins, "windows");
+
+                if (Directory.Exists(directory))
+                {
+                    //
+                    // Enumerate files
+                    //
+                    string[] files = Directory.GetFiles(directory, "*.dll");
+
+                    //
+                    // Add to list
+                    //
+                    foreach (string file in files)
+                    {
+                        availablePlugins.Add(file);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error("[WifiRemote Setup] error enumerating windows plugins: " + e.Message); 
+            }
+        }
+
+        /// <summary>
+        /// Load available window plugins in a list
+        /// 
+        /// Copied and modified from MediaPortal config: PluginsNew.cs
+        /// </summary>
+        private void LoadPlugins()
+        {
+            try
+            {
+                foreach (string pluginFile in availablePlugins)
+                {
+                    Assembly pluginAssembly = null;
+                    try
+                    {
+                        Log.Debug("[WifiRemote Setup] loadPlugins {0}", pluginFile);
+                        pluginAssembly = Assembly.LoadFrom(pluginFile);
+                    }
+                    catch (BadImageFormatException)
+                    {
+                        Log.Warn("[WifiRemote Setup] {0} has a bad image format", pluginFile);
+                    }
+
+                    if (pluginAssembly != null)
+                    {
+                        try
+                        {
+                            Type[] exportedTypes = pluginAssembly.GetExportedTypes();
+
+                            foreach (Type type in exportedTypes)
+                            {
+                                bool isPlugin = (type.GetInterface("MediaPortal.GUI.Library.ISetupForm") != null);
+                                bool isGuiWindow = ((type.IsClass) && (type.IsSubclassOf(typeof(GUIWindow))));
+
+                                // an abstract class cannot be instanciated
+                                if (type.IsAbstract)
+                                {
+                                    continue;
+                                }
+
+                                // Try to locate the interface we're interested in
+                                if (isPlugin && isGuiWindow)
+                                {
+                                    // Create instance of the current type
+                                    object pluginObject;
+                                    try
+                                    {
+                                        pluginObject = Activator.CreateInstance(type);
+                                    }
+                                    catch (TargetInvocationException)
+                                    {
+                                        Log.Warn(
+                                          "[WifiRemote Setup] Plugin {0} is incompatible with the current MediaPortal version! (File: {1})",
+                                          type.FullName, pluginFile.Substring(pluginFile.LastIndexOf(@"\") + 1));
+                                        continue;
+                                    }
+
+                                    if (isPlugin)
+                                    {
+                                        ISetupForm pluginForm = pluginObject as ISetupForm;
+
+                                        if (pluginForm != null)
+                                        {
+                                            ItemTag tag = new ItemTag();
+                                            tag.SetupForm = pluginForm;
+                                            tag.DllName = pluginFile.Substring(pluginFile.LastIndexOf(@"\") + 1);
+                                            tag.WindowId = pluginForm.GetWindowId();
+
+                                            if (isGuiWindow)
+                                            {
+                                                GUIWindow win = (GUIWindow)pluginObject;
+                                                if (tag.WindowId == win.GetID)
+                                                {
+                                                    tag.Type = win.GetType().ToString();
+                                                }
+                                            }
+
+                                            LoadPluginImages(type, tag);
+                                            plugins.Add(tag);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warn(
+                              "[WifiRemote Setup] Plugin file {0} is broken or incompatible with the current MediaPortal version and won't be loaded!",
+                              pluginFile.Substring(pluginFile.LastIndexOf(@"\") + 1));
+                            Log.Error("[WifiRemote Setup] Exception: {0}", ex);
+                        }
+                    }
+                }
+            }
+            catch (Exception excep)
+            {
+                Log.Error("[WifiRemote Setup] Error loading plugins: " + excep.Message);
+            }
+        }
+
+        
+        /// <summary>
+        /// Checks whether the a plugin has a <see cref="PluginIconsAttribute"/> defined.  If it has, the images that are indicated
+        /// in the attribute are loaded
+        /// 
+        /// Copied from MediaPortal setup, see PluginsNew.cs
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/> to examine.</param>
+        /// <param name="tag">The <see cref="ItemTag"/> to store the images in.</param>
+        private static void LoadPluginImages(Type type, ItemTag tag)
+        {
+            PluginIconsAttribute[] icons =
+              (PluginIconsAttribute[])type.GetCustomAttributes(typeof(PluginIconsAttribute), false);
+            if (icons == null || icons.Length == 0)
+            {
+                return;
+            }
+            string resourceName = icons[0].ActivatedResourceName;
+            if (!string.IsNullOrEmpty(resourceName))
+            {
+                Log.Debug("[WifiRemote Setup] load active image from resource - {0}", resourceName);
+                tag.ActiveImage = LoadImageFromResource(type, resourceName);
+            }
+        }
+
+        /// <summary>
+        /// Load an image from a plugin ressource
+        /// 
+        /// Copied from MediaPortal setup, see PluginsNew.cs
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="resourceName"></param>
+        /// <returns></returns>
+        private static Image LoadImageFromResource(Type type, string resourceName)
+        {
+            try
+            {
+                return Image.FromStream(type.Assembly.GetManifestResourceStream(resourceName));
+            }
+            catch (ArgumentException aex)
+            {
+                Log.Error("[WifiRemote Setup] Argument Exception loading the image - {0}, {1}", resourceName, aex.Message);
+                //Thrown when the stream does not seem to contain a valid image
+            }
+            catch (FileLoadException lex)
+            {
+                Log.Error("[WifiRemote Setup] FileLoad Exception loading the image - {0}, {1}", resourceName, lex.Message);
+                //Throw when the resource could not be loaded
+            }
+            catch (FileNotFoundException fex)
+            {
+                Log.Error("[WifiRemote Setup] FileNotFound Exception loading the image - {0}, {1}", resourceName, fex.Message);
+                //Thrown when the resource could not be found
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Check in config if plugin is enabled
+        /// </summary>
+        private void LoadSettings()
+        {
+            using (Settings xmlreader = new MPSettings())
+            {
+                foreach (ItemTag itemTag in plugins)
+                {
+                    if (itemTag.SetupForm != null)
+                    {
+                        if (itemTag.SetupForm.CanEnable() || itemTag.SetupForm.DefaultEnabled())
+                        {
+                            itemTag.IsEnabled =
+                              xmlreader.GetValueAsBool("plugins", itemTag.SetupForm.PluginName(), itemTag.SetupForm.DefaultEnabled());
+                        }
+                        else
+                        {
+                            itemTag.IsEnabled = itemTag.SetupForm.DefaultEnabled();
+                        }
+                    }
+                }
+            }
         }
 
         #endregion

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using MediaPortal.Player;
 using MediaPortal.Video.Database;
-using System.Reflection;
 
 namespace WifiRemote
 {
@@ -85,7 +81,11 @@ namespace WifiRemote
                             // MyVideos movie
                             if (movie.ID > 0)
                             {
+#if COMPILE_FOR_1_2_0 || COMPILE_FOR_1_1_2 // MyVideos extended info available since MediaPortal 1.1.2 (Rev 26532)
                                 return new NowPlayingVideo(movie);
+#else
+                                return null;
+#endif
                             }
                             else
                             // MovingPictures, TVSeries or something else
@@ -126,45 +126,11 @@ namespace WifiRemote
         public MessageNowPlaying()
         {
             // Check for "hookable" plugins
-            isMovingPicturesAvailable = IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
-            isTVSeriesAvailable = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
-            isFanartHandlerAvailable = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
+            isMovingPicturesAvailable = WifiRemote.IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
+            isTVSeriesAvailable = WifiRemote.IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
+            isFanartHandlerAvailable = WifiRemote.IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
         }
 
-        /// <summary>
-        /// Check if assembly is available
-        /// </summary>
-        /// <param name="name">Assembly name</param>
-        /// <param name="ver">Assembly version</param>
-        /// <returns>true if the assembly is available</returns>
-        public bool IsAssemblyAvailable(string name, Version ver)
-        {
-            bool result = false;
 
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly a in assemblies)
-            {
-                try
-                {
-                    if (a.GetName().Name == name)
-                    {
-                        if (a.GetName().Version >= ver)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                }
-                catch
-                {
-                    result = false;
-                }
-            }
-
-            return result;
-        }
     }
 }
