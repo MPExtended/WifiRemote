@@ -6,6 +6,9 @@ using MediaPortal.Player;
 
 namespace WifiRemote
 {
+    /// <summary>
+    /// Message containing information about the current volume on the htpc
+    /// </summary>
     class MessageVolume
     {
         string type = "volume";
@@ -33,6 +36,9 @@ namespace WifiRemote
             }
         }
 
+        /// <summary>
+        /// Is the volume muted
+        /// </summary>
         public bool IsMuted
         {
             get { return VolumeHandler.Instance.IsMuted; }

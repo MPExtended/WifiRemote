@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace WifiRemote
 {
+    /// <summary>
+    /// Message containing all plugins installed on the htpc
+    /// </summary>
     class MessagePlugins
     {
         string type = "plugins";

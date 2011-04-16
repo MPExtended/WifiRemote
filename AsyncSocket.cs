@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Net.Security;
 using System.Text;
 using System.Security.Cryptography.X509Certificates;
+using WifiRemote;
 
 namespace Deusty.Net
 {
@@ -19,6 +20,8 @@ namespace Deusty.Net
 	/// </summary>
 	public class AsyncSocket
 	{
+        public RemoteClient ClientData { get; set; }
+
 		public delegate void SocketDidAccept(AsyncSocket sender, AsyncSocket newSocket);
 		public delegate bool SocketWillConnect(AsyncSocket sender, Socket socket);
 		public delegate void SocketDidConnect(AsyncSocket sender, IPAddress address, UInt16 port);

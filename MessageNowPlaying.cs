@@ -1,6 +1,7 @@
 ﻿using System;
 using MediaPortal.Player;
 using MediaPortal.Video.Database;
+using MediaPortal.GUI.Library;
 
 namespace WifiRemote
 {
@@ -41,9 +42,8 @@ namespace WifiRemote
         /// </summary>
         public String File
         {
-            get { return g_Player.currentFileName; }
+            get { return g_Player.CurrentFile; }
         }
-
 
         /// <summary>
         /// Current position in the file in seconds
@@ -51,6 +51,14 @@ namespace WifiRemote
         public int Position
         {
             get { return (int)g_Player.Player.CurrentPosition; }
+        }
+
+        /// <summary>
+        /// Is the current playing item tv
+        /// </summary>
+        public bool IsTv
+        {
+            get { return g_Player.Player.IsTV; }
         }
 
         public IAdditionalNowPlayingInfo MediaInfo
@@ -114,6 +122,11 @@ namespace WifiRemote
                             }
                         }
                     }
+                    else if (g_Player.IsTV)
+                    {
+                        //g_Player.
+                    }
+
                 }
 
                 return null;

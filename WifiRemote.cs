@@ -12,6 +12,7 @@ using System.Collections;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 namespace WifiRemote
 {
@@ -55,6 +56,7 @@ namespace WifiRemote
         public const string LOG_PREFIX = "[WIFI_REMOTE] ";
         public const int DEFAULT_PORT = 8017;
         public const int SERVER_VERSION = 1;
+        private const int UPDATE_INTERVAL = 1000;
 
         /// <summary>
         /// Server handling communication with the clients
@@ -100,6 +102,16 @@ namespace WifiRemote
         /// <code>true</code> if the tv plugin is installed
         /// </summary>
         private bool isTvEnabled = false;
+
+        /// <summary>
+        /// Thread for sending now playing updates
+        /// </summary>
+        private Thread nowPlayingUpdateThread;
+
+        /// <summary>
+        /// Indicator if now playing update thread is running
+        /// </summary>
+        private bool nowPlayingUpdateThreadRunning;
 
         /// <summary>
         /// Mediaportal log type
@@ -188,6 +200,7 @@ namespace WifiRemote
             g_Player.PlayBackEnded += new g_Player.EndedHandler(g_Player_PlayBackEnded);
             g_Player.PlayBackStopped += new g_Player.StoppedHandler(g_Player_PlayBackStopped);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(g_Player_PlayBackChanged);
+            GUIWindowManager.Receivers += new SendMessageHandler(GUIWindowManager_Receivers);
 
             System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
@@ -295,7 +308,6 @@ namespace WifiRemote
             if (tag.Equals("#selecteditem") ||
                 tag.Equals("#selecteditem2") ||
                 tag.Equals("#highlightedbutton") ||
-                tag.Equals("#Play.Current.Title") ||
                 tag.Equals("#currentmodule"))
             {
                 SendStatus();
@@ -304,6 +316,11 @@ namespace WifiRemote
             {
                 socketServer.SendImageToAllClients();
             }
+            else if (tag.StartsWith("#Play.") ||
+                     tag.StartsWith("#TV."))
+            {
+                socketServer.SendPropertyToClient(tag, tagValue);
+            }
         }
 
         // An action was executed on the GUI
@@ -311,16 +328,22 @@ namespace WifiRemote
         {
             switch (action.wID)
             {
-                case MediaPortal.GUI.Library.Action.ActionType.ACTION_VOLUME_DOWN:
-                case MediaPortal.GUI.Library.Action.ActionType.ACTION_VOLUME_UP:
-                case MediaPortal.GUI.Library.Action.ActionType.ACTION_VOLUME_MUTE:
-                    socketServer.SendVolumeToAllClients();
-                    break;
-
                 case MediaPortal.GUI.Library.Action.ActionType.ACTION_PLAY:
                 case MediaPortal.GUI.Library.Action.ActionType.ACTION_PAUSE:
                     SendStatus();
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Received a GUIMessage from MediaPortal
+        /// </summary>
+        /// <param name="message">The message</param>
+        void GUIWindowManager_Receivers(GUIMessage message)
+        {
+            if (message.Message == GUIMessage.MessageType.GUI_MSG_AUDIOVOLUME_CHANGED)
+            {
+                socketServer.SendVolumeToAllClients();
             }
         }
 
@@ -346,6 +369,7 @@ namespace WifiRemote
         {
             LogMessage("Playback stopped!", LogType.Debug);
             SendStatus();
+            StopNowPlayingUpdateThread();
         }
 
         /// <summary>
@@ -357,6 +381,7 @@ namespace WifiRemote
         {
             LogMessage("Playback ended!", LogType.Debug);
             SendStatus();
+            StopNowPlayingUpdateThread();
         }
 
         /// <summary>
@@ -369,6 +394,7 @@ namespace WifiRemote
             LogMessage("Playback started!", LogType.Debug);
             SendStatus();
             socketServer.SendNowPlayingToAllClients();
+            StartNowPlayingUpdateThread();
         }
 
         /// <summary>
@@ -650,6 +676,47 @@ namespace WifiRemote
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Starts the status update thread
+        /// </summary>
+        private void StartNowPlayingUpdateThread()
+        {
+            if (nowPlayingUpdateThread == null)
+            {
+                nowPlayingUpdateThread = new Thread(new ThreadStart(DoNowPlayingUpdate));
+                nowPlayingUpdateThread.Start();
+            }
+        }
+
+        /// <summary>
+        /// Stops the status update thread
+        /// </summary>
+        private void StopNowPlayingUpdateThread()
+        {
+            nowPlayingUpdateThreadRunning = false;
+            nowPlayingUpdateThread = null;
+        }
+
+        /// <summary>
+        /// Updates the current status of the playing item and sends the basic information
+        /// (duration, position, speed) to all clients
+        /// </summary>
+        private void DoNowPlayingUpdate()
+        {
+            LogMessage("Start now-playing update thread", LogType.Debug);
+            nowPlayingUpdateThreadRunning = true;
+            while (nowPlayingUpdateThreadRunning)
+            {
+                if (g_Player.Playing && nowPlayingUpdateThreadRunning)
+                {
+                    //LogMessage("Send Nowplaying", LogType.Debug);
+                    socketServer.sendNowPlayingUpdateToAllClients();
+                }
+                Thread.Sleep(UPDATE_INTERVAL);
+            }
+            LogMessage("Stop now-playing update thread", LogType.Debug);
         }
     }
 }

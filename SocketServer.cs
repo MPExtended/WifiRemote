@@ -10,6 +10,7 @@ using Deusty.Net;
 using MediaPortal.Player;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using MediaPortal.GUI.Library;
 
 namespace WifiRemote
 {
@@ -30,6 +31,8 @@ namespace WifiRemote
         private MessageVolume volumeMessage;
         private MessageImage imageMessage;
         private MessageNowPlaying nowPlayingMessage;
+        private MessageNowPlayingUpdate nowPlayingMessageUpdate;
+        private MessagePropertyChanged nowPlayingPropertiesUpdate;
 
         // Delegate to log messages from another thread
         private delegate void LogMessage(string message, WifiRemote.LogType type);
@@ -46,7 +49,8 @@ namespace WifiRemote
             this.volumeMessage = new MessageVolume();
             this.imageMessage = new MessageImage();
             this.nowPlayingMessage = new MessageNowPlaying();
-
+            this.nowPlayingMessageUpdate = new MessageNowPlayingUpdate();
+            this.nowPlayingPropertiesUpdate = new MessagePropertyChanged();
             this.welcomeMessage.Status = this.statusMessage;
             this.welcomeMessage.Volume = this.volumeMessage;
 
@@ -151,8 +155,8 @@ namespace WifiRemote
         /// </summary>
         public void SendImageToAllClients()
         {
-            String image = JsonConvert.SerializeObject(imageMessage);
-            SendMessageToAllClients(image);
+            //String image = JsonConvert.SerializeObject(imageMessage);
+            //SendMessageToAllClients(image);
         }
 
         /// <summary>
@@ -166,6 +170,28 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// Send the now playing update (only basic information) to all clients
+        /// </summary>
+        internal void sendNowPlayingUpdateToAllClients()
+        {
+            if (g_Player.Playing)
+            {
+                String nowPlaying = JsonConvert.SerializeObject(nowPlayingMessageUpdate);
+                SendMessageToAllClients(nowPlaying);
+            }
+        }
+
+        /// <summary>
+        /// Send the now playing properties (information that is shown on the mediaportal overlays) 
+        /// to all clients
+        /// </summary>
+        internal void SendNowPlayingPropertiesToAllClients()
+        {
+            String nowPlaying = JsonConvert.SerializeObject(nowPlayingPropertiesUpdate);
+            SendMessageToAllClients(nowPlaying);
+        }
+
+        /// <summary>
         /// A client connected.
         /// </summary>
         /// <param name="sender"></param>
@@ -173,11 +199,12 @@ namespace WifiRemote
         void listenSocket_DidAccept(AsyncSocket sender, AsyncSocket newSocket)
         {
             // Subsribe to worker socket events
-            newSocket.DidRead   += new AsyncSocket.SocketDidRead(newSocket_DidRead);
-            newSocket.DidWrite  += new AsyncSocket.SocketDidWrite(newSocket_DidWrite);
+            newSocket.DidRead += new AsyncSocket.SocketDidRead(newSocket_DidRead);
+            newSocket.DidWrite += new AsyncSocket.SocketDidWrite(newSocket_DidWrite);
             newSocket.WillClose += new AsyncSocket.SocketWillClose(newSocket_WillClose);
-            newSocket.DidClose  += new AsyncSocket.SocketDidClose(newSocket_DidClose);
-            
+            newSocket.DidClose += new AsyncSocket.SocketDidClose(newSocket_DidClose);
+            newSocket.ClientData = new RemoteClient();
+
             // Store worker socket in client list
             lock (connectedSockets)
             {
@@ -186,7 +213,7 @@ namespace WifiRemote
 
             // Send welcome message to client
             String welcome = JsonConvert.SerializeObject(welcomeMessage);
-            WifiRemote.LogMessage("Client connected, sending welcome msg: "+ welcomeMessage.ToString(), WifiRemote.LogType.Debug);
+            WifiRemote.LogMessage("Client connected, sending welcome msg: " + welcomeMessage.ToString(), WifiRemote.LogType.Debug);
 
             byte[] data = Encoding.UTF8.GetBytes(welcome + "\r\n");
             newSocket.Write(data, -1, 0);
@@ -294,17 +321,62 @@ namespace WifiRemote
                     int volume = (int)message["Volume"];
                     communication.SetVolume(volume);
                 }
+                // Set the position of the media item
+                else if (type == "position")
+                {
+                    int seekType = (int)message["SeekType"];
+
+                    if (seekType == 0)
+                    {
+                        int position = (int)message["Position"];
+                        communication.SetPositionPercent(position, true);
+                    }
+                    if (seekType == 1)
+                    {
+                        int position = (int)message["Position"];
+                        communication.SetPositionPercent(position, false);
+                    }
+                    if (seekType == 2)
+                    {
+                        double position = (double)message["Position"];
+                        communication.SetPosition(position, true);
+                    }
+                    else if (seekType == 3)
+                    {
+                        double position = (double)message["Position"];
+                        communication.SetPosition(position, false);
+                    }
+                }
                 // Start to play a video identified by Filepath
                 else if (type == "video")
                 {
                     String video = (string)message["Filepath"];
                     communication.PlayVideoFile(video);
                 }
+                // Start to play a video identified by Filepath
+                else if (type == "audio")
+                {
+                    String audio = (string)message["Filepath"];
+                    communication.PlayAudioFile(audio);
+                }
                 // Reply with a list of installed and active window plugins
                 // with icon and windowId
                 else if (type == "plugins")
                 {
                     SendWindowPluginsList(sender);
+                }
+                // register for a list of properties
+                else if (type == "properties")
+                {
+                    sender.ClientData.Properties = new List<String>();
+                    JArray array = (JArray)message["Properties"];
+                    foreach (JValue v in array)
+                    {
+                        String propString = (string)v.Value;
+                        sender.ClientData.Properties.Add(propString);
+                    }
+
+                    SendPropertiesToClient(sender);
                 }
                 else
                 {
@@ -316,15 +388,16 @@ namespace WifiRemote
             }
             catch (Exception e)
             {
+                WifiRemote.LogMessage("WifiRemote Communication Error: " + e.Message, WifiRemote.LogType.Warn);
                 //WifiRemote.LogMessage("Error converting received data into UTF-8 String: " + e.Message, WifiRemote.LogType.Error);
-                MediaPortal.Dialogs.GUIDialogNotify dialog = (MediaPortal.Dialogs.GUIDialogNotify)MediaPortal.GUI.Library.GUIWindowManager.GetWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_DIALOG_NOTIFY);
-                dialog.Reset();
-                dialog.SetHeading("WifiRemote Communication Error");
-                dialog.SetText(e.Message);
-                dialog.DoModal(MediaPortal.GUI.Library.GUIWindowManager.ActiveWindow);
+                //MediaPortal.Dialogs.GUIDialogNotify dialog = (MediaPortal.Dialogs.GUIDialogNotify)MediaPortal.GUI.Library.GUIWindowManager.GetWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_DIALOG_NOTIFY);
+                //dialog.Reset();
+                //dialog.SetHeading("WifiRemote Communication Error");
+                //dialog.SetText(e.Message);
+                //dialog.DoModal(MediaPortal.GUI.Library.GUIWindowManager.ActiveWindow);
             }
 
-   
+
             // Continue listening
             sender.Read(AsyncSocket.CRLFData, -1, 0);
         }
@@ -341,6 +414,90 @@ namespace WifiRemote
 
             byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");
             client.Write(data, -1, 0);
+        }
+
+        /// <summary>
+        /// Sends all properties a client has registered for to the client
+        /// </summary>
+        /// <param name="client">Which client</param>
+        private void SendPropertiesToClient(AsyncSocket client)
+        {
+            MessageProperties propertiesMessage = new MessageProperties();
+
+            List<Property> properties = new List<Property>();
+            foreach (String s in client.ClientData.Properties)
+            {
+                String value = GUIPropertyManager.GetProperty(s);
+
+                if (value != null && !value.Equals("") && CheckProperty(s))
+                {
+                    properties.Add(new Property(s, value));
+                }
+            }
+
+            propertiesMessage.Tags = properties;
+            String plugins = JsonConvert.SerializeObject(propertiesMessage);
+
+            byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");
+            client.Write(data, -1, 0);
+        }
+
+        /// <summary>
+        /// Checks if the given property should be returned. In some situation we don't
+        /// want to return the property, even though the client has registered it.
+        /// 
+        /// For example, if tv is playing, some video-related tags are filled with faulty
+        /// information
+        /// </summary>
+        /// <param name="tag">The tag</param>
+        /// <returns>True if the property should be returned, false otherwise</returns>
+        private bool CheckProperty(String tag)
+        {
+            //don't send these values when tv is playing because they're filled
+            //with wrong information (mp problem)
+            if (g_Player.Playing && g_Player.IsTV && tag.Equals("#Play.Current.Title")
+                || tag.Equals("#Play.Current.Description")
+                || tag.Equals("#Play.Current.Genre"))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Sends the property to all clients who have registered for it
+        /// </summary>
+        /// <param name="tag">name of the property</param>
+        /// <param name="tagValue">value of the property</param>
+        public void SendPropertyToClient(string tag, string tagValue)
+        {
+            if (!CheckProperty(tag))
+            {
+                return;
+            }
+
+            byte[] messageData = null;
+
+            foreach (AsyncSocket s in connectedSockets)
+            {
+                foreach (String t in s.ClientData.Properties)
+                {
+                    if (t.Equals(tag))
+                    {
+                        if (messageData == null)
+                        {
+
+                            //init variable only when at least on client has it on the request list
+                            MessagePropertyChanged changed = new MessagePropertyChanged(tag, tagValue);
+                            WifiRemote.LogMessage("Changed property: " + tag + "|" + tagValue, WifiRemote.LogType.Debug);
+                            String plugins = JsonConvert.SerializeObject(changed);
+                            messageData = Encoding.UTF8.GetBytes(plugins + "\r\n");
+                        }
+                        s.Write(messageData, -1, 0);
+                    }
+                }
+            }
         }
     }
 }

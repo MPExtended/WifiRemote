@@ -595,6 +595,7 @@ namespace WifiRemote
             {
                 key = new Key(keyCode + (modifiers * 32), 0);
             }
+
             MediaPortal.GUI.Library.Action action = new MediaPortal.GUI.Library.Action(key, MediaPortal.GUI.Library.Action.ActionType.ACTION_KEY_PRESSED, 0, 0);
 
             GUIWindowManager.OnAction(action);
@@ -665,7 +666,7 @@ namespace WifiRemote
         /// <param name="video">Path to the video</param>
         internal void PlayVideoFile(string video)
         {
-            if (video != null & File.Exists(video))
+            if (video != null && File.Exists(video))
             {
                 // from MP-TvSeries code:
                 // sometimes it takes up to 30+ secs to go to fullscreen even though the video is already playing
@@ -679,6 +680,52 @@ namespace WifiRemote
                 // Play File
                 g_Player.Play(video, g_Player.MediaType.Video);
                 g_Player.ShowFullScreenWindowVideo();
+            }
+        }
+
+        /// <summary>
+        /// Set the player position to the given absolute percentage 
+        /// </summary>
+        /// <param name="position">position in %</param>
+        /// <param name="absolute">absolute or relative to current position</param>
+        internal void SetPositionPercent(int position, bool absolute)
+        {
+            if (absolute)
+            {
+                g_Player.SeekAsolutePercentage(position);
+            }
+            else
+            {
+                g_Player.SeekRelativePercentage(position);
+            }
+        }
+
+        /// <summary>
+        /// Set the player position to the given absolute time (in ms)
+        /// </summary>
+        /// <param name="position">position in ms</param>
+        /// <param name="absolute">absolute or relative to current position</param>
+        internal void SetPosition(double position, bool absolute)
+        {
+            if (absolute)
+            {
+                g_Player.SeekAbsolute(position);
+            }
+            else
+            {
+                g_Player.SeekRelative(position);
+            }
+        }
+
+        /// <summary>
+        /// Plays the local audio file on the MediaPortal client
+        /// </summary>
+        /// <param name="video">Path to the audio file</param>
+        internal void PlayAudioFile(string audio)
+        {
+            if (audio != null && File.Exists(audio))
+            {
+                g_Player.Play(audio, g_Player.MediaType.Music);
             }
         }
     }
