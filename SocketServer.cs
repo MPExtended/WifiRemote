@@ -29,7 +29,6 @@ namespace WifiRemote
         private MessageWelcome welcomeMessage;
         private MessageStatus statusMessage;
         private MessageVolume volumeMessage;
-        private MessageImage imageMessage;
         private MessageNowPlaying nowPlayingMessage;
         private MessageNowPlayingUpdate nowPlayingMessageUpdate;
         private MessagePropertyChanged nowPlayingPropertiesUpdate;
@@ -47,7 +46,6 @@ namespace WifiRemote
             this.welcomeMessage = new MessageWelcome();
             this.statusMessage = new MessageStatus();
             this.volumeMessage = new MessageVolume();
-            this.imageMessage = new MessageImage();
             this.nowPlayingMessage = new MessageNowPlaying();
             this.nowPlayingMessageUpdate = new MessageNowPlayingUpdate();
             this.nowPlayingPropertiesUpdate = new MessagePropertyChanged();
@@ -153,10 +151,13 @@ namespace WifiRemote
         /// <summary>
         /// Send the image of the currently played media to all clients as byte array
         /// </summary>
-        public void SendImageToAllClients()
+        public void SendImageToClient(AsyncSocket sender, String imagePath)
         {
-            //String image = JsonConvert.SerializeObject(imageMessage);
-            //SendMessageToAllClients(image);
+            MessageImage imageMessage = new MessageImage(imagePath);
+            String image = JsonConvert.SerializeObject(imageMessage);
+
+            byte[] data = Encoding.UTF8.GetBytes(image + "\r\n");
+            sender.Write(data, -1, 0);
         }
 
         /// <summary>
@@ -363,7 +364,12 @@ namespace WifiRemote
                 // with icon and windowId
                 else if (type == "plugins")
                 {
-                    SendWindowPluginsList(sender);
+                    bool sendIcons = false;
+                    if (message["SendIcons"] != null)
+                    {
+                        sendIcons = (bool)message["SendIcons"];
+                    }
+                    SendWindowPluginsList(sender, sendIcons);
                 }
                 // register for a list of properties
                 else if (type == "properties")
@@ -377,6 +383,12 @@ namespace WifiRemote
                     }
 
                     SendPropertiesToClient(sender);
+                }
+                // request image
+                else if (type == "image")
+                {
+                    String path = (string)message["ImagePath"];
+                    SendImageToClient(sender, path);
                 }
                 else
                 {
@@ -407,9 +419,10 @@ namespace WifiRemote
         /// This contains plugin name, icon and windowID.
         /// </summary>
         /// <param name="client">A connected socket client</param>
-        public void SendWindowPluginsList(AsyncSocket client)
+        /// <param name="sendIcons">Send icons with th eplugin list</param>
+        public void SendWindowPluginsList(AsyncSocket client, bool sendIcons)
         {
-            MessagePlugins pluginsMessage = new MessagePlugins();
+            MessagePlugins pluginsMessage = new MessagePlugins(sendIcons);
             String plugins = JsonConvert.SerializeObject(pluginsMessage);
 
             byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");

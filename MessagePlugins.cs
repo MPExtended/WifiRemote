@@ -30,9 +30,9 @@ namespace WifiRemote
         /// <summary>
         /// Contructor.
         /// </summary>
-        public MessagePlugins()
+        public MessagePlugins(bool sendIcons)
         {
-            plugins = WifiRemote.GetActiveWindowPluginsAndIDs();
+            plugins = WifiRemote.GetActiveWindowPluginsAndIDs(sendIcons);
         }
     }
 }

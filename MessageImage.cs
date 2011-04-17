@@ -19,6 +19,8 @@ namespace WifiRemote
             get { return type; }
         }
 
+        public String ImagePath { get; set; }
+
         byte[] image;
         public byte[] Image
         {
@@ -26,19 +28,13 @@ namespace WifiRemote
             { 
                 try
                 {
-                    String thumbFile = GUIPropertyManager.GetProperty("#Play.Current.Title");
-
-                    // thumb was reset
-                    if (thumbFile.Equals(" "))
+                    // ImagePath was empty or does not exists
+                    if (ImagePath == null || ImagePath.Equals("") || ImagePath.Equals(" ") || !File.Exists(ImagePath))
                     {
                         return new byte[0];
                     }
-
-                    String thumbFullPath = Path.Combine(thumbFolder, thumbFile + ".jpg");
-                    WifiRemote.LogMessage(thumbFullPath, WifiRemote.LogType.Info);
-
-                    Image thumbnail = new Bitmap(thumbFullPath);
-                    image = imageToByteArray(thumbnail);
+                    Image thumbnail = new Bitmap(ImagePath);
+                    image = ImageToByteArray(thumbnail);
                 }
                 catch (Exception)
                 {
@@ -48,14 +44,15 @@ namespace WifiRemote
             }
         }
 
-        public MessageImage()
+        public MessageImage(String path)
         {
             image = new byte[0];
             thumbFolder = Config.GetFolder(Config.Dir.Thumbs);
+            ImagePath = path;
         }
 
 
-        private byte[] imageToByteArray(Image img)
+        private byte[] ImageToByteArray(Image img)
         {
             byte[] byteArray = new byte[0];
             using (MemoryStream stream = new MemoryStream())

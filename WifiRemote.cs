@@ -312,10 +312,6 @@ namespace WifiRemote
             {
                 SendStatus();
             }
-            else if (tag.Equals("#Play.Current.Thumb"))
-            {
-                socketServer.SendImageToAllClients();
-            }
             else if (tag.StartsWith("#Play.") ||
                      tag.StartsWith("#TV."))
             {
@@ -594,7 +590,7 @@ namespace WifiRemote
         /// 
         /// We are also sending the plugin icon as byte array if it exists.
         /// </summary>
-        internal static ArrayList GetActiveWindowPluginsAndIDs()
+        internal static ArrayList GetActiveWindowPluginsAndIDs(bool sendIcons)
         {
             ArrayList plugins = new ArrayList();
             int[] ignoredPluginIds = new int[] { 
@@ -608,34 +604,41 @@ namespace WifiRemote
             {
                 if (!ignoredPluginIds.Contains<int>(plugin.GetWindowId()))
                 {
-                    byte[] iconBytes = new byte[0];
-
-                    // Load plugin icon
-                    Type pluginType = plugin.GetType();
-                    PluginIconsAttribute[] icons = (PluginIconsAttribute[])pluginType.GetCustomAttributes(typeof(PluginIconsAttribute), false);
-                    if (icons.Length > 0)
+                    if (sendIcons)
                     {
-                        string resourceName = icons[0].ActivatedResourceName;
-                        if (!string.IsNullOrEmpty(resourceName))
-                        {
-                            System.Drawing.Image icon = null;
-                            try
-                            {
-                                icon = System.Drawing.Image.FromStream(pluginType.Assembly.GetManifestResourceStream(resourceName));
-                            }
-                            catch (Exception e)
-                            {
-                                WifiRemote.LogMessage("Could not load plugin icon: " + e.Message, WifiRemote.LogType.Error);
-                            }
+                        byte[] iconBytes = new byte[0];
 
-                            if (icon != null)
+                        // Load plugin icon
+                        Type pluginType = plugin.GetType();
+                        PluginIconsAttribute[] icons = (PluginIconsAttribute[])pluginType.GetCustomAttributes(typeof(PluginIconsAttribute), false);
+                        if (icons.Length > 0)
+                        {
+                            string resourceName = icons[0].ActivatedResourceName;
+                            if (!string.IsNullOrEmpty(resourceName))
                             {
-                                iconBytes = WifiRemote.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
+                                System.Drawing.Image icon = null;
+                                try
+                                {
+                                    icon = System.Drawing.Image.FromStream(pluginType.Assembly.GetManifestResourceStream(resourceName));
+                                }
+                                catch (Exception e)
+                                {
+                                    WifiRemote.LogMessage("Could not load plugin icon: " + e.Message, WifiRemote.LogType.Error);
+                                }
+
+                                if (icon != null)
+                                {
+                                    iconBytes = WifiRemote.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
+                                }
                             }
                         }
-                    }
 
-                    plugins.Add(new WindowPlugin(plugin.PluginName(), plugin.GetWindowId(), iconBytes));
+                        plugins.Add(new WindowPlugin(plugin.PluginName(), plugin.GetWindowId(), iconBytes));
+                    }
+                    else
+                    {
+                        plugins.Add(new WindowPlugin(plugin.PluginName(), plugin.GetWindowId(), null));
+                    }
                 }
             }
 
