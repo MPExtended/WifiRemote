@@ -485,31 +485,44 @@ namespace WifiRemote
         /// <param name="tagValue">value of the property</param>
         public void SendPropertyToClient(string tag, string tagValue)
         {
-            if (!CheckProperty(tag))
+            try
             {
-                return;
-            }
-
-            byte[] messageData = null;
-
-            foreach (AsyncSocket s in connectedSockets)
-            {
-                foreach (String t in s.ClientData.Properties)
+                if (!CheckProperty(tag))
                 {
-                    if (t.Equals(tag))
-                    {
-                        if (messageData == null)
-                        {
+                    return;
+                }
 
-                            //init variable only when at least on client has it on the request list
-                            MessagePropertyChanged changed = new MessagePropertyChanged(tag, tagValue);
-                            WifiRemote.LogMessage("Changed property: " + tag + "|" + tagValue, WifiRemote.LogType.Debug);
-                            String plugins = JsonConvert.SerializeObject(changed);
-                            messageData = Encoding.UTF8.GetBytes(plugins + "\r\n");
+                byte[] messageData = null;
+
+                if (connectedSockets != null)
+                {
+                    foreach (AsyncSocket s in connectedSockets)
+                    {
+                        if (s.ClientData != null && s.ClientData.Properties != null)
+                        {
+                            foreach (String t in s.ClientData.Properties)
+                            {
+                                if (t.Equals(tag))
+                                {
+                                    if (messageData == null)
+                                    {
+
+                                        //init variable only when at least on client has it on the request list
+                                        MessagePropertyChanged changed = new MessagePropertyChanged(tag, tagValue);
+                                        WifiRemote.LogMessage("Changed property: " + tag + "|" + tagValue, WifiRemote.LogType.Debug);
+                                        String plugins = JsonConvert.SerializeObject(changed);
+                                        messageData = Encoding.UTF8.GetBytes(plugins + "\r\n");
+                                    }
+                                    s.Write(messageData, -1, 0);
+                                }
+                            }
                         }
-                        s.Write(messageData, -1, 0);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                WifiRemote.LogMessage(ex.Message, WifiRemote.LogType.Error);
             }
         }
     }
