@@ -68,9 +68,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\Dialogs.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json.Net20, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json.Net35, Version=4.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\Newtonsoft.Json.Net20.dll</HintPath>
+      <HintPath>Libs\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
     <Reference Include="RemotePlugins, Version=1.1.6.32462, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -91,53 +91,54 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\Utils.dll</HintPath>
     </Reference>
-    <Reference Include="ZeroconfService">
-      <HintPath>..\Libs\ZeroconfService.dll</HintPath>
+    <Reference Include="ZeroconfService, Version=0.6.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\ZeroconfService.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncSocket.cs" />
-    <Compile Include="Communication.cs" />
-    <Compile Include="MessageNowPlayingUpdate.cs" />
-    <Compile Include="MessagePlugins.cs" />
-    <Compile Include="MessageProperties.cs" />
-    <Compile Include="MessagePropertyChanged.cs" />
-    <Compile Include="NowPlayingSeries.cs" />
-    <Compile Include="NowPlayingMovingPictures.cs" />
-    <Compile Include="NowPlayingDVD.cs" />
-    <Compile Include="NowPlayingVideo.cs" />
-    <Compile Include="Data.cs" />
-    <Compile Include="IAdditionalNowPlayingInfo.cs" />
-    <Compile Include="MessageImage.cs" />
-    <Compile Include="MessageNowPlaying.cs" />
-    <Compile Include="MessageStatus.cs" />
-    <Compile Include="MessageVolume.cs" />
-    <Compile Include="MessageWelcome.cs" />
-    <Compile Include="NowPlayingMusic.cs" />
+    <Compile Include="Source\AsyncSocket.cs" />
+    <Compile Include="Source\Communication.cs" />
+    <Compile Include="Source\Messages\MessageNowPlayingUpdate.cs" />
+    <Compile Include="Source\Messages\MessagePlugins.cs" />
+    <Compile Include="Source\Messages\MessageProperties.cs" />
+    <Compile Include="Source\Messages\MessagePropertyChanged.cs" />
+    <Compile Include="Source\Messages\Now Playing\NowPlayingSeries.cs" />
+    <Compile Include="Source\Messages\Now Playing\NowPlayingMovingPictures.cs" />
+    <Compile Include="Source\Messages\Now Playing\NowPlayingDVD.cs" />
+    <Compile Include="Source\Messages\Now Playing\NowPlayingVideo.cs" />
+    <Compile Include="Source\Data.cs" />
+    <Compile Include="Source\Messages\Now Playing\IAdditionalNowPlayingInfo.cs" />
+    <Compile Include="Source\Messages\MessageImage.cs" />
+    <Compile Include="Source\Messages\MessageNowPlaying.cs" />
+    <Compile Include="Source\Messages\MessageStatus.cs" />
+    <Compile Include="Source\Messages\MessageVolume.cs" />
+    <Compile Include="Source\Messages\MessageWelcome.cs" />
+    <Compile Include="Source\Messages\Now Playing\NowPlayingMusic.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Property.cs" />
-    <Compile Include="RemoteClient.cs" />
-    <Compile Include="SetupForm.cs">
+    <Compile Include="Source\Property.cs" />
+    <Compile Include="Source\RemoteClient.cs" />
+    <Compile Include="Source\SetupForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SetupForm.Designer.cs">
+    <Compile Include="Source\SetupForm.Designer.cs">
       <DependentUpon>SetupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SocketServer.cs" />
+    <Compile Include="Source\SocketServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WifiRemote.cs" />
-    <Compile Include="WindowPlugin.cs" />
+    <Compile Include="Source\WifiRemote.cs" />
+    <Compile Include="Source\WindowPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="SetupForm.resx">
+    <EmbeddedResource Include="Source\SetupForm.resx">
       <DependentUpon>SetupForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -163,7 +164,7 @@
     <None Include="merge.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="NoPluginImage.png" />
+    <None Include="Resources\NoPluginImage.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />

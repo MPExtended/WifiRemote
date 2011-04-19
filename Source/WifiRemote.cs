@@ -490,7 +490,6 @@ namespace WifiRemote
                 LogMessage("Could not get hardware address: " + e.Message, LogType.Error);
             }
             dict.Add("hwAddr", hardwareAddresses.ToString());
-            //publishService.setTXTRecordData(NetService.DataFromTXTRecordDictionary(dict));
             publishService.TXTRecordData = NetService.DataFromTXTRecordDictionary(dict);
             publishService.DidPublishService += new NetService.ServicePublished(publishService_DidPublishService);
             publishService.DidNotPublishService += new NetService.ServiceNotPublished(publishService_DidNotPublishService);
