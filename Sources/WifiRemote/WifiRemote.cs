@@ -57,6 +57,7 @@ namespace WifiRemote
         public const int DEFAULT_PORT = 8017;
         public const int SERVER_VERSION = 1;
         private const int UPDATE_INTERVAL = 1000;
+        private String localizedKeyboard;//the localised name of the virtual keyboard
 
         /// <summary>
         /// Server handling communication with the clients
@@ -224,6 +225,8 @@ namespace WifiRemote
             {
                 PublishBonjourService();
             }
+
+            localizedKeyboard = GUILocalizeStrings.Get(100000 + (int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
         }
 
         /// <summary>
@@ -305,6 +308,14 @@ namespace WifiRemote
         /// <param name="tagValue"></param>
         void GUIPropertyManager_OnPropertyChanged(string tag, string tagValue)
         {
+            if(tag.Equals("#currentmodule"))
+            {
+                if (tagValue != null && tagValue.Equals(localizedKeyboard))
+                {
+                    //keyboard open
+                    LogMessage("Keyboard opened!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! :)))))", LogType.Info);
+                }
+            }
             if (tag.Equals("#selecteditem") ||
                 tag.Equals("#selecteditem2") ||
                 tag.Equals("#highlightedbutton") ||
