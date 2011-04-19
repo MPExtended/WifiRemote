@@ -52,29 +52,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Utils, Version=1.1.6.27652, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\Common.Utils.dll</HintPath>
+    <Reference Include="Common.Utils">
+      <HintPath>..\..\Libs\Common.Utils.dll</HintPath>
     </Reference>
-    <Reference Include="Core, Version=1.1.6.32457, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\Core.dll</HintPath>
+    <Reference Include="Core">
+      <HintPath>..\..\Libs\Core.dll</HintPath>
     </Reference>
-    <Reference Include="Databases, Version=1.1.6.32459, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\Databases.dll</HintPath>
+    <Reference Include="Databases">
+      <HintPath>..\..\Libs\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="Dialogs, Version=1.1.6.32465, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\Dialogs.dll</HintPath>
+    <Reference Include="Dialogs">
+      <HintPath>..\..\Libs\Dialogs.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json.Net35, Version=4.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\Newtonsoft.Json.Net35.dll</HintPath>
+    <Reference Include="Newtonsoft.Json.Net35">
+      <HintPath>..\..\Libs\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
-    <Reference Include="RemotePlugins, Version=1.1.6.32462, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\RemotePlugins.dll</HintPath>
+    <Reference Include="RemotePlugins">
+      <HintPath>..\..\Libs\RemotePlugins.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -87,58 +81,56 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.XML" />
-    <Reference Include="Utils, Version=1.1.6.32453, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\Utils.dll</HintPath>
+    <Reference Include="Utils">
+      <HintPath>..\..\Libs\Utils.dll</HintPath>
     </Reference>
-    <Reference Include="ZeroconfService, Version=0.6.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\ZeroconfService.dll</HintPath>
+    <Reference Include="ZeroconfService">
+      <HintPath>..\..\Libs\ZeroconfService.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\AsyncSocket.cs" />
-    <Compile Include="Source\Communication.cs" />
-    <Compile Include="Source\Messages\MessageNowPlayingUpdate.cs" />
-    <Compile Include="Source\Messages\MessagePlugins.cs" />
-    <Compile Include="Source\Messages\MessageProperties.cs" />
-    <Compile Include="Source\Messages\MessagePropertyChanged.cs" />
-    <Compile Include="Source\Messages\Now Playing\NowPlayingSeries.cs" />
-    <Compile Include="Source\Messages\Now Playing\NowPlayingMovingPictures.cs" />
-    <Compile Include="Source\Messages\Now Playing\NowPlayingDVD.cs" />
-    <Compile Include="Source\Messages\Now Playing\NowPlayingVideo.cs" />
-    <Compile Include="Source\Data.cs" />
-    <Compile Include="Source\Messages\Now Playing\IAdditionalNowPlayingInfo.cs" />
-    <Compile Include="Source\Messages\MessageImage.cs" />
-    <Compile Include="Source\Messages\MessageNowPlaying.cs" />
-    <Compile Include="Source\Messages\MessageStatus.cs" />
-    <Compile Include="Source\Messages\MessageVolume.cs" />
-    <Compile Include="Source\Messages\MessageWelcome.cs" />
-    <Compile Include="Source\Messages\Now Playing\NowPlayingMusic.cs" />
+    <Compile Include="AsyncSocket.cs" />
+    <Compile Include="Communication.cs" />
+    <Compile Include="Messages\MessageNowPlayingUpdate.cs" />
+    <Compile Include="Messages\MessagePlugins.cs" />
+    <Compile Include="Messages\MessageProperties.cs" />
+    <Compile Include="Messages\MessagePropertyChanged.cs" />
+    <Compile Include="Messages\Now Playing\NowPlayingSeries.cs" />
+    <Compile Include="Messages\Now Playing\NowPlayingMovingPictures.cs" />
+    <Compile Include="Messages\Now Playing\NowPlayingDVD.cs" />
+    <Compile Include="Messages\Now Playing\NowPlayingVideo.cs" />
+    <Compile Include="Data.cs" />
+    <Compile Include="Messages\Now Playing\IAdditionalNowPlayingInfo.cs" />
+    <Compile Include="Messages\MessageImage.cs" />
+    <Compile Include="Messages\MessageNowPlaying.cs" />
+    <Compile Include="Messages\MessageStatus.cs" />
+    <Compile Include="Messages\MessageVolume.cs" />
+    <Compile Include="Messages\MessageWelcome.cs" />
+    <Compile Include="Messages\Now Playing\NowPlayingMusic.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Source\Property.cs" />
-    <Compile Include="Source\RemoteClient.cs" />
-    <Compile Include="Source\SetupForm.cs">
+    <Compile Include="Property.cs" />
+    <Compile Include="RemoteClient.cs" />
+    <Compile Include="SetupForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Source\SetupForm.Designer.cs">
+    <Compile Include="SetupForm.Designer.cs">
       <DependentUpon>SetupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Source\SocketServer.cs" />
+    <Compile Include="SocketServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\WifiRemote.cs" />
-    <Compile Include="Source\WindowPlugin.cs" />
+    <Compile Include="WifiRemote.cs" />
+    <Compile Include="WindowPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\SetupForm.resx">
+    <EmbeddedResource Include="SetupForm.resx">
       <DependentUpon>SetupForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
