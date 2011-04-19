@@ -348,17 +348,22 @@ namespace WifiRemote
                         communication.SetPosition(position, false);
                     }
                 }
-                // Start to play a video identified by Filepath
-                else if (type == "video")
+                // Start to play a file identified by Filepath
+                else if (type == "playfile")
                 {
-                    String video = (string)message["Filepath"];
-                    communication.PlayVideoFile(video);
-                }
-                // Start to play a video identified by Filepath
-                else if (type == "audio")
-                {
-                    String audio = (string)message["Filepath"];
-                    communication.PlayAudioFile(audio);
+                    string fileType = (string)message["FileType"];
+                    string filePath = (string)message["Filepath"];
+
+                    // Play a video file
+                    if (fileType == "video")
+                    {
+                        communication.PlayVideoFile(filePath);
+                    }
+                    // Play an audio file
+                    else if (fileType == "audio")
+                    {
+                        communication.PlayAudioFile(filePath);
+                    }
                 }
                 // Reply with a list of installed and active window plugins
                 // with icon and windowId
