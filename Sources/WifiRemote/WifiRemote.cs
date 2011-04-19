@@ -57,7 +57,17 @@ namespace WifiRemote
         public const int DEFAULT_PORT = 8017;
         public const int SERVER_VERSION = 1;
         private const int UPDATE_INTERVAL = 1000;
-        private String localizedKeyboard;//the localised name of the virtual keyboard
+
+        /// <summary>
+        /// The localised name of the virtual keyboard
+        /// Used to detect if the keyboard was opened or closed
+        /// </summary>
+        private String localizedKeyboard;
+
+        /// <summary>
+        /// Determines if the onscreen keyboard is active
+        /// </summary>
+        private bool keyboardIsActive;
 
         /// <summary>
         /// Server handling communication with the clients
@@ -312,8 +322,17 @@ namespace WifiRemote
             {
                 if (tagValue != null && tagValue.Equals(localizedKeyboard))
                 {
-                    //keyboard open
-                    LogMessage("Keyboard opened!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! :)))))", LogType.Info);
+                    MessageOnscreenKeyboard keyboardMessage = new MessageOnscreenKeyboard(true);
+                    string keyboard = Newtonsoft.Json.JsonConvert.SerializeObject(keyboardMessage);
+                    socketServer.SendMessageToAllClients(keyboard);
+                    keyboardIsActive = true;
+                }
+                else if (keyboardIsActive)
+                {
+                    MessageOnscreenKeyboard keyboardMessage = new MessageOnscreenKeyboard(false);
+                    string keyboard = Newtonsoft.Json.JsonConvert.SerializeObject(keyboardMessage);
+                    socketServer.SendMessageToAllClients(keyboard);
+                    keyboardIsActive = false;
                 }
             }
             if (tag.Equals("#selecteditem") ||

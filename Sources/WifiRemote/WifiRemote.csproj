@@ -92,6 +92,7 @@
     <Compile Include="AsyncSocket.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="Messages\MessageNowPlayingUpdate.cs" />
+    <Compile Include="Messages\MessageOnscreenKeyboard.cs" />
     <Compile Include="Messages\MessagePlugins.cs" />
     <Compile Include="Messages\MessageProperties.cs" />
     <Compile Include="Messages\MessagePropertyChanged.cs" />
