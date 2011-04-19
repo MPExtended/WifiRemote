@@ -24,7 +24,7 @@ namespace WifiRemote
 
         private AsyncSocket listenSocket;
         private Communication communication;
-        private List<AsyncSocket> connectedSockets;
+        private List<RemoteClient> connectedSockets;
 
         private MessageWelcome welcomeMessage;
         private MessageStatus statusMessage;
@@ -63,7 +63,7 @@ namespace WifiRemote
             listenSocket.DidAccept += new AsyncSocket.SocketDidAccept(listenSocket_DidAccept);
 
             // Initialize list to hold connected sockets
-            connectedSockets = new List<AsyncSocket>();
+            connectedSockets = new List<RemoteClient>();
 
             String welcome = JsonConvert.SerializeObject(welcomeMessage);
             WifiRemote.LogMessage("Client connected, sending welcome msg: " + welcome, WifiRemote.LogType.Debug);
@@ -96,9 +96,9 @@ namespace WifiRemote
             // Stop any client connections
             lock (connectedSockets)
             {
-                foreach (AsyncSocket socket in connectedSockets)
+                foreach (RemoteClient client in connectedSockets)
                 {
-                    socket.CloseAfterReading();
+                    client.Socket.CloseAfterReading();
                 }
             }
 
@@ -113,9 +113,9 @@ namespace WifiRemote
         {
             byte[] data = Encoding.UTF8.GetBytes(message + "\r\n");
 
-            foreach (AsyncSocket socket in connectedSockets)
+            foreach (RemoteClient client in connectedSockets)
             {
-                socket.Write(data, -1, 0);
+                client.Socket.Write(data, -1, 0);
             }
         }
 
@@ -204,12 +204,11 @@ namespace WifiRemote
             newSocket.DidWrite += new AsyncSocket.SocketDidWrite(newSocket_DidWrite);
             newSocket.WillClose += new AsyncSocket.SocketWillClose(newSocket_WillClose);
             newSocket.DidClose += new AsyncSocket.SocketDidClose(newSocket_DidClose);
-            newSocket.ClientData = new RemoteClient();
-
+            
             // Store worker socket in client list
             lock (connectedSockets)
             {
-                connectedSockets.Add(newSocket);
+                connectedSockets.Add(new RemoteClient(newSocket));
             }
 
             // Send welcome message to client
@@ -237,7 +236,7 @@ namespace WifiRemote
             // Remove the client from the client list.
             lock (connectedSockets)
             {
-                connectedSockets.Remove(sender);
+                connectedSockets.RemoveAll(x => x.Socket == sender);
             }
         }
 
@@ -270,7 +269,7 @@ namespace WifiRemote
         void newSocket_DidRead(AsyncSocket sender, byte[] data, long tag)
         {
             String msg = null;
-
+            
             try
             {
                 msg = Encoding.UTF8.GetString(data);
@@ -379,12 +378,13 @@ namespace WifiRemote
                 // register for a list of properties
                 else if (type == "properties")
                 {
-                    sender.ClientData.Properties = new List<String>();
+                    RemoteClient client = connectedSockets.Single(x => x.Socket == sender);
+                    client.Properties = new List<String>();
                     JArray array = (JArray)message["Properties"];
                     foreach (JValue v in array)
                     {
                         String propString = (string)v.Value;
-                        sender.ClientData.Properties.Add(propString);
+                        client.Properties.Add(propString);
                     }
 
                     SendPropertiesToClient(sender);
@@ -437,13 +437,14 @@ namespace WifiRemote
         /// <summary>
         /// Sends all properties a client has registered for to the client
         /// </summary>
-        /// <param name="client">Which client</param>
-        private void SendPropertiesToClient(AsyncSocket client)
+        /// <param name="socket">Which client</param>
+        private void SendPropertiesToClient(AsyncSocket socket)
         {
+            RemoteClient client = connectedSockets.Single(x => x.Socket == socket);
             MessageProperties propertiesMessage = new MessageProperties();
 
             List<Property> properties = new List<Property>();
-            foreach (String s in client.ClientData.Properties)
+            foreach (String s in client.Properties)
             {
                 String value = GUIPropertyManager.GetProperty(s);
 
@@ -457,7 +458,7 @@ namespace WifiRemote
             String plugins = JsonConvert.SerializeObject(propertiesMessage);
 
             byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");
-            client.Write(data, -1, 0);
+            client.Socket.Write(data, -1, 0);
         }
 
         /// <summary>
@@ -501,11 +502,11 @@ namespace WifiRemote
 
                 if (connectedSockets != null)
                 {
-                    foreach (AsyncSocket s in connectedSockets)
+                    foreach (RemoteClient client in connectedSockets)
                     {
-                        if (s.ClientData != null && s.ClientData.Properties != null)
+                        if (client.Properties != null)
                         {
-                            foreach (String t in s.ClientData.Properties)
+                            foreach (String t in client.Properties)
                             {
                                 if (t.Equals(tag))
                                 {
@@ -518,7 +519,7 @@ namespace WifiRemote
                                         String plugins = JsonConvert.SerializeObject(changed);
                                         messageData = Encoding.UTF8.GetBytes(plugins + "\r\n");
                                     }
-                                    s.Write(messageData, -1, 0);
+                                    client.Socket.Write(messageData, -1, 0);
                                 }
                             }
                         }
