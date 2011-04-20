@@ -216,7 +216,10 @@ namespace WifiRemote
             System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
 
-            
+            String userName = null;
+            String password = null;
+            String passcode = null;
+            AuthMethod auth = AuthMethod.None;
 
             // Load port from config
             using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
@@ -224,10 +227,20 @@ namespace WifiRemote
                 port = (UInt16)reader.GetValueAsInt(PLUGIN_NAME, "port", DEFAULT_PORT);
                 disableBonjour = reader.GetValueAsBool(PLUGIN_NAME, "disableBonjour", false);
                 serviceName = reader.GetValueAsString(PLUGIN_NAME, "serviceName", "");
+                userName = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", "");
+                password = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", "");
+                passcode = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", "");
+
+                auth = (AuthMethod)reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
+        
             }
 
             // Start listening for client connections
             socketServer = new SocketServer(port);
+            socketServer.UserName = userName;
+            socketServer.Password = password;
+            socketServer.PassCode = passcode;
+            socketServer.AllowedAuth = auth;
             socketServer.Start();
 
             // Publish the service via bonjour to the network

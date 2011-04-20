@@ -11,6 +11,7 @@ using MediaPortal.Player;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MediaPortal.GUI.Library;
+using WifiRemote.Messages;
 
 namespace WifiRemote
 {
@@ -24,7 +25,7 @@ namespace WifiRemote
 
         private AsyncSocket listenSocket;
         private Communication communication;
-        private List<RemoteClient> connectedSockets;
+        private List<AsyncSocket> connectedSockets;
 
         private MessageWelcome welcomeMessage;
         private MessageStatus statusMessage;
@@ -35,6 +36,26 @@ namespace WifiRemote
 
         // Delegate to log messages from another thread
         private delegate void LogMessage(string message, WifiRemote.LogType type);
+
+        /// <summary>
+        /// Username  for client authentification
+        /// </summary>
+        internal String UserName {get; set;}
+
+        /// <summary>
+        /// Password for client authentification
+        /// </summary>
+        internal String Password {get; set;}
+
+        /// <summary>
+        /// Passcode for client authentification
+        /// </summary>
+        internal String PassCode {get; set;}
+
+        /// <summary>
+        /// Passcode for client authentification
+        /// </summary>
+        internal AuthMethod AllowedAuth { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -63,7 +84,7 @@ namespace WifiRemote
             listenSocket.DidAccept += new AsyncSocket.SocketDidAccept(listenSocket_DidAccept);
 
             // Initialize list to hold connected sockets
-            connectedSockets = new List<RemoteClient>();
+            connectedSockets = new List<AsyncSocket>();
 
             String welcome = JsonConvert.SerializeObject(welcomeMessage);
             WifiRemote.LogMessage("Client connected, sending welcome msg: " + welcome, WifiRemote.LogType.Debug);
@@ -96,9 +117,9 @@ namespace WifiRemote
             // Stop any client connections
             lock (connectedSockets)
             {
-                foreach (RemoteClient client in connectedSockets)
+                foreach (AsyncSocket socket in connectedSockets)
                 {
-                    client.Socket.CloseAfterReading();
+                    socket.CloseAfterReading();
                 }
             }
 
@@ -113,9 +134,12 @@ namespace WifiRemote
         {
             byte[] data = Encoding.UTF8.GetBytes(message + "\r\n");
 
-            foreach (RemoteClient client in connectedSockets)
+            foreach (AsyncSocket socket in connectedSockets)
             {
-                client.Socket.Write(data, -1, 0);
+                if (socket.GetRemoteClient().IsAuthentificated)
+                {
+                    socket.Write(data, -1, 0);
+                }
             }
         }
 
@@ -204,11 +228,12 @@ namespace WifiRemote
             newSocket.DidWrite += new AsyncSocket.SocketDidWrite(newSocket_DidWrite);
             newSocket.WillClose += new AsyncSocket.SocketWillClose(newSocket_WillClose);
             newSocket.DidClose += new AsyncSocket.SocketDidClose(newSocket_DidClose);
-            
+
+            newSocket.SetRemoteClient(new RemoteClient());
             // Store worker socket in client list
             lock (connectedSockets)
             {
-                connectedSockets.Add(new RemoteClient(newSocket));
+                connectedSockets.Add(newSocket);
             }
 
             // Send welcome message to client
@@ -236,7 +261,7 @@ namespace WifiRemote
             // Remove the client from the client list.
             lock (connectedSockets)
             {
-                connectedSockets.RemoveAll(x => x.Socket == sender);
+                connectedSockets.Remove(sender);
             }
         }
 
@@ -278,126 +303,144 @@ namespace WifiRemote
                 // TODO: error checking
                 JObject message = JObject.Parse(msg);
                 string type = (string)message["Type"];
+                RemoteClient client = sender.GetRemoteClient();
 
-                // Send a command
-                if (type == "command")
-                {
-                    string command = (string)message["Command"];
-                    communication.SendCommand(command);
-                }
-                // Send a key press
-                else if (type == "key")
-                {
-                    string key = (string)message["Key"];
-                    communication.SendKey(key);
-                }
-                // Send a key down
-                else if (type == "keydown")
-                {
-                    string key = (string)message["Key"];
-                    int pause = (int)message["Pause"];
-                    communication.SendKeyDown(key, pause);
-                }
-                // Send a key up
-                else if (type == "keyup")
-                {
-                    communication.SendKeyUp();
-                }
-                // Open a skin window
-                else if (type == "window")
-                {
-                    int windowId = (int)message["Window"];
-                    communication.OpenWindow(windowId);
-                }
-                // Shutdown/hibernate/reboot system or exit mediaportal
-                else if (type == "powermode")
-                {
-                    string powerMode = (string)message["PowerMode"];
-                    communication.SetPowerMode(powerMode);
-                }
-                // Directly set the volume to Volume percent
-                else if (type == "volume")
-                {
-                    int volume = (int)message["Volume"];
-                    communication.SetVolume(volume);
-                }
-                // Set the position of the media item
-                else if (type == "position")
-                {
-                    int seekType = (int)message["SeekType"];
+                if (client.IsAuthentificated || AllowedAuth == AuthMethod.None)
+                {// The client is already authentificated or we don't need authentification
+                    // Send a command
+                    if (type == "command")
+                    {
+                        string command = (string)message["Command"];
+                        communication.SendCommand(command);
+                    }
+                    // Send a key press
+                    else if (type == "key")
+                    {
+                        string key = (string)message["Key"];
+                        communication.SendKey(key);
+                    }
+                    // Send a key down
+                    else if (type == "keydown")
+                    {
+                        string key = (string)message["Key"];
+                        int pause = (int)message["Pause"];
+                        communication.SendKeyDown(key, pause);
+                    }
+                    // Send a key up
+                    else if (type == "keyup")
+                    {
+                        communication.SendKeyUp();
+                    }
+                    // Open a skin window
+                    else if (type == "window")
+                    {
+                        int windowId = (int)message["Window"];
+                        communication.OpenWindow(windowId);
+                    }
+                    // Shutdown/hibernate/reboot system or exit mediaportal
+                    else if (type == "powermode")
+                    {
+                        string powerMode = (string)message["PowerMode"];
+                        communication.SetPowerMode(powerMode);
+                    }
+                    // Directly set the volume to Volume percent
+                    else if (type == "volume")
+                    {
+                        int volume = (int)message["Volume"];
+                        communication.SetVolume(volume);
+                    }
+                    // Set the position of the media item
+                    else if (type == "position")
+                    {
+                        int seekType = (int)message["SeekType"];
 
-                    if (seekType == 0)
-                    {
-                        int position = (int)message["Position"];
-                        communication.SetPositionPercent(position, true);
+                        if (seekType == 0)
+                        {
+                            int position = (int)message["Position"];
+                            communication.SetPositionPercent(position, true);
+                        }
+                        if (seekType == 1)
+                        {
+                            int position = (int)message["Position"];
+                            communication.SetPositionPercent(position, false);
+                        }
+                        if (seekType == 2)
+                        {
+                            double position = (double)message["Position"];
+                            communication.SetPosition(position, true);
+                        }
+                        else if (seekType == 3)
+                        {
+                            double position = (double)message["Position"];
+                            communication.SetPosition(position, false);
+                        }
                     }
-                    if (seekType == 1)
+                    // Start to play a file identified by Filepath
+                    else if (type == "playfile")
                     {
-                        int position = (int)message["Position"];
-                        communication.SetPositionPercent(position, false);
-                    }
-                    if (seekType == 2)
-                    {
-                        double position = (double)message["Position"];
-                        communication.SetPosition(position, true);
-                    }
-                    else if (seekType == 3)
-                    {
-                        double position = (double)message["Position"];
-                        communication.SetPosition(position, false);
-                    }
-                }
-                // Start to play a file identified by Filepath
-                else if (type == "playfile")
-                {
-                    string fileType = (string)message["FileType"];
-                    string filePath = (string)message["Filepath"];
+                        string fileType = (string)message["FileType"];
+                        string filePath = (string)message["Filepath"];
 
-                    // Play a video file
-                    if (fileType == "video")
-                    {
-                        communication.PlayVideoFile(filePath);
+                        // Play a video file
+                        if (fileType == "video")
+                        {
+                            communication.PlayVideoFile(filePath);
+                        }
+                        // Play an audio file
+                        else if (fileType == "audio")
+                        {
+                            communication.PlayAudioFile(filePath);
+                        }
                     }
-                    // Play an audio file
-                    else if (fileType == "audio")
+                    // Reply with a list of installed and active window plugins
+                    // with icon and windowId
+                    else if (type == "plugins")
                     {
-                        communication.PlayAudioFile(filePath);
+                        bool sendIcons = false;
+                        if (message["SendIcons"] != null)
+                        {
+                            sendIcons = (bool)message["SendIcons"];
+                        }
+                        SendWindowPluginsList(sender, sendIcons);
                     }
-                }
-                // Reply with a list of installed and active window plugins
-                // with icon and windowId
-                else if (type == "plugins")
-                {
-                    bool sendIcons = false;
-                    if (message["SendIcons"] != null)
+                    // register for a list of properties
+                    else if (type == "properties")
                     {
-                        sendIcons = (bool)message["SendIcons"];
-                    }
-                    SendWindowPluginsList(sender, sendIcons);
-                }
-                // register for a list of properties
-                else if (type == "properties")
-                {
-                    RemoteClient client = connectedSockets.Single(x => x.Socket == sender);
-                    client.Properties = new List<String>();
-                    JArray array = (JArray)message["Properties"];
-                    foreach (JValue v in array)
-                    {
-                        String propString = (string)v.Value;
-                        client.Properties.Add(propString);
-                    }
+                        client.Properties = new List<String>();
+                        JArray array = (JArray)message["Properties"];
+                        foreach (JValue v in array)
+                        {
+                            String propString = (string)v.Value;
+                            client.Properties.Add(propString);
+                        }
 
-                    SendPropertiesToClient(sender);
-                }
-                // request image
-                else if (type == "image")
-                {
-                    String path = (string)message["ImagePath"];
-                    SendImageToClient(sender, path);
+                        SendPropertiesToClient(sender);
+                    }
+                    // request image
+                    else if (type == "image")
+                    {
+                        String path = (string)message["ImagePath"];
+                        SendImageToClient(sender, path);
+                    }
+                    else
+                    {
+                        // Unknown command. Log or inform user ...
+                    }
                 }
                 else
-                {
-                    // Unknown command. Log or inform user ...
+                {// user is not yet authentificated
+                    if (type == "authentificate" &&
+                        CheckAuthentificationRequest(client, message))
+                    {
+                        //user successfully authentificated
+                        SendAuthentificationResponse(sender, true);
+                    }
+                    else
+                    {
+                        //client sends a message other then authentificate when not yet
+                        //authentificated or authentificate failed
+                        SendAuthentificationResponse(sender, false);
+                    }
                 }
 
 
@@ -418,6 +461,73 @@ namespace WifiRemote
             // Continue listening
             sender.Read(AsyncSocket.CRLFData, -1, 0);
         }
+
+        private bool CheckAuthentificationRequest(RemoteClient client, JObject message)
+        {
+            AuthMethod auth = AuthMethod.UserPassword;//default
+            if (message["AuthMethod"] != null)
+            {
+                String authString = (string)message["AuthMethod"];
+                if (authString.Equals("userpass"))
+                {
+                    auth = AuthMethod.UserPassword;
+                }
+                else if (authString.Equals("passcode"))
+                {
+                    auth = AuthMethod.Passcode;
+                }
+            }
+
+            if (auth == AuthMethod.UserPassword)
+            {
+                if (message["User"] != null && message["Password"] != null)
+                {
+                    String user = (string)message["User"];
+                    String pass = (string)message["Password"];
+                    if (user.Equals(this.UserName) && pass.Equals(this.Password))
+                    {
+                        client.AuthentificatedBy = auth;
+                        client.User = user;
+                        client.Password = pass;
+                        client.IsAuthentificated = true;
+                        WifiRemote.LogMessage("User successfully authentificated by username and password", WifiRemote.LogType.Debug);
+                        return true;
+                    }
+                }
+            }
+            else if (auth == AuthMethod.Passcode)
+            {
+                if (message["PassCode"] != null)
+                {
+                    String pass = (string)message["PassCode"];
+                    if (pass.Equals(this.PassCode))
+                    {
+                        client.AuthentificatedBy = auth;
+                        client.PassCode = pass;
+                        client.IsAuthentificated = true;
+                        WifiRemote.LogMessage("User successfully authentificated by passcod", WifiRemote.LogType.Debug);
+                        return true;
+                    }
+                }
+            }
+            WifiRemote.LogMessage("User authentification failed", WifiRemote.LogType.Debug);
+                        
+            return false;
+        }
+
+        private void SendAuthentificationResponse(AsyncSocket socket, bool _success)
+        {
+            MessageAuthentificationResponse authResponse = new MessageAuthentificationResponse(_success);
+            if (!_success)
+            {
+                authResponse.ErrorMessage = "Login failed";
+            }
+            String plugins = JsonConvert.SerializeObject(authResponse);
+
+            byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");
+            socket.Write(data, -1, 0);
+        }
+
 
         /// <summary>
         /// Sends a list of installed and active window plugins to the client.
@@ -440,7 +550,7 @@ namespace WifiRemote
         /// <param name="socket">Which client</param>
         private void SendPropertiesToClient(AsyncSocket socket)
         {
-            RemoteClient client = connectedSockets.Single(x => x.Socket == socket);
+            RemoteClient client = socket.GetRemoteClient();
             MessageProperties propertiesMessage = new MessageProperties();
 
             List<Property> properties = new List<Property>();
@@ -484,6 +594,8 @@ namespace WifiRemote
             return true;
         }
 
+
+
         /// <summary>
         /// Sends the property to all clients who have registered for it
         /// </summary>
@@ -502,9 +614,10 @@ namespace WifiRemote
 
                 if (connectedSockets != null)
                 {
-                    foreach (RemoteClient client in connectedSockets)
+                    foreach (AsyncSocket socket in connectedSockets)
                     {
-                        if (client.Properties != null)
+                        RemoteClient client = socket.GetRemoteClient();
+                        if (client.IsAuthentificated && client.Properties != null)
                         {
                             foreach (String t in client.Properties)
                             {

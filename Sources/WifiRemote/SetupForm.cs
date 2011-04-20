@@ -59,6 +59,12 @@ namespace WifiRemote
                 originalPort = reader.GetValue(WifiRemote.PLUGIN_NAME, "port");
                 checkBoxDisableBonjour.Checked = reader.GetValueAsBool(WifiRemote.PLUGIN_NAME, "disableBonjour", false);
                 textBoxName.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "serviceName", WifiRemote.GetServiceName());
+
+                txtUsername.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", "");
+                txtPassword.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", "");
+                txtPasscode.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", "");
+
+                cbAuthMethod.SelectedIndex = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
         
                 resetPort();
             }
@@ -173,6 +179,10 @@ namespace WifiRemote
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "port", textBoxPort.Text);
                 xmlwriter.SetValueAsBool(WifiRemote.PLUGIN_NAME, "disableBonjour", checkBoxDisableBonjour.Checked);
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "serviceName", textBoxName.Text);
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "username", txtUsername.Text);
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "password", txtPassword.Text);
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "passcode", txtPasscode.Text);
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "auth", cbAuthMethod.SelectedIndex);
             }
         }
 
@@ -523,6 +533,30 @@ namespace WifiRemote
         }
 
         #endregion
+
+        private void cbAuthMethod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbAuthMethod.SelectedIndex)
+            {
+                case 0:
+                    groupUsernamePassword.Enabled = false;
+                    groupPasscode.Enabled = false;
+                    break;
+                case 1:
+                    groupUsernamePassword.Enabled = true;
+                    groupPasscode.Enabled = false;
+                    break;
+                case 2:
+                    groupUsernamePassword.Enabled = false;
+                    groupPasscode.Enabled = true;
+                    break;
+                case 3:
+                    groupUsernamePassword.Enabled = true;
+                    groupPasscode.Enabled = true;
+                    break;
+
+            }
+        }
 
     }
 }
