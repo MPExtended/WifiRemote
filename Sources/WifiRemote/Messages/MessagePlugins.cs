@@ -10,12 +10,11 @@ namespace WifiRemote
     /// <summary>
     /// Message containing all plugins installed on the htpc
     /// </summary>
-    class MessagePlugins
+    class MessagePlugins : IMessage
     {
-        string type = "plugins";
         public string Type
         {
-            get { return type; }
+            get { return "plugins"; }
         }
 
         ArrayList plugins;

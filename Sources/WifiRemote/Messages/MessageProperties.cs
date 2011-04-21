@@ -8,10 +8,8 @@ namespace WifiRemote
     /// <summary>
     /// Message to be sent to the client if he requests all properties
     /// </summary>
-    class MessageProperties
+    class MessageProperties : IMessage
     {
-        string type = "properties";
-  
         public MessageProperties()
         {
 
@@ -22,7 +20,7 @@ namespace WifiRemote
         /// </summary>
         public String Type
         {
-            get { return type; }
+            get { return "properties"; }
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ using MediaPortal.GUI.Library;
 
 namespace WifiRemote
 {
-    class MessageNowPlaying
+    class MessageNowPlaying : IMessage
     {
 
         /// <summary>
@@ -23,10 +23,9 @@ namespace WifiRemote
         /// </summary>
         private bool isFanartHandlerAvailable = false;
 
-        string type = "nowplaying";
         public String Type
         {
-            get { return type; }
+            get { return "nowplaying"; }
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace WifiRemote
     /// <summary>
     /// Message to be sent if a property has changed 
     /// </summary>
-    class MessagePropertyChanged : Property
+    class MessagePropertyChanged : Property, IMessage
     {
         string type = "propertychanged";
   

@@ -10,17 +10,11 @@ namespace WifiRemote
     /// <summary>
     /// Contains status information about the MediaPortal instance.
     /// </summary>
-    class MessageStatus
+    class MessageStatus : IMessage
     {
-
-        string type = "status";
-        /// <summary>
-        /// Type is a required attribute for all messages. 
-        /// The client decides by this attribute what message was sent.
-        /// </summary>
         public string Type
         {
-            get { return type; }
+            get { return "status"; }
         }
 
         private bool isPlaying;

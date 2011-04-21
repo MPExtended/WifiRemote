@@ -5,12 +5,12 @@ using System.Text;
 
 namespace WifiRemote
 {
-    class MessageOnscreenKeyboard
+    class MessageOnscreenKeyboard : IMessage
     {
-        string type = "onscreenkeyboard";
+        
         public string Type
         {
-            get { return type; }
+            get { return "onscreenkeyboard"; }
         }
 
         bool isActive;

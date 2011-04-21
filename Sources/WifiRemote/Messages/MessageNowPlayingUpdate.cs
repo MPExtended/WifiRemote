@@ -10,12 +10,12 @@ namespace WifiRemote
     /// Message that is sent to the client in regular updates as when Media is
     /// being played on the htpc
     /// </summary>
-    class MessageNowPlayingUpdate
+    class MessageNowPlayingUpdate : IMessage
     {
-        string type = "nowplayingupdate";
+        
         public String Type
         {
-            get { return type; }
+            get { return "nowplayingupdate"; }
         }
 
         /// <summary>

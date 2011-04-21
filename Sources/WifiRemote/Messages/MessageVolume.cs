@@ -9,13 +9,11 @@ namespace WifiRemote
     /// <summary>
     /// Message containing information about the current volume on the htpc
     /// </summary>
-    class MessageVolume
+    class MessageVolume : IMessage
     {
-        string type = "volume";
-
         public string Type
         {
-            get { return type; }
+            get { return "volume"; }
         }
 
         /// <summary>

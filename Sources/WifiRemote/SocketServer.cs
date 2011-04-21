@@ -70,8 +70,6 @@ namespace WifiRemote
             this.nowPlayingMessage = new MessageNowPlaying();
             this.nowPlayingMessageUpdate = new MessageNowPlayingUpdate();
             this.nowPlayingPropertiesUpdate = new MessagePropertyChanged();
-            this.welcomeMessage.Status = this.statusMessage;
-            this.welcomeMessage.Volume = this.volumeMessage;
 
             this.port = port;
 
@@ -126,20 +124,62 @@ namespace WifiRemote
             WifiRemote.LogMessage("SocketServer stopped.", WifiRemote.LogType.Info);
         }
 
+
+        /// <summary>
+        /// Send a message (object) to a specific client
+        /// </summary>
+        /// <param name="message">Message object to send</param>
+        /// <param name="client">A connected client socket</param>
+        public void SendMessageToClient(IMessage message, AsyncSocket client)
+        {
+            if (message == null) return;
+
+            string messageString = JsonConvert.SerializeObject(message);
+            SendMessageToClient(messageString, client);
+        }
+
+        /// <summary>
+        /// Send a message to a specific client
+        /// </summary>
+        /// <param name="message">The message</param>
+        /// <param name="client">A connected client socket</param>
+        public void SendMessageToClient(String message, AsyncSocket client)
+        {
+            if (message == null) return;
+
+            byte[] data = Encoding.UTF8.GetBytes(message + "\r\n");
+            if (client.GetRemoteClient().IsAuthenticated)
+            {
+                client.Write(data, -1, 0);
+            }
+        }
+
+
+        /// <summary>
+        /// Send a message (object) to all connected clients.
+        /// </summary>
+        /// <param name="message">Message object to send</param>
+        public void SendMessageToAllClients(IMessage message)
+        {
+            if (message == null) return;
+
+            foreach (AsyncSocket socket in connectedSockets)
+            {
+                SendMessageToClient(message, socket);
+            }
+        }
+
         /// <summary>
         /// Send a message to all connected clients.
         /// </summary>
         /// <param name="message"></param>
         public void SendMessageToAllClients(String message)
         {
-            byte[] data = Encoding.UTF8.GetBytes(message + "\r\n");
+            if (message == null) return;
 
             foreach (AsyncSocket socket in connectedSockets)
             {
-                if (socket.GetRemoteClient().IsAuthenticated)
-                {
-                    socket.Write(data, -1, 0);
-                }
+                SendMessageToClient(message, socket);
             }
         }
 
@@ -178,10 +218,7 @@ namespace WifiRemote
         public void SendImageToClient(AsyncSocket sender, String imagePath)
         {
             MessageImage imageMessage = new MessageImage(imagePath);
-            String image = JsonConvert.SerializeObject(imageMessage);
-
-            byte[] data = Encoding.UTF8.GetBytes(image + "\r\n");
-            sender.Write(data, -1, 0);
+            SendMessageToClient(imageMessage, sender);
         }
 
         /// <summary>
@@ -237,18 +274,14 @@ namespace WifiRemote
             }
 
             // Send welcome message to client
-            String welcome = JsonConvert.SerializeObject(welcomeMessage);
             WifiRemote.LogMessage("Client connected, sending welcome msg: " + welcomeMessage.ToString(), WifiRemote.LogType.Debug);
 
-            byte[] data = Encoding.UTF8.GetBytes(welcome + "\r\n");
-            newSocket.Write(data, -1, 0);
+            SendMessageToClient(welcomeMessage, newSocket);
 
-            // If we are playing a file send detailed information about it
-            if (g_Player.Playing)
+            // Send basic information package if no auth is needed
+            if (AllowedAuth == AuthMethod.None)
             {
-                String nowPlaying = JsonConvert.SerializeObject(nowPlayingMessage);
-                byte[] nowPlayingData = Encoding.UTF8.GetBytes(nowPlaying + "\r\n");
-                newSocket.Write(nowPlayingData, -1, 0);
+                sendOverviewInformationToClient(newSocket);
             }
         }
 
@@ -434,6 +467,7 @@ namespace WifiRemote
                     {
                         //user successfully authentificated
                         SendAuthenticationResponse(sender, true);
+                        sendOverviewInformationToClient(client.Socket);
                     }
                     else
                     {
@@ -522,10 +556,7 @@ namespace WifiRemote
             {
                 authResponse.ErrorMessage = "Login failed";
             }
-            String plugins = JsonConvert.SerializeObject(authResponse);
-
-            byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");
-            socket.Write(data, -1, 0);
+            SendMessageToClient(authResponse, socket);
         }
 
 
@@ -538,10 +569,7 @@ namespace WifiRemote
         public void SendWindowPluginsList(AsyncSocket client, bool sendIcons)
         {
             MessagePlugins pluginsMessage = new MessagePlugins(sendIcons);
-            String plugins = JsonConvert.SerializeObject(pluginsMessage);
-
-            byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");
-            client.Write(data, -1, 0);
+            SendMessageToClient(pluginsMessage, client);
         }
 
         /// <summary>
@@ -565,10 +593,7 @@ namespace WifiRemote
             }
 
             propertiesMessage.Tags = properties;
-            String plugins = JsonConvert.SerializeObject(propertiesMessage);
-
-            byte[] data = Encoding.UTF8.GetBytes(plugins + "\r\n");
-            client.Socket.Write(data, -1, 0);
+            SendMessageToClient(propertiesMessage, client.Socket);
         }
 
         /// <summary>
@@ -619,6 +644,7 @@ namespace WifiRemote
                         RemoteClient client = socket.GetRemoteClient();
                         if (client.IsAuthenticated && client.Properties != null)
                         {
+                            MessagePropertyChanged changed = null;
                             foreach (String t in client.Properties)
                             {
                                 if (t.Equals(tag))
@@ -627,12 +653,10 @@ namespace WifiRemote
                                     {
 
                                         //init variable only when at least on client has it on the request list
-                                        MessagePropertyChanged changed = new MessagePropertyChanged(tag, tagValue);
+                                        changed = new MessagePropertyChanged(tag, tagValue);
                                         WifiRemote.LogMessage("Changed property: " + tag + "|" + tagValue, WifiRemote.LogType.Debug);
-                                        String plugins = JsonConvert.SerializeObject(changed);
-                                        messageData = Encoding.UTF8.GetBytes(plugins + "\r\n");
                                     }
-                                    client.Socket.Write(messageData, -1, 0);
+                                    SendMessageToClient(changed, client.Socket);
                                 }
                             }
                         }
@@ -642,6 +666,22 @@ namespace WifiRemote
             catch (Exception ex)
             {
                 WifiRemote.LogMessage(ex.Message, WifiRemote.LogType.Error);
+            }
+        }
+
+        /// <summary>
+        /// Send current status, volume and nowplaying info to a client
+        /// </summary>
+        /// <param name="client"></param>
+        private void sendOverviewInformationToClient(AsyncSocket client) 
+        {
+            SendMessageToClient(this.statusMessage, client);
+            SendMessageToClient(this.volumeMessage, client);
+
+            // If we are playing a file send detailed information about it
+            if (g_Player.Playing)
+            {
+                SendMessageToClient(this.nowPlayingMessage, client);
             }
         }
     }

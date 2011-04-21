@@ -9,14 +9,13 @@ using MediaPortal.Configuration;
 
 namespace WifiRemote
 {
-    class MessageImage
+    class MessageImage : IMessage
     {
         string thumbFolder;
-        string type = "image";
 
         public string Type
         {
-            get { return type; }
+            get { return "image"; }
         }
 
         public String ImagePath { get; set; }

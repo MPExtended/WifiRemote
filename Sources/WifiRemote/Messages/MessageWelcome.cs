@@ -7,12 +7,10 @@ using System.Linq;
 
 namespace WifiRemote
 {
-    class MessageWelcome
+    class MessageWelcome : IMessage
     {
         string type = "welcome";
-        int server_version = 2;
-        MessageStatus status;
-        MessageVolume volume;
+        int server_version = 3;
 
         public string Type
         {
@@ -23,19 +21,6 @@ namespace WifiRemote
         { 
             get { return server_version; }
         }
-
-        public MessageStatus Status
-        {
-            get { return status; }
-            set { status = value; }
-        }
-
-        public MessageVolume Volume
-        {
-            get { return volume; }
-            set { volume = value; }
-        }
-
 
         /// <summary>
         /// Contructor.

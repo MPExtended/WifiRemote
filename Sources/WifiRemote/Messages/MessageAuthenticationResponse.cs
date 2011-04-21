@@ -5,10 +5,8 @@ using System.Text;
 
 namespace WifiRemote.Messages
 {
-    public class MessageAuthenticationResponse
+    public class MessageAuthenticationResponse : IMessage
     {
-        string type = "authenticationresponse";
-  
         public MessageAuthenticationResponse(bool success)
         {
             this.Success = success;
@@ -16,7 +14,7 @@ namespace WifiRemote.Messages
         
         public String Type
         {
-            get { return type; }
+            get { return "authenticationresponse"; }
         }
 
         /// <summary>
