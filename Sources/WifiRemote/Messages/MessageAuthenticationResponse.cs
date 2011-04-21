@@ -7,7 +7,7 @@ namespace WifiRemote.Messages
 {
     public class MessageAuthenticationResponse
     {
-        string type = "authentificationresponse";
+        string type = "authenticationresponse";
   
         public MessageAuthenticationResponse(bool success)
         {
