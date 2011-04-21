@@ -5,11 +5,11 @@ using System.Text;
 
 namespace WifiRemote.Messages
 {
-    public class MessageAuthentificationResponse
+    public class MessageAuthenticationResponse
     {
         string type = "authentificationresponse";
   
-        public MessageAuthentificationResponse(bool success)
+        public MessageAuthenticationResponse(bool success)
         {
             this.Success = success;
         }

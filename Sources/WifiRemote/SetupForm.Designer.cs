@@ -45,7 +45,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabPagePlugins = new System.Windows.Forms.TabPage();
             this.dataGridViewPluginList = new System.Windows.Forms.DataGridView();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPageAuthentication = new System.Windows.Forms.TabPage();
             this.label5 = new System.Windows.Forms.Label();
             this.cbAuthMethod = new System.Windows.Forms.ComboBox();
             this.groupPasscode = new System.Windows.Forms.GroupBox();
@@ -58,12 +58,13 @@
             this.lblUser = new System.Windows.Forms.Label();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.labelAuthHint = new System.Windows.Forms.Label();
             this.tabControlNavigation.SuspendLayout();
             this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPagePlugins.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).BeginInit();
-            this.tabPage1.SuspendLayout();
+            this.tabPageAuthentication.SuspendLayout();
             this.groupPasscode.SuspendLayout();
             this.groupUsernamePassword.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).BeginInit();
@@ -134,8 +135,8 @@
             // tabControlNavigation
             // 
             this.tabControlNavigation.Controls.Add(this.tabPageNetwork);
+            this.tabControlNavigation.Controls.Add(this.tabPageAuthentication);
             this.tabControlNavigation.Controls.Add(this.tabPagePlugins);
-            this.tabControlNavigation.Controls.Add(this.tabPage1);
             this.tabControlNavigation.Location = new System.Drawing.Point(1, 1);
             this.tabControlNavigation.Name = "tabControlNavigation";
             this.tabControlNavigation.SelectedIndex = 0;
@@ -225,35 +226,36 @@
             this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 329);
             this.dataGridViewPluginList.TabIndex = 0;
             // 
-            // tabPage1
+            // tabPageAuthentication
             // 
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.cbAuthMethod);
-            this.tabPage1.Controls.Add(this.groupPasscode);
-            this.tabPage1.Controls.Add(this.groupUsernamePassword);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(255, 335);
-            this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "Authentification";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPageAuthentication.Controls.Add(this.labelAuthHint);
+            this.tabPageAuthentication.Controls.Add(this.label5);
+            this.tabPageAuthentication.Controls.Add(this.cbAuthMethod);
+            this.tabPageAuthentication.Controls.Add(this.groupPasscode);
+            this.tabPageAuthentication.Controls.Add(this.groupUsernamePassword);
+            this.tabPageAuthentication.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAuthentication.Name = "tabPageAuthentication";
+            this.tabPageAuthentication.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAuthentication.Size = new System.Drawing.Size(255, 335);
+            this.tabPageAuthentication.TabIndex = 2;
+            this.tabPageAuthentication.Text = "Authentication";
+            this.tabPageAuthentication.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(7, 21);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(119, 13);
+            this.label5.Size = new System.Drawing.Size(114, 13);
             this.label5.TabIndex = 2;
-            this.label5.Text = "Authentification Method";
+            this.label5.Text = "Authentication Method";
             // 
             // cbAuthMethod
             // 
             this.cbAuthMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAuthMethod.FormattingEnabled = true;
             this.cbAuthMethod.Items.AddRange(new object[] {
-            "No Authentification",
+            "No Authentication",
             "Username/Password",
             "Passcode",
             "Both"});
@@ -335,6 +337,17 @@
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Username";
             // 
+            // labelAuthHint
+            // 
+            this.labelAuthHint.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelAuthHint.Location = new System.Drawing.Point(7, 247);
+            this.labelAuthHint.Name = "labelAuthHint";
+            this.labelAuthHint.Size = new System.Drawing.Size(240, 83);
+            this.labelAuthHint.TabIndex = 9;
+            this.labelAuthHint.Text = "Please select what information a client has to provide to connect to your MediaPo" +
+                "rtal.\r\n\r\nOnly authenticated clients are allowed to remote control via WifiRemote" +
+                ".";
+            // 
             // SetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -356,8 +369,8 @@
             this.groupBox1.PerformLayout();
             this.tabPagePlugins.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).EndInit();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabPageAuthentication.ResumeLayout(false);
+            this.tabPageAuthentication.PerformLayout();
             this.groupPasscode.ResumeLayout(false);
             this.groupPasscode.PerformLayout();
             this.groupUsernamePassword.ResumeLayout(false);
@@ -387,7 +400,7 @@
         private System.Windows.Forms.DataGridView dataGridViewPluginList;
         private System.Windows.Forms.BindingSource setupFormBindingSource;
         private System.Windows.Forms.BindingSource setupFormBindingSource1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPageAuthentication;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox cbAuthMethod;
         private System.Windows.Forms.GroupBox groupPasscode;
@@ -398,5 +411,6 @@
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.Label lblUser;
+        private System.Windows.Forms.Label labelAuthHint;
     }
 }

@@ -93,7 +93,7 @@
     <Compile Include="AsyncSocketExtension.cs" />
     <Compile Include="AuthMethod.cs" />
     <Compile Include="Communication.cs" />
-    <Compile Include="Messages\MessageAuthentificationResponse.cs" />
+    <Compile Include="Messages\MessageAuthenticationResponse.cs" />
     <Compile Include="Messages\MessageNowPlayingUpdate.cs" />
     <Compile Include="Messages\MessageOnscreenKeyboard.cs" />
     <Compile Include="Messages\MessagePlugins.cs" />

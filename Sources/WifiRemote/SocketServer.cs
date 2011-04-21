@@ -136,7 +136,7 @@ namespace WifiRemote
 
             foreach (AsyncSocket socket in connectedSockets)
             {
-                if (socket.GetRemoteClient().IsAuthentificated)
+                if (socket.GetRemoteClient().IsAuthenticated)
                 {
                     socket.Write(data, -1, 0);
                 }
@@ -305,7 +305,7 @@ namespace WifiRemote
                 string type = (string)message["Type"];
                 RemoteClient client = sender.GetRemoteClient();
 
-                if (client.IsAuthentificated || AllowedAuth == AuthMethod.None)
+                if (client.IsAuthenticated || AllowedAuth == AuthMethod.None)
                 {// The client is already authentificated or we don't need authentification
                     // Send a command
                     if (type == "command")
@@ -486,10 +486,10 @@ namespace WifiRemote
                     String pass = (string)message["Password"];
                     if (user.Equals(this.UserName) && pass.Equals(this.Password))
                     {
-                        client.AuthentificatedBy = auth;
+                        client.AuthenticatedBy = auth;
                         client.User = user;
                         client.Password = pass;
-                        client.IsAuthentificated = true;
+                        client.IsAuthenticated = true;
                         WifiRemote.LogMessage("User successfully authentificated by username and password", WifiRemote.LogType.Debug);
                         return true;
                     }
@@ -502,9 +502,9 @@ namespace WifiRemote
                     String pass = (string)message["PassCode"];
                     if (pass.Equals(this.PassCode))
                     {
-                        client.AuthentificatedBy = auth;
+                        client.AuthenticatedBy = auth;
                         client.PassCode = pass;
-                        client.IsAuthentificated = true;
+                        client.IsAuthenticated = true;
                         WifiRemote.LogMessage("User successfully authentificated by passcod", WifiRemote.LogType.Debug);
                         return true;
                     }
@@ -517,7 +517,7 @@ namespace WifiRemote
 
         private void SendAuthentificationResponse(AsyncSocket socket, bool _success)
         {
-            MessageAuthentificationResponse authResponse = new MessageAuthentificationResponse(_success);
+            MessageAuthenticationResponse authResponse = new MessageAuthenticationResponse(_success);
             if (!_success)
             {
                 authResponse.ErrorMessage = "Login failed";
@@ -617,7 +617,7 @@ namespace WifiRemote
                     foreach (AsyncSocket socket in connectedSockets)
                     {
                         RemoteClient client = socket.GetRemoteClient();
-                        if (client.IsAuthentificated && client.Properties != null)
+                        if (client.IsAuthenticated && client.Properties != null)
                         {
                             foreach (String t in client.Properties)
                             {

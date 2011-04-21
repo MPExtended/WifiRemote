@@ -534,6 +534,8 @@ namespace WifiRemote
 
         #endregion
 
+        #region Authentication
+
         private void cbAuthMethod_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (cbAuthMethod.SelectedIndex)
@@ -557,6 +559,9 @@ namespace WifiRemote
 
             }
         }
+
+        #endregion
+
 
     }
 }

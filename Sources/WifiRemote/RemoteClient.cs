@@ -37,12 +37,12 @@ namespace WifiRemote
         /// <summary>
         /// By which method did this client login
         /// </summary>
-        public AuthMethod AuthentificatedBy { get; set; }
+        public AuthMethod AuthenticatedBy { get; set; }
 
         /// <summary>
         /// Is the client already authentificated
         /// </summary>
-        public bool IsAuthentificated { get; set; }
+        public bool IsAuthenticated { get; set; }
 
         public RemoteClient()
         {
