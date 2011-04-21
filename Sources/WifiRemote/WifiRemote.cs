@@ -228,8 +228,11 @@ namespace WifiRemote
                 disableBonjour = reader.GetValueAsBool(PLUGIN_NAME, "disableBonjour", false);
                 serviceName = reader.GetValueAsString(PLUGIN_NAME, "serviceName", "");
                 userName = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", "");
+                userName = WifiRemote.DecryptString(userName);
                 password = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", "");
+                password = WifiRemote.DecryptString(password);
                 passcode = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", "");
+                passcode = WifiRemote.DecryptString(passcode);
 
                 auth = (AuthMethod)reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
         
@@ -762,6 +765,52 @@ namespace WifiRemote
                 Thread.Sleep(UPDATE_INTERVAL);
             }
             LogMessage("Stop now-playing update thread", LogType.Debug);
+        }
+
+        /// <summary>
+        /// Decrypt an encrypted setting string
+        /// </summary>
+        /// <param name="encrypted">The string to decrypt</param>
+        /// <returns>The decrypted string or an empty string if something went wrong</returns>
+        internal static string DecryptString(string encrypted)
+        {
+            string decrypted = String.Empty;
+
+            EncryptDecrypt Crypto = new EncryptDecrypt();
+            try
+            {
+                decrypted = Crypto.Decrypt(encrypted);
+            }
+            catch (Exception)
+            {
+                WifiRemote.LogMessage("Could not decrypt config string!", LogType.Error);
+                decrypted = null;
+            }
+
+            return decrypted;
+        }
+
+        /// <summary>
+        /// Encrypt a setting string
+        /// </summary>
+        /// <param name="decrypted">An unencrypted string</param>
+        /// <returns>The string encrypted</returns>
+        internal static string EncryptString(string decrypted)
+        {
+            EncryptDecrypt Crypto = new EncryptDecrypt();
+            string encrypted = String.Empty;
+
+            try
+            {
+                encrypted = Crypto.Encrypt(decrypted);
+            }
+            catch (Exception)
+            {
+                WifiRemote.LogMessage("Could not encrypt setting string!", LogType.Error);
+                encrypted = null;
+            }
+
+            return encrypted;
         }
     }
 }

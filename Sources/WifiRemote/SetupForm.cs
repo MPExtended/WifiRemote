@@ -60,9 +60,9 @@ namespace WifiRemote
                 checkBoxDisableBonjour.Checked = reader.GetValueAsBool(WifiRemote.PLUGIN_NAME, "disableBonjour", false);
                 textBoxName.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "serviceName", WifiRemote.GetServiceName());
 
-                txtUsername.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", "");
-                txtPassword.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", "");
-                txtPasscode.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", "");
+                txtUsername.Text = WifiRemote.DecryptString(reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", ""));
+                txtPassword.Text = WifiRemote.DecryptString(reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", ""));
+                txtPasscode.Text = WifiRemote.DecryptString(reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", ""));
 
                 cbAuthMethod.SelectedIndex = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
         
@@ -179,9 +179,9 @@ namespace WifiRemote
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "port", textBoxPort.Text);
                 xmlwriter.SetValueAsBool(WifiRemote.PLUGIN_NAME, "disableBonjour", checkBoxDisableBonjour.Checked);
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "serviceName", textBoxName.Text);
-                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "username", txtUsername.Text);
-                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "password", txtPassword.Text);
-                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "passcode", txtPasscode.Text);
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "username", WifiRemote.EncryptString(txtUsername.Text));
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "password", WifiRemote.EncryptString(txtPassword.Text));
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "passcode", WifiRemote.EncryptString(txtPasscode.Text));
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "auth", cbAuthMethod.SelectedIndex);
             }
         }
