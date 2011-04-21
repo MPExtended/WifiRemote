@@ -429,17 +429,17 @@ namespace WifiRemote
                 }
                 else
                 {// user is not yet authentificated
-                    if (type == "authentificate" &&
-                        CheckAuthentificationRequest(client, message))
+                    if (type == "authenticate" &&
+                        CheckAuthenticationRequest(client, message))
                     {
                         //user successfully authentificated
-                        SendAuthentificationResponse(sender, true);
+                        SendAuthenticationResponse(sender, true);
                     }
                     else
                     {
                         //client sends a message other then authentificate when not yet
                         //authentificated or authentificate failed
-                        SendAuthentificationResponse(sender, false);
+                        SendAuthenticationResponse(sender, false);
                     }
                 }
 
@@ -462,7 +462,7 @@ namespace WifiRemote
             sender.Read(AsyncSocket.CRLFData, -1, 0);
         }
 
-        private bool CheckAuthentificationRequest(RemoteClient client, JObject message)
+        private bool CheckAuthenticationRequest(RemoteClient client, JObject message)
         {
             AuthMethod auth = AuthMethod.UserPassword;//default
             if (message["AuthMethod"] != null)
@@ -515,7 +515,7 @@ namespace WifiRemote
             return false;
         }
 
-        private void SendAuthentificationResponse(AsyncSocket socket, bool _success)
+        private void SendAuthenticationResponse(AsyncSocket socket, bool _success)
         {
             MessageAuthenticationResponse authResponse = new MessageAuthenticationResponse(_success);
             if (!_success)
