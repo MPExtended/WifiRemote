@@ -130,12 +130,28 @@ namespace WifiRemote
         /// </summary>
         /// <param name="message">Message object to send</param>
         /// <param name="client">A connected client socket</param>
+        /// <param name="ignoreAuth">False if messages should only be sent to authed clients</param>
+        public void SendMessageToClient(IMessage message, AsyncSocket client, bool ignoreAuth)
+        {
+            if (message == null)
+            {
+                WifiRemote.LogMessage("SendMessageToClient failed: IMessage object is null", WifiRemote.LogType.Debug);
+                return;
+            }
+
+            WifiRemote.LogMessage("Sending message object to client: " + message.ToString(), WifiRemote.LogType.Debug);
+            string messageString = JsonConvert.SerializeObject(message);
+            SendMessageToClient(messageString, client, ignoreAuth);
+        }
+
+        /// <summary>
+        /// Send a message (object) to a specific authed client
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="client"></param>
         public void SendMessageToClient(IMessage message, AsyncSocket client)
         {
-            if (message == null) return;
-
-            string messageString = JsonConvert.SerializeObject(message);
-            SendMessageToClient(messageString, client);
+            SendMessageToClient(message, client, false);
         }
 
         /// <summary>
@@ -143,15 +159,32 @@ namespace WifiRemote
         /// </summary>
         /// <param name="message">The message</param>
         /// <param name="client">A connected client socket</param>
-        public void SendMessageToClient(String message, AsyncSocket client)
+        /// <param name="ignoreAuth">False if messages should only be sent to authed clients</param>
+        public void SendMessageToClient(String message, AsyncSocket client, bool ignoreAuth)
         {
-            if (message == null) return;
+            if (message == null)
+            {
+                WifiRemote.LogMessage("SendMessageToClient failed: Message string is null", WifiRemote.LogType.Debug);
+                return;
+            }
+
+            WifiRemote.LogMessage("Sending string message to client:" + message, WifiRemote.LogType.Debug);
 
             byte[] data = Encoding.UTF8.GetBytes(message + "\r\n");
-            if (client.GetRemoteClient().IsAuthenticated)
+            if (client.GetRemoteClient().IsAuthenticated || ignoreAuth)
             {
                 client.Write(data, -1, 0);
             }
+        }
+
+        /// <summary>
+        /// Send a message to a specific authenticated client
+        /// </summary>
+        /// <param name="message">The message</param>
+        /// <param name="client">A connected and authenticated client</param>
+        public void SendMessageToClient(String message, AsyncSocket client)
+        {
+            SendMessageToClient(message, client, false);
         }
 
 
@@ -159,28 +192,48 @@ namespace WifiRemote
         /// Send a message (object) to all connected clients.
         /// </summary>
         /// <param name="message">Message object to send</param>
-        public void SendMessageToAllClients(IMessage message)
+        /// <param name="ignoreAuth">False if the message should only be sent to authed clients</param>
+        public void SendMessageToAllClients(IMessage message, bool ignoreAuth)
         {
             if (message == null) return;
 
             foreach (AsyncSocket socket in connectedSockets)
             {
-                SendMessageToClient(message, socket);
+                SendMessageToClient(message, socket, ignoreAuth);
             }
+        }
+
+        /// <summary>
+        /// Send a message (object) to all connected clients.
+        /// </summary>
+        /// <param name="message">Message object to send</param>
+        public void SendMessageToAllClients(IMessage message)
+        {
+            SendMessageToAllClients(message, false);
         }
 
         /// <summary>
         /// Send a message to all connected clients.
         /// </summary>
-        /// <param name="message"></param>
-        public void SendMessageToAllClients(String message)
+        /// <param name="message">The message</param>
+        /// <param name="ignoreAuth">False if the message should only be sent to authed clients</param>
+        public void SendMessageToAllClients(String message, bool ignoreAuth)
         {
             if (message == null) return;
 
             foreach (AsyncSocket socket in connectedSockets)
             {
-                SendMessageToClient(message, socket);
+                SendMessageToClient(message, socket, ignoreAuth);
             }
+        }
+
+        /// <summary>
+        /// Send a message to all connected and authenticated clients.
+        /// </summary>
+        /// <param name="message">The message</param>
+        public void SendMessageToAllClients(String message)
+        {
+            SendMessageToAllClients(message, false);
         }
 
         /// <summary>
@@ -267,6 +320,7 @@ namespace WifiRemote
             newSocket.DidClose += new AsyncSocket.SocketDidClose(newSocket_DidClose);
 
             newSocket.SetRemoteClient(new RemoteClient());
+
             // Store worker socket in client list
             lock (connectedSockets)
             {
@@ -274,13 +328,13 @@ namespace WifiRemote
             }
 
             // Send welcome message to client
-            WifiRemote.LogMessage("Client connected, sending welcome msg: " + welcomeMessage.ToString(), WifiRemote.LogType.Debug);
-
-            SendMessageToClient(welcomeMessage, newSocket);
-
+            WifiRemote.LogMessage("Client connected, sending welcome msg.", WifiRemote.LogType.Debug);
+            SendMessageToClient(welcomeMessage, newSocket, true);
+            
             // Send basic information package if no auth is needed
             if (AllowedAuth == AuthMethod.None)
             {
+                newSocket.GetRemoteClient().IsAuthenticated = true;
                 sendOverviewInformationToClient(newSocket);
             }
         }
@@ -446,7 +500,6 @@ namespace WifiRemote
                             String propString = (string)v.Value;
                             client.Properties.Add(propString);
                         }
-
                         SendPropertiesToClient(sender);
                     }
                     // request image
@@ -467,7 +520,7 @@ namespace WifiRemote
                     {
                         //user successfully authentificated
                         SendAuthenticationResponse(sender, true);
-                        sendOverviewInformationToClient(client.Socket);
+                        sendOverviewInformationToClient(sender);
                     }
                     else
                     {
@@ -556,7 +609,7 @@ namespace WifiRemote
             {
                 authResponse.ErrorMessage = "Login failed";
             }
-            SendMessageToClient(authResponse, socket);
+            SendMessageToClient(authResponse, socket, true);
         }
 
 
@@ -593,7 +646,7 @@ namespace WifiRemote
             }
 
             propertiesMessage.Tags = properties;
-            SendMessageToClient(propertiesMessage, client.Socket);
+            SendMessageToClient(propertiesMessage, socket);
         }
 
         /// <summary>
@@ -656,7 +709,7 @@ namespace WifiRemote
                                         changed = new MessagePropertyChanged(tag, tagValue);
                                         WifiRemote.LogMessage("Changed property: " + tag + "|" + tagValue, WifiRemote.LogType.Debug);
                                     }
-                                    SendMessageToClient(changed, client.Socket);
+                                    SendMessageToClient(changed, socket);
                                 }
                             }
                         }
