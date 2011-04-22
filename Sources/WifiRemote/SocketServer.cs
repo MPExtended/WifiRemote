@@ -515,18 +515,19 @@ namespace WifiRemote
                     }
                 }
                 else
-                {// user is not yet authentificated
+                {
+                    // user is not yet authenticated
                     if (type == "authenticate" &&
                         CheckAuthenticationRequest(client, message))
                     {
-                        //user successfully authentificated
+                        //user successfully authenticated
                         SendAuthenticationResponse(sender, true);
                         sendOverviewInformationToClient(sender);
                     }
                     else
                     {
-                        //client sends a message other then authentificate when not yet
-                        //authentificated or authentificate failed
+                        //client sends a message other then authenticate when not yet
+                        //authenticated or authenticate failed
                         SendAuthenticationResponse(sender, false);
                     }
                 }

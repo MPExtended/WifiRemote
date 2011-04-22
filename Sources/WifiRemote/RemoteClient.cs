@@ -44,9 +44,14 @@ namespace WifiRemote
         /// </summary>
         public bool IsAuthenticated { get; set; }
 
+        /// <summary>
+        /// Name of the client
+        /// </summary>
+        public String ClientName { get; set; }
+
         public RemoteClient()
         {
-
+            ClientName = "Unknown";
         }       
     }
 }
