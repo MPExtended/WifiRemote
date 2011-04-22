@@ -334,7 +334,8 @@ namespace WifiRemote
             // Send basic information package if no auth is needed
             if (AllowedAuth == AuthMethod.None)
             {
-                newSocket.GetRemoteClient().IsAuthenticated = true;
+                SendAuthenticationResponse(newSocket, true);
+                newSocket.GetRemoteClient().IsAuthenticated = true;              
                 sendOverviewInformationToClient(newSocket);
             }
         }
