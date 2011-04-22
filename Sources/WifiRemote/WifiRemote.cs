@@ -151,7 +151,7 @@ namespace WifiRemote
 
         public string Author()
         {
-            return "Shukuyen <shukuyen@stalk-me.net>";
+            return "Shukuyen, DieBagger";
         }
 
         public void ShowPlugin()
