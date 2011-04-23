@@ -49,9 +49,27 @@ namespace WifiRemote
         /// </summary>
         public String ClientName { get; set; }
 
+        /// <summary>
+        /// Description of the client
+        /// </summary>
+        public String ClientDescription { get; set; }
+
+        /// <summary>
+        /// Name of the client application (CouchPotato, aMPdroid, ...)
+        /// </summary>
+        public String ApplicationName { get; set; }
+
+        /// <summary>
+        /// Version of the client application
+        /// </summary>
+        public String ApplicationVersion { get; set; }
+
         public RemoteClient()
         {
             ClientName = "Unknown";
-        }       
+            ClientDescription = String.Empty;
+            ApplicationName = String.Empty;
+            ApplicationVersion = String.Empty;
+        }
     }
 }

@@ -10,16 +10,33 @@ namespace WifiRemote
     class MessageWelcome : IMessage
     {
         string type = "welcome";
-        int server_version = 3;
+        int server_version = 4;
+        AuthMethod authMethod = AuthMethod.UserPassword;
 
+        /// <summary>
+        /// Type of this method
+        /// </summary>
         public string Type
         {
             get { return type; }
         }
 
+        /// <summary>
+        /// API version of this WifiRemote instance. 
+        /// Should be increased on breaking changes.
+        /// </summary>
         public int Server_Version 
         { 
             get { return server_version; }
+        }
+
+        /// <summary>
+        /// Authentication method required of the client.
+        /// </summary>
+        public AuthMethod AuthMethod
+        {
+            get { return authMethod; }
+            set { authMethod = value; }
         }
 
         /// <summary>

@@ -26,6 +26,7 @@ namespace WifiRemote
         private AsyncSocket listenSocket;
         private Communication communication;
         private List<AsyncSocket> connectedSockets;
+        private AuthMethod allowedAuth;
 
         private MessageWelcome welcomeMessage;
         private MessageStatus statusMessage;
@@ -55,7 +56,18 @@ namespace WifiRemote
         /// <summary>
         /// Passcode for client authentification
         /// </summary>
-        internal AuthMethod AllowedAuth { get; set; }
+        internal AuthMethod AllowedAuth 
+        {
+            get { 
+                return allowedAuth; 
+            }
+
+            set
+            {
+                allowedAuth = value;
+                this.welcomeMessage.AuthMethod = allowedAuth;
+            }
+        }
 
         /// <summary>
         /// Constructor.
@@ -65,6 +77,7 @@ namespace WifiRemote
         {
             this.communication = new Communication();
             this.welcomeMessage = new MessageWelcome();
+            welcomeMessage.AuthMethod = AllowedAuth;
             this.statusMessage = new MessageStatus();
             this.volumeMessage = new MessageVolume();
             this.nowPlayingMessage = new MessageNowPlaying();
@@ -517,18 +530,46 @@ namespace WifiRemote
                 else
                 {
                     // user is not yet authenticated
-                    if (type == "authenticate" &&
-                        CheckAuthenticationRequest(client, message))
+                    if (type == "identify")
                     {
-                        //user successfully authenticated
-                        SendAuthenticationResponse(sender, true);
-                        sendOverviewInformationToClient(sender);
-                    }
-                    else
-                    {
-                        //client sends a message other then authenticate when not yet
-                        //authenticated or authenticate failed
-                        SendAuthenticationResponse(sender, false);
+                        // Save client name if supplied
+                        if (message["Name"] != null)
+                        {
+                            client.ClientName = (string)message["Name"];
+                        }
+
+                        // Save client description if supplied
+                        if (message["Description"] != null)
+                        {
+                            client.ClientDescription = (string)message["Description"];
+                        }
+
+                        // Save application name if supplied
+                        if (message["Application"] != null)
+                        {
+                            client.ApplicationName = (string)message["Application"];
+                        }
+
+                        // Save application version if supplied
+                        if (message["Version"] != null)
+                        {
+                            client.ApplicationVersion = (string)message["Version"];
+                        }
+
+                        // Authentication
+                        if (AllowedAuth == AuthMethod.None || (message["Authenticate"] != null && 
+                            CheckAuthenticationRequest(client, (JObject)message["Authenticate"])))
+                        {
+                            // User successfully authenticated
+                            SendAuthenticationResponse(sender, true);
+                            sendOverviewInformationToClient(sender);
+                        }
+                        else
+                        {
+                            // Client sends a message other then authenticate when not yet
+                            // authenticated or authenticate failed
+                            SendAuthenticationResponse(sender, false);
+                        }
                     }
                 }
 
@@ -553,20 +594,36 @@ namespace WifiRemote
 
         private bool CheckAuthenticationRequest(RemoteClient client, JObject message)
         {
-            AuthMethod auth = AuthMethod.UserPassword;//default
-            if (message["AuthMethod"] != null)
+            AuthMethod auth = AllowedAuth;
+
+            // For AuthMethod.Both we have to check which method was choosen.
+            if (AllowedAuth == AuthMethod.Both)
             {
-                String authString = (string)message["AuthMethod"];
-                if (authString.Equals("userpass"))
+                if (message["AuthMethod"] == null) 
+                {            
+                    WifiRemote.LogMessage("User " + client.ClientName + " authentification failed, no authMethod submitted", WifiRemote.LogType.Info);
+                    return false;
+                } 
+                else
                 {
-                    auth = AuthMethod.UserPassword;
-                }
-                else if (authString.Equals("passcode"))
-                {
-                    auth = AuthMethod.Passcode;
+                    String authString = (string)message["AuthMethod"];
+                    if (authString.Equals("userpass"))
+                    {
+                        auth = AuthMethod.UserPassword;
+                    }
+                    else if (authString.Equals("passcode"))
+                    {
+                        auth = AuthMethod.Passcode;
+                    }
+                    else
+                    {
+                        WifiRemote.LogMessage("User " + client.ClientName + " authentification failed, invalid authMethod '"+ authString +"'", WifiRemote.LogType.Info);
+                        return false;
+                    }
                 }
             }
 
+            // Check user credentials
             if (auth == AuthMethod.UserPassword)
             {
                 if (message["User"] != null && message["Password"] != null)
@@ -579,7 +636,7 @@ namespace WifiRemote
                         client.User = user;
                         client.Password = pass;
                         client.IsAuthenticated = true;
-                        WifiRemote.LogMessage("User successfully authentificated by username and password", WifiRemote.LogType.Debug);
+                        WifiRemote.LogMessage("User "+ client.ClientName +" successfully authentificated by username and password", WifiRemote.LogType.Debug);
                         return true;
                     }
                 }
@@ -594,13 +651,18 @@ namespace WifiRemote
                         client.AuthenticatedBy = auth;
                         client.PassCode = pass;
                         client.IsAuthenticated = true;
-                        WifiRemote.LogMessage("User successfully authentificated by passcod", WifiRemote.LogType.Debug);
+                        WifiRemote.LogMessage("User " + client.ClientName + " successfully authentificated by passcode", WifiRemote.LogType.Debug);
                         return true;
                     }
                 }
             }
-            WifiRemote.LogMessage("User authentification failed", WifiRemote.LogType.Debug);
-                        
+            else if (auth == AuthMethod.None)
+            {
+                // Every auth request is valid for AuthMethod.None
+                return true;
+            }
+
+            WifiRemote.LogMessage("User " + client.ClientName + " authentification failed", WifiRemote.LogType.Info);
             return false;
         }
 

@@ -43,9 +43,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.tabPagePlugins = new System.Windows.Forms.TabPage();
-            this.dataGridViewPluginList = new System.Windows.Forms.DataGridView();
             this.tabPageAuthentication = new System.Windows.Forms.TabPage();
+            this.labelAuthHint = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.cbAuthMethod = new System.Windows.Forms.ComboBox();
             this.groupPasscode = new System.Windows.Forms.GroupBox();
@@ -56,17 +55,18 @@
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
+            this.tabPagePlugins = new System.Windows.Forms.TabPage();
+            this.dataGridViewPluginList = new System.Windows.Forms.DataGridView();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.labelAuthHint = new System.Windows.Forms.Label();
             this.tabControlNavigation.SuspendLayout();
             this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.tabPagePlugins.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).BeginInit();
             this.tabPageAuthentication.SuspendLayout();
             this.groupPasscode.SuspendLayout();
             this.groupUsernamePassword.SuspendLayout();
+            this.tabPagePlugins.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).BeginInit();
             this.SuspendLayout();
@@ -198,34 +198,6 @@
             this.label3.TabIndex = 8;
             this.label3.Text = resources.GetString("label3.Text");
             // 
-            // tabPagePlugins
-            // 
-            this.tabPagePlugins.Controls.Add(this.dataGridViewPluginList);
-            this.tabPagePlugins.Location = new System.Drawing.Point(4, 22);
-            this.tabPagePlugins.Name = "tabPagePlugins";
-            this.tabPagePlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePlugins.Size = new System.Drawing.Size(255, 335);
-            this.tabPagePlugins.TabIndex = 1;
-            this.tabPagePlugins.Text = "Plugins";
-            this.tabPagePlugins.UseVisualStyleBackColor = true;
-            // 
-            // dataGridViewPluginList
-            // 
-            this.dataGridViewPluginList.AllowUserToAddRows = false;
-            this.dataGridViewPluginList.AllowUserToDeleteRows = false;
-            this.dataGridViewPluginList.AllowUserToOrderColumns = true;
-            this.dataGridViewPluginList.AllowUserToResizeColumns = false;
-            this.dataGridViewPluginList.AllowUserToResizeRows = false;
-            this.dataGridViewPluginList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewPluginList.ColumnHeadersVisible = false;
-            this.dataGridViewPluginList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewPluginList.Location = new System.Drawing.Point(3, 3);
-            this.dataGridViewPluginList.Name = "dataGridViewPluginList";
-            this.dataGridViewPluginList.ReadOnly = true;
-            this.dataGridViewPluginList.RowHeadersVisible = false;
-            this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 329);
-            this.dataGridViewPluginList.TabIndex = 0;
-            // 
             // tabPageAuthentication
             // 
             this.tabPageAuthentication.Controls.Add(this.labelAuthHint);
@@ -240,6 +212,17 @@
             this.tabPageAuthentication.TabIndex = 2;
             this.tabPageAuthentication.Text = "Authentication";
             this.tabPageAuthentication.UseVisualStyleBackColor = true;
+            // 
+            // labelAuthHint
+            // 
+            this.labelAuthHint.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelAuthHint.Location = new System.Drawing.Point(7, 247);
+            this.labelAuthHint.Name = "labelAuthHint";
+            this.labelAuthHint.Size = new System.Drawing.Size(240, 83);
+            this.labelAuthHint.TabIndex = 9;
+            this.labelAuthHint.Text = "Please select what information a client has to provide to connect to your MediaPo" +
+                "rtal.\r\n\r\nOnly authenticated clients are allowed to remote control via WifiRemote" +
+                ".";
             // 
             // label5
             // 
@@ -281,7 +264,7 @@
             this.txtPasscode.Location = new System.Drawing.Point(87, 25);
             this.txtPasscode.Name = "txtPasscode";
             this.txtPasscode.Size = new System.Drawing.Size(147, 20);
-            this.txtPasscode.TabIndex = 2;
+            this.txtPasscode.TabIndex = 4;
             // 
             // label7
             // 
@@ -309,8 +292,9 @@
             // 
             this.txtPassword.Location = new System.Drawing.Point(87, 56);
             this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(147, 20);
-            this.txtPassword.TabIndex = 2;
+            this.txtPassword.TabIndex = 3;
             // 
             // txtUsername
             // 
@@ -337,16 +321,33 @@
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Username";
             // 
-            // labelAuthHint
+            // tabPagePlugins
             // 
-            this.labelAuthHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.labelAuthHint.Location = new System.Drawing.Point(7, 247);
-            this.labelAuthHint.Name = "labelAuthHint";
-            this.labelAuthHint.Size = new System.Drawing.Size(240, 83);
-            this.labelAuthHint.TabIndex = 9;
-            this.labelAuthHint.Text = "Please select what information a client has to provide to connect to your MediaPo" +
-                "rtal.\r\n\r\nOnly authenticated clients are allowed to remote control via WifiRemote" +
-                ".";
+            this.tabPagePlugins.Controls.Add(this.dataGridViewPluginList);
+            this.tabPagePlugins.Location = new System.Drawing.Point(4, 22);
+            this.tabPagePlugins.Name = "tabPagePlugins";
+            this.tabPagePlugins.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagePlugins.Size = new System.Drawing.Size(255, 335);
+            this.tabPagePlugins.TabIndex = 1;
+            this.tabPagePlugins.Text = "Plugins";
+            this.tabPagePlugins.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewPluginList
+            // 
+            this.dataGridViewPluginList.AllowUserToAddRows = false;
+            this.dataGridViewPluginList.AllowUserToDeleteRows = false;
+            this.dataGridViewPluginList.AllowUserToOrderColumns = true;
+            this.dataGridViewPluginList.AllowUserToResizeColumns = false;
+            this.dataGridViewPluginList.AllowUserToResizeRows = false;
+            this.dataGridViewPluginList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewPluginList.ColumnHeadersVisible = false;
+            this.dataGridViewPluginList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewPluginList.Location = new System.Drawing.Point(3, 3);
+            this.dataGridViewPluginList.Name = "dataGridViewPluginList";
+            this.dataGridViewPluginList.ReadOnly = true;
+            this.dataGridViewPluginList.RowHeadersVisible = false;
+            this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 329);
+            this.dataGridViewPluginList.TabIndex = 0;
             // 
             // SetupForm
             // 
@@ -367,14 +368,14 @@
             this.tabPageNetwork.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.tabPagePlugins.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).EndInit();
             this.tabPageAuthentication.ResumeLayout(false);
             this.tabPageAuthentication.PerformLayout();
             this.groupPasscode.ResumeLayout(false);
             this.groupPasscode.PerformLayout();
             this.groupUsernamePassword.ResumeLayout(false);
             this.groupUsernamePassword.PerformLayout();
+            this.tabPagePlugins.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).EndInit();
             this.ResumeLayout(false);
