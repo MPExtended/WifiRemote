@@ -502,7 +502,7 @@ namespace WifiRemote
             catch
             {
                 Log.Error(String.Format("{0} This plugin needs Bonjour installed! Get it at http://support.apple.com/downloads/Bonjour_for_Windows", LOG_PREFIX));
-                Stop();
+                return;
             }
 
             publishService = new NetService(domain, serviceType, serviceName, port);
