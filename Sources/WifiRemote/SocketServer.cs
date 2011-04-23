@@ -601,7 +601,7 @@ namespace WifiRemote
             {
                 if (message["AuthMethod"] == null) 
                 {            
-                    WifiRemote.LogMessage("User " + client.ClientName + " authentification failed, no authMethod submitted", WifiRemote.LogType.Info);
+                    WifiRemote.LogMessage("User " + client.ToString() + " authentification failed, no authMethod submitted", WifiRemote.LogType.Info);
                     return false;
                 } 
                 else
@@ -617,7 +617,7 @@ namespace WifiRemote
                     }
                     else
                     {
-                        WifiRemote.LogMessage("User " + client.ClientName + " authentification failed, invalid authMethod '"+ authString +"'", WifiRemote.LogType.Info);
+                        WifiRemote.LogMessage("User " + client.ToString() + " authentification failed, invalid authMethod '" + authString + "'", WifiRemote.LogType.Info);
                         return false;
                     }
                 }
@@ -636,7 +636,7 @@ namespace WifiRemote
                         client.User = user;
                         client.Password = pass;
                         client.IsAuthenticated = true;
-                        WifiRemote.LogMessage("User "+ client.ClientName +" successfully authentificated by username and password", WifiRemote.LogType.Debug);
+                        WifiRemote.LogMessage("User " + client.ToString() + " successfully authentificated by username and password", WifiRemote.LogType.Debug);
                         return true;
                     }
                 }
@@ -651,7 +651,7 @@ namespace WifiRemote
                         client.AuthenticatedBy = auth;
                         client.PassCode = pass;
                         client.IsAuthenticated = true;
-                        WifiRemote.LogMessage("User " + client.ClientName + " successfully authentificated by passcode", WifiRemote.LogType.Debug);
+                        WifiRemote.LogMessage("User " + client.ToString() + " successfully authentificated by passcode", WifiRemote.LogType.Debug);
                         return true;
                     }
                 }
@@ -662,7 +662,7 @@ namespace WifiRemote
                 return true;
             }
 
-            WifiRemote.LogMessage("User " + client.ClientName + " authentification failed", WifiRemote.LogType.Info);
+            WifiRemote.LogMessage("User " + client.ToString() + " authentification failed", WifiRemote.LogType.Info);
             return false;
         }
 

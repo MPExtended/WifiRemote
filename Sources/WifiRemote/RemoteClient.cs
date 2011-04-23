@@ -71,5 +71,25 @@ namespace WifiRemote
             ApplicationName = String.Empty;
             ApplicationVersion = String.Empty;
         }
+
+        /// <summary>
+        /// Custom ToString() method
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string output = ClientName;
+            if (ApplicationName != String.Empty)
+            {
+                output += " [" + ApplicationName;
+                if (ApplicationVersion != String.Empty)
+                {
+                    output += " (version " + ApplicationVersion + ")";
+                }
+                output += "]";
+            }
+
+            return output;
+        }
     }
 }
