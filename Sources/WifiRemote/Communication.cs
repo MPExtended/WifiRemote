@@ -16,10 +16,10 @@ namespace WifiRemote
     {
         private const int KEY_DOWN_TIMEOUT = 2000;
         private InputHandler remoteHandler;
-        private Thread m_keyDownThread;
-        private String m_keyDownChar;
-        private int m_keyDownPauses;
-        private bool m_KeyDown;
+        private Thread commandDownThread;
+        private String commandDownChar;
+        private int commandDownPauses;
+        private bool isCommandDown;
         private StopWatch m_keyDownTimer;
 
         private enum RemoteButton
@@ -334,29 +334,29 @@ namespace WifiRemote
 
 
         /// <summary>
-        /// Sends a key repeatedly until it is stopped by a key-up command or the timeout is reached
+        /// Sends a command repeatedly until it is stopped by a key-up command or the timeout is reached
         /// </summary>
-        /// <param name="keyChar">the key that is being pressed</param>
+        /// <param name="command">the command that is being pressed</param>
         /// <param name="msBetweenPresses">how much pause between presses</param>
-        public void SendKeyDown(String keyChar, int msBetweenPresses)
+        public void SendCommandRepeatStart(String command, int msBetweenPresses)
         {
-            m_keyDownChar = keyChar;
-            m_keyDownPauses = msBetweenPresses;
+            commandDownChar = command;
+            commandDownPauses = msBetweenPresses;
             m_keyDownTimer.StartZero();
 
-            if (!m_KeyDown)
+            if (!isCommandDown)
             {
-                m_keyDownThread = new Thread(new ThreadStart(DoKeyDown));
-                m_keyDownThread.Start();
+                commandDownThread = new Thread(new ThreadStart(DoKeyDown));
+                commandDownThread.Start();
             }
         }
 
         /// <summary>
         /// Sends key-up so a running key-down is cancelled
         /// </summary>
-        public void SendKeyUp()
+        public void SendCommandRepeatStop()
         {
-            m_KeyDown = false;
+            isCommandDown = false;
         }
 
         /// <summary>
@@ -364,14 +364,14 @@ namespace WifiRemote
         /// </summary>
         private void DoKeyDown()
         {
-            m_KeyDown = true;
-            while (m_KeyDown || m_keyDownTimer.ElapsedMilliseconds > KEY_DOWN_TIMEOUT)
+            isCommandDown = true;
+            while (isCommandDown || m_keyDownTimer.ElapsedMilliseconds > KEY_DOWN_TIMEOUT)
             {
-                SendCommand(m_keyDownChar);
-                Thread.Sleep(m_keyDownPauses);
+                SendCommand(commandDownChar);
+                Thread.Sleep(commandDownPauses);
             }
             m_keyDownTimer.Stop();
-            m_KeyDown = false;
+            isCommandDown = false;
         }
 
         /// <summary>
@@ -381,224 +381,15 @@ namespace WifiRemote
         /// </summary>
         public void SendKey(String keyChar)
         {
-            int modifiers = 1;
-            int keyCode = 0;
-
-            if (keyChar != keyChar.ToLower())
-            {
-                modifiers = 0;
-            }
-
-            switch (keyChar.ToLower())
-            {
-                case "0":
-                    keyCode = (int)Keys.D0;
-                    break;
-
-                case "1":
-                    keyCode = (int)Keys.D1;
-                    break;
-
-                case "2":
-                    keyCode = (int)Keys.D2;
-                    break;
-
-                case "3":
-                    keyCode = (int)Keys.D3;
-                    break;
-
-                case "4":
-                    keyCode = (int)Keys.D4;
-                    break;
-
-                case "5":
-                    keyCode = (int)Keys.D5;
-                    break;
-
-                case "6":
-                    keyCode = (int)Keys.D6;
-                    break;
-
-                case "7":
-                    keyCode = (int)Keys.D7;
-                    break;
-
-                case "8":
-                    keyCode = (int)Keys.D8;
-                    break;
-
-                case "9":
-                    keyCode = (int)Keys.D9;
-                    break;
-
-
-                case "a":
-                    keyCode = (int)Keys.A;
-                    break;
-
-                case "b":
-                    keyCode = (int)Keys.B;
-                    break;
-
-                case "c":
-                    keyCode = (int)Keys.C;
-                    break;
-
-                case "d":
-                    keyCode = (int)Keys.D;
-                    break;
-
-                case "e":
-                    keyCode = (int)Keys.E;
-                    break;
-
-                case "f":
-                    keyCode = (int)Keys.F;
-                    break;
-
-                case "g":
-                    keyCode = (int)Keys.G;
-                    break;
-
-                case "h":
-                    keyCode = (int)Keys.H;
-                    break;
-
-                case "i":
-                    keyCode = (int)Keys.I;
-                    break;
-
-                case "j":
-                    keyCode = (int)Keys.J;
-                    break;
-
-                case "k":
-                    keyCode = (int)Keys.K;
-                    break;
-
-                case "l":
-                    keyCode = (int)Keys.L;
-                    break;
-
-                case "m":
-                    keyCode = (int)Keys.M;
-                    break;
-
-                case "n":
-                    keyCode = (int)Keys.N;
-                    break;
-
-                case "o":
-                    keyCode = (int)Keys.O;
-                    break;
-
-                case "p":
-                    keyCode = (int)Keys.P;
-                    break;
-
-                case "q":
-                    keyCode = (int)Keys.Q;
-                    break;
-
-                case "r":
-                    keyCode = (int)Keys.R;
-                    break;
-
-                case "s":
-                    keyCode = (int)Keys.S;
-                    break;
-
-                case "t":
-                    keyCode = (int)Keys.T;
-                    break;
-
-                case "u":
-                    keyCode = (int)Keys.U;
-                    break;
-
-                case "v":
-                    keyCode = (int)Keys.V;
-                    break;
-
-                case "w":
-                    keyCode = (int)Keys.W;
-                    break;
-
-                case "x":
-                    keyCode = (int)Keys.X;
-                    break;
-
-                case "y":
-                    keyCode = (int)Keys.Y;
-                    break;
-
-                case "z":
-                    keyCode = (int)Keys.Z;
-                    break;
-
-
-                case "f1":
-                    keyCode = (int)Keys.F1;
-                    break;
-
-                case "f2":
-                    keyCode = (int)Keys.F2;
-                    break;
-
-                case "f3":
-                    keyCode = (int)Keys.F3;
-                    break;
-
-                case "f4":
-                    keyCode = (int)Keys.F4;
-                    break;
-
-                case "f5":
-                    keyCode = (int)Keys.F5;
-                    break;
-
-                case "f6":
-                    keyCode = (int)Keys.F6;
-                    break;
-
-                case "f7":
-                    keyCode = (int)Keys.F7;
-                    break;
-
-                case "f8":
-                    keyCode = (int)Keys.F8;
-                    break;
-
-                case "f9":
-                    keyCode = (int)Keys.F9;
-                    break;
-
-                case "f10":
-                    keyCode = (int)Keys.F10;
-                    break;
-
-                case "f11":
-                    keyCode = (int)Keys.F11;
-                    break;
-
-                case "f12":
-                    keyCode = (int)Keys.F12;
-                    break;
-            }
-
-            Key key;
-            if (keyChar == "delete")
-            {
-                key = new Key(8, 0);
-            }
-            else
-            {
-                key = new Key(keyCode + (modifiers * 32), 0);
-            }
-
-            MediaPortal.GUI.Library.Action action = new MediaPortal.GUI.Library.Action(key, MediaPortal.GUI.Library.Action.ActionType.ACTION_KEY_PRESSED, 0, 0);
-
-            GUIWindowManager.OnAction(action);
+            if (keyChar == "{DONE}")
+             {
+                //TODO: simulate pressing "done" on the virtual keyboard -> needs MediaPortal patch
+             }
+             else
+             {
+                //Sends a key to mediaportal
+                 SendKeys.SendWait(keyChar);
+             }
         }
 
         /// <summary>

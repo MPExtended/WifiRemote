@@ -421,16 +421,16 @@ namespace WifiRemote
                         communication.SendKey(key);
                     }
                     // Send a key down
-                    else if (type == "keydown")
+                    else if (type == "commandstartrepeat")
                     {
                         string key = (string)message["Key"];
                         int pause = (int)message["Pause"];
-                        communication.SendKeyDown(key, pause);
+                        communication.SendCommandRepeatStart(key, pause);
                     }
                     // Send a key up
-                    else if (type == "keyup")
+                    else if (type == "commandstoprepeat")
                     {
-                        communication.SendKeyUp();
+                        communication.SendCommandRepeatStop();
                     }
                     // Open a skin window
                     else if (type == "window")
