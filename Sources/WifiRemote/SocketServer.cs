@@ -423,9 +423,9 @@ namespace WifiRemote
                     // Send a key down
                     else if (type == "commandstartrepeat")
                     {
-                        string key = (string)message["Key"];
+                        string command = (string)message["Command"];
                         int pause = (int)message["Pause"];
-                        communication.SendCommandRepeatStart(key, pause);
+                        communication.SendCommandRepeatStart(command, pause);
                     }
                     // Send a key up
                     else if (type == "commandstoprepeat")
