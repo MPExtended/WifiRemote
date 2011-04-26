@@ -152,7 +152,6 @@ namespace WifiRemote
                 return;
             }
 
-            WifiRemote.LogMessage("Sending message object to client: " + message.ToString(), WifiRemote.LogType.Debug);
             string messageString = JsonConvert.SerializeObject(message);
             SendMessageToClient(messageString, client, ignoreAuth);
         }
@@ -180,8 +179,6 @@ namespace WifiRemote
                 WifiRemote.LogMessage("SendMessageToClient failed: Message string is null", WifiRemote.LogType.Debug);
                 return;
             }
-
-            WifiRemote.LogMessage("Sending string message to client:" + message, WifiRemote.LogType.Debug);
 
             byte[] data = Encoding.UTF8.GetBytes(message + "\r\n");
             if (client.GetRemoteClient().IsAuthenticated || ignoreAuth)
@@ -343,14 +340,6 @@ namespace WifiRemote
             // Send welcome message to client
             WifiRemote.LogMessage("Client connected, sending welcome msg.", WifiRemote.LogType.Debug);
             SendMessageToClient(welcomeMessage, newSocket, true);
-            
-            // Send basic information package if no auth is needed
-            if (AllowedAuth == AuthMethod.None)
-            {
-                SendAuthenticationResponse(newSocket, true);
-                newSocket.GetRemoteClient().IsAuthenticated = true;              
-                sendOverviewInformationToClient(newSocket);
-            }
         }
 
         /// <summary>
@@ -401,31 +390,40 @@ namespace WifiRemote
                 msg = Encoding.UTF8.GetString(data);
 
                 // Get json object
-                // TODO: error checking
                 JObject message = JObject.Parse(msg);
                 string type = (string)message["Type"];
                 RemoteClient client = sender.GetRemoteClient();
-
-                if (client.IsAuthenticated || AllowedAuth == AuthMethod.None)
-                {// The client is already authentificated or we don't need authentification
+                
+                // The client is already authentificated or we don't need authentification
+                if (type != null && client.IsAuthenticated && type != "identify")
+                {
                     // Send a command
                     if (type == "command")
                     {
                         string command = (string)message["Command"];
-                        communication.SendCommand(command);
+                        if (command != null)
+                        {
+                            communication.SendCommand(command);
+                        }
                     }
                     // Send a key press
                     else if (type == "key")
                     {
                         string key = (string)message["Key"];
-                        communication.SendKey(key);
+                        if (key != null)
+                        {
+                            communication.SendKey(key);
+                        }
                     }
                     // Send a key down
                     else if (type == "commandstartrepeat")
                     {
                         string command = (string)message["Command"];
                         int pause = (int)message["Pause"];
-                        communication.SendCommandRepeatStart(command, pause);
+                        if (command != null)
+                        {
+                            communication.SendCommandRepeatStart(command, pause);
+                        }
                     }
                     // Send a key up
                     else if (type == "commandstoprepeat")
@@ -442,7 +440,10 @@ namespace WifiRemote
                     else if (type == "powermode")
                     {
                         string powerMode = (string)message["PowerMode"];
-                        communication.SetPowerMode(powerMode);
+                        if (powerMode != null)
+                        {
+                            communication.SetPowerMode(powerMode);
+                        }
                     }
                     // Directly set the volume to Volume percent
                     else if (type == "volume")
@@ -482,15 +483,18 @@ namespace WifiRemote
                         string fileType = (string)message["FileType"];
                         string filePath = (string)message["Filepath"];
 
-                        // Play a video file
-                        if (fileType == "video")
+                        if (fileType != null && filePath != null)
                         {
-                            communication.PlayVideoFile(filePath);
-                        }
-                        // Play an audio file
-                        else if (fileType == "audio")
-                        {
-                            communication.PlayAudioFile(filePath);
+                            // Play a video file
+                            if (fileType == "video")
+                            {
+                                communication.PlayVideoFile(filePath);
+                            }
+                            // Play an audio file
+                            else if (fileType == "audio")
+                            {
+                                communication.PlayAudioFile(filePath);
+                            }
                         }
                     }
                     // Reply with a list of installed and active window plugins
@@ -509,22 +513,29 @@ namespace WifiRemote
                     {
                         client.Properties = new List<String>();
                         JArray array = (JArray)message["Properties"];
-                        foreach (JValue v in array)
+                        if (array != null)
                         {
-                            String propString = (string)v.Value;
-                            client.Properties.Add(propString);
+                            foreach (JValue v in array)
+                            {
+                                String propString = (string)v.Value;
+                                client.Properties.Add(propString);
+                            }
+                            SendPropertiesToClient(sender);
                         }
-                        SendPropertiesToClient(sender);
                     }
                     // request image
                     else if (type == "image")
                     {
                         String path = (string)message["ImagePath"];
-                        SendImageToClient(sender, path);
+                        if (path != null)
+                        {
+                            SendImageToClient(sender, path);
+                        }
                     }
                     else
                     {
                         // Unknown command. Log or inform user ...
+                        WifiRemote.LogMessage("Unknown command received from client " + client.ToString() + ": " + type, WifiRemote.LogType.Info);
                     }
                 }
                 else
@@ -561,6 +572,7 @@ namespace WifiRemote
                             CheckAuthenticationRequest(client, (JObject)message["Authenticate"])))
                         {
                             // User successfully authenticated
+                            sender.GetRemoteClient().IsAuthenticated = true;
                             SendAuthenticationResponse(sender, true);
                             sendOverviewInformationToClient(sender);
                         }
@@ -607,18 +619,21 @@ namespace WifiRemote
                 else
                 {
                     String authString = (string)message["AuthMethod"];
-                    if (authString.Equals("userpass"))
+                    if (authString != null)
                     {
-                        auth = AuthMethod.UserPassword;
-                    }
-                    else if (authString.Equals("passcode"))
-                    {
-                        auth = AuthMethod.Passcode;
-                    }
-                    else
-                    {
-                        WifiRemote.LogMessage("User " + client.ToString() + " authentification failed, invalid authMethod '" + authString + "'", WifiRemote.LogType.Info);
-                        return false;
+                        if (authString.Equals("userpass"))
+                        {
+                            auth = AuthMethod.UserPassword;
+                        }
+                        else if (authString.Equals("passcode"))
+                        {
+                            auth = AuthMethod.Passcode;
+                        }
+                        else
+                        {
+                            WifiRemote.LogMessage("User " + client.ToString() + " authentification failed, invalid authMethod '" + authString + "'", WifiRemote.LogType.Info);
+                            return false;
+                        }
                     }
                 }
             }
@@ -673,6 +688,11 @@ namespace WifiRemote
             {
                 authResponse.ErrorMessage = "Login failed";
             }
+            else
+            {
+                WifiRemote.LogMessage("Client identified: " + socket.GetRemoteClient().ToString(), WifiRemote.LogType.Debug);
+            }
+
             SendMessageToClient(authResponse, socket, true);
         }
 
