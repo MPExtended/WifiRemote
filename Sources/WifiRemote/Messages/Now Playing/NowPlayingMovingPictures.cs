@@ -150,14 +150,14 @@ namespace WifiRemote
             set { detailsUrl = value; }
         }
 
-        byte[] image;
+        string imageName;
         /// <summary>
-        /// Movie poster
+        /// Movie poster filepath
         /// </summary>
-        public byte[] Image
+        public string ImageName
         {
-            get { return image; }
-            set { image = value; }
+            get { return imageName; }
+            set { imageName = value; }
         }
 
 
@@ -243,38 +243,7 @@ namespace WifiRemote
                                 break;
 
                             case "System.String CoverFullPath":
-                                string coverPath = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                if (File.Exists(coverPath))
-                                {
-                                    Image fullsizeImage = Bitmap.FromFile(coverPath);
-                                    int newWidth = 480;
-                                    int maxHeight = 640;
-
-                                    // Prevent using images internal thumbnail
-                                    fullsizeImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                                    fullsizeImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
-
-                                    if (fullsizeImage.Width <= newWidth)
-                                    {
-                                        newWidth = fullsizeImage.Width;
-                                    }
-
-                                    int NewHeight = fullsizeImage.Height * newWidth / fullsizeImage.Width;
-                                    if (NewHeight > maxHeight)
-                                    {
-                                        // Resize with height instead
-                                        newWidth = fullsizeImage.Width * maxHeight / fullsizeImage.Height;
-                                        NewHeight = maxHeight;
-                                    }
-
-                                    Image newImage = fullsizeImage.GetThumbnailImage(newWidth, NewHeight, null, IntPtr.Zero);
-
-                                    // Clear handle to original file so that we can overwrite it if necessary
-                                    fullsizeImage.Dispose();
-
-                                    Image = WifiRemote.imageToByteArray(newImage, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                }
-                                
+                                ImageName = movieProp.GetValue(attachedMovies[0], null).ToString();
                                 break;
                         }
                     }

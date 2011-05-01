@@ -159,14 +159,14 @@ namespace WifiRemote
             set { genre = value; }
         }
 
-        byte[] image;
+        string imageName;
         /// <summary>
-        /// Season poster
+        /// Season poster filepath
         /// </summary>
-        public byte[] Image
+        public string ImageName
         {
-            get { return image; }
-            set { image = value; }
+            get { return imageName; }
+            set { imageName = value; }
         }
 
 
@@ -280,42 +280,11 @@ namespace WifiRemote
                         null,
                         new object[] { seriesId, seasonId });
 
-                    string imageFilename = imageAllocatorType.InvokeMember("GetSeasonBannerAsFilename",
+                    ImageName = imageAllocatorType.InvokeMember("GetSeasonBannerAsFilename",
                         BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static,
                         null,
                         null,
                         new object[] { season }).ToString();
-
-                    if (File.Exists(imageFilename))
-                    {
-                        Image fullsizeImage = Bitmap.FromFile(imageFilename);
-                        int newWidth = 480;
-                        int maxHeight = 640;
-
-                        // Prevent using images internal thumbnail
-                        fullsizeImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                        fullsizeImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
-
-                        if (fullsizeImage.Width <= newWidth)
-                        {
-                            newWidth = fullsizeImage.Width;
-                        }
-
-                        int NewHeight = fullsizeImage.Height * newWidth / fullsizeImage.Width;
-                        if (NewHeight > maxHeight)
-                        {
-                            // Resize with height instead
-                            newWidth = fullsizeImage.Width * maxHeight / fullsizeImage.Height;
-                            NewHeight = maxHeight;
-                        }
-
-                        Image newImage = fullsizeImage.GetThumbnailImage(newWidth, NewHeight, null, IntPtr.Zero);
-
-                        // Clear handle to original file so that we can overwrite it if necessary
-                        fullsizeImage.Dispose();
-
-                        Image = WifiRemote.imageToByteArray(newImage, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    }
                 }
               
             }

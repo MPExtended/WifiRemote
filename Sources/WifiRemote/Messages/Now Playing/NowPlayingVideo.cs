@@ -127,14 +127,14 @@ namespace WifiRemote
             set { certification = value; }
         }
         
-        byte[] image;
+        string imageUrl;
         /// <summary>
         /// Movie poster
         /// </summary>
-        public byte[] Image
+        public string ImageUrl
         {
-            get { return image; }
-            set { image = value; }
+            get { return imageUrl; }
+            set { imageUrl = value; }
         }
 
 
@@ -155,37 +155,7 @@ namespace WifiRemote
             Genres = aMovie.Genre;
             Certification = aMovie.MPARating;
 
-            string coverPath = aMovie.ThumbURL;
-            if (File.Exists(coverPath))
-            {
-                Image fullsizeImage = Bitmap.FromFile(coverPath);
-                int newWidth = 480;
-                int maxHeight = 640;
-
-                // Prevent using images internal thumbnail
-                fullsizeImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                fullsizeImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
-
-                if (fullsizeImage.Width <= newWidth)
-                {
-                    newWidth = fullsizeImage.Width;
-                }
-
-                int NewHeight = fullsizeImage.Height * newWidth / fullsizeImage.Width;
-                if (NewHeight > maxHeight)
-                {
-                    // Resize with height instead
-                    newWidth = fullsizeImage.Width * maxHeight / fullsizeImage.Height;
-                    NewHeight = maxHeight;
-                }
-
-                Image newImage = fullsizeImage.GetThumbnailImage(newWidth, NewHeight, null, IntPtr.Zero);
-
-                // Clear handle to original file so that we can overwrite it if necessary
-                fullsizeImage.Dispose();
-
-                Image = WifiRemote.imageToByteArray(newImage, System.Drawing.Imaging.ImageFormat.Jpeg);
-            }
+            ImageUrl = aMovie.ThumbURL;
         }
     }
 }
