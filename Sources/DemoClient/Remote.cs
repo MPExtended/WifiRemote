@@ -451,10 +451,34 @@ namespace DemoClient
                 // AuthMethod: User&Password or Both
                 case 1:
                 case 3:
+                    PasswordDialog pwDialog = new PasswordDialog();
+                    pwDialog.ShowDialog();
+                    if (pwDialog.DialogResult.Equals(DialogResult.OK))
+                    {
+                        MessageIdentify identificationMessage = new MessageIdentify();
+                        identificationMessage.Authenticate = new Authenticate(pwDialog.GetUsername(), pwDialog.GetPassword());
+                        SendCommand(identificationMessage, socket);
+                    }
+                    else
+                    {
+                        socket.Close();
+                    }
                     break;
 
                 // AuthMethod: Passcode
                 case 2:
+                    PasscodeDialog pcDialog = new PasscodeDialog();
+                    pcDialog.ShowDialog();
+                    if (pcDialog.DialogResult.Equals(DialogResult.OK))
+                    {
+                        MessageIdentify identificationMessage = new MessageIdentify();
+                        identificationMessage.Authenticate = new Authenticate(pcDialog.GetPasscode());
+                        SendCommand(identificationMessage, socket);
+                    }
+                    else
+                    {
+                        socket.Close();
+                    }
                     break;
 
                 // AuthMethod: None

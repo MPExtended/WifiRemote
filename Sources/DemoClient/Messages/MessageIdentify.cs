@@ -27,5 +27,32 @@ namespace DemoClient
         {
             get { return "0.1"; }
         }
+
+        public Authenticate Authenticate
+        {
+            get;
+            set;
+        }
+    }
+
+    class Authenticate
+    {
+        public String AuthMethod { get; set; }
+        public String User { get; set; }
+        public String Password { get; set; }
+        public String PassCode { get; set; }
+
+        public Authenticate(String theUser, String thePassword)
+        {
+            AuthMethod = "userpass";
+            User = theUser;
+            Password = thePassword;
+        }
+
+        public Authenticate(String thePasscode)
+        {
+            AuthMethod = "passcode";
+            PassCode = thePasscode;
+        }
     }
 }
