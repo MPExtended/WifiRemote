@@ -87,6 +87,9 @@
     <Reference Include="ZeroconfService">
       <HintPath>..\..\Libs\ZeroconfService.dll</HintPath>
     </Reference>
+    <Reference Include="zxing">
+      <HintPath>..\..\Libs\zxing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncSocket.cs" />
@@ -118,7 +121,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Property.cs" />
+    <Compile Include="QRCodeGenerator.cs" />
     <Compile Include="RemoteClient.cs" />
+    <Compile Include="ServerDescription.cs" />
     <Compile Include="SetupForm.cs">
       <SubType>Form</SubType>
     </Compile>

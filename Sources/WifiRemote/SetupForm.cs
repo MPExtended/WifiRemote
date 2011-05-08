@@ -13,6 +13,9 @@ using System.Collections;
 using System.Reflection;
 using MediaPortal.GUI.Library;
 using MediaPortal.Profile;
+using System.Net;
+using System.Net.Sockets;
+using Newtonsoft.Json;
 
 //using ThirstyCrow.WinForms.Controls;
 
@@ -65,7 +68,7 @@ namespace WifiRemote
                 txtPasscode.Text = WifiRemote.DecryptString(reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", ""));
 
                 cbAuthMethod.SelectedIndex = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
-        
+
                 resetPort();
             }
 
@@ -107,7 +110,7 @@ namespace WifiRemote
             EnumerateWindowPlugins();
             LoadPlugins();
             LoadSettings();
-            
+
             DataGridViewImageColumn iconColumn = new DataGridViewImageColumn(false);
             iconColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
             iconColumn.Width = 20;
@@ -117,9 +120,9 @@ namespace WifiRemote
             dataGridViewPluginList.Columns.Add(nameColumn);
 
 
-            
+
             foreach (ItemTag plugin in plugins)
-            {  
+            {
                 if (plugin.IsEnabled)
                 {
                     int i = dataGridViewPluginList.Rows.Add();
@@ -131,14 +134,14 @@ namespace WifiRemote
                     {
                         dataGridViewPluginList[0, i].Value = Properties.Resources.NoPluginImage;
                     }
-                    
-                    
+
+
                     dataGridViewPluginList[1, i].Value = plugin.SetupForm.PluginName();
                     //StarRating stars = new StarRating();
                 }
-                
+
             }
-            
+
         }
 
 
@@ -312,7 +315,7 @@ namespace WifiRemote
             {
                 System.Diagnostics.Process.Start(downloadTarget);
             }
-            catch (Exception) {}
+            catch (Exception) { }
         }
 
         #endregion
@@ -347,7 +350,7 @@ namespace WifiRemote
             }
             catch (Exception e)
             {
-                Log.Error("[WifiRemote Setup] error enumerating windows plugins: " + e.Message); 
+                Log.Error("[WifiRemote Setup] error enumerating windows plugins: " + e.Message);
             }
         }
 
@@ -450,7 +453,7 @@ namespace WifiRemote
             }
         }
 
-        
+
         /// <summary>
         /// Checks whether the a plugin has a <see cref="PluginIconsAttribute"/> defined.  If it has, the images that are indicated
         /// in the attribute are loaded
@@ -562,6 +565,89 @@ namespace WifiRemote
 
         #endregion
 
+        #region Barcode
+        /// <summary>
+        /// Save the generated barcode as image file to harddisk
+        /// </summary>
+        /// <param name="sender">sender</param>
+        /// <param name="e">event args</param>
+        private void btnSaveBarcode_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog diag = new SaveFileDialog();
+            diag.Filter = "JPEG Image|*.jpg";
+            diag.Title = "Save Barcode as Image File";
+            if(diag.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                pbQrCode.Image.Save(diag.FileName);
+            }
+        }
+
+        /// <summary>
+        /// Generate a QR Barcode with the server information
+        /// </summary>
+        private void GenerateBarcode()
+        {
+            try
+            {
+                ServerDescription desc = new ServerDescription();
+                desc.Port = Int32.Parse(textBoxPort.Text);
+                desc.Name = textBoxName.Text;
+
+                IPHostEntry host;
+                string localIP = "?";
+                host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (IPAddress ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        localIP = ip.ToString();
+                    }
+                }
+                desc.Address = localIP;
+
+                desc.AuthOptions = cbAuthMethod.SelectedIndex;
+                if (checkBoxIncludeAuth.Checked)
+                {
+                    desc.User = txtUsername.Text;
+                    desc.Password = txtPassword.Text;
+                    desc.Passcode = txtPasscode.Text;
+                }
+
+                Bitmap bm = QRCodeGenerator.Generate(JsonConvert.SerializeObject(desc));
+
+                pbQrCode.Image = bm;
+            }
+            catch (Exception ex)
+            {
+                WifiRemote.LogMessage("Error generating barcode: " + ex.Message, WifiRemote.LogType.Error);
+            }
+        }
+
+        /// <summary>
+        /// Checkbox that controls if we integrated authentication information in the barcode
+        /// </summary>
+        /// <param name="sender">sender</param>
+        /// <param name="e">event args</param>
+        private void checkBoxIncludeAuth_CheckedChanged(object sender, EventArgs e)
+        {
+            GenerateBarcode();
+        }
+
+
+        /// <summary>
+        /// Tab changed
+        /// </summary>
+        /// <param name="sender">sender</param>
+        /// <param name="e">event args</param>
+        private void tabControlNavigation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControlNavigation.SelectedIndex == 3)
+            {
+                //tab changed to index 3 (QR Code), generate barcode
+                GenerateBarcode();
+            }
+        }
+        #endregion
 
     }
 }
