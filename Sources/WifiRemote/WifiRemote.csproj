@@ -175,6 +175,8 @@
     <Content Include="ILMerge.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\logo_radio.png" />
+    <EmbeddedResource Include="Resources\logo_radio_disabled.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

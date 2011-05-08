@@ -50,6 +50,7 @@ namespace WifiRemote
     ///
     /// 
     /// </summary>
+    [PluginIcons("WifiRemote.Resources.logo_radio.png", "WifiRemote.Resources.logo_radio_disabled.png")]
     public class WifiRemote: ISetupForm, IPlugin
     {
         public const string PLUGIN_NAME = "WifiRemote";

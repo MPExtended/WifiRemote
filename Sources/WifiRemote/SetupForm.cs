@@ -641,9 +641,9 @@ namespace WifiRemote
         /// <param name="e">event args</param>
         private void tabControlNavigation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControlNavigation.SelectedIndex == 3)
+            if (tabControlNavigation.SelectedTab == tabPageQRCode)
             {
-                //tab changed to index 3 (QR Code), generate barcode
+                //tab changed to (QR Code), generate barcode
                 GenerateBarcode();
             }
         }

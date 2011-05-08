@@ -57,9 +57,10 @@
             this.lblUser = new System.Windows.Forms.Label();
             this.tabPagePlugins = new System.Windows.Forms.TabPage();
             this.dataGridViewPluginList = new System.Windows.Forms.DataGridView();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPageQRCode = new System.Windows.Forms.TabPage();
             this.checkBoxIncludeAuth = new System.Windows.Forms.CheckBox();
             this.btnSaveBarcode = new System.Windows.Forms.Button();
+            this.labelQRDescription = new System.Windows.Forms.Label();
             this.pbQrCode = new System.Windows.Forms.PictureBox();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
@@ -71,7 +72,7 @@
             this.groupUsernamePassword.SuspendLayout();
             this.tabPagePlugins.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).BeginInit();
-            this.tabPage1.SuspendLayout();
+            this.tabPageQRCode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbQrCode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).BeginInit();
@@ -143,7 +144,7 @@
             this.tabControlNavigation.Controls.Add(this.tabPageNetwork);
             this.tabControlNavigation.Controls.Add(this.tabPageAuthentication);
             this.tabControlNavigation.Controls.Add(this.tabPagePlugins);
-            this.tabControlNavigation.Controls.Add(this.tabPage1);
+            this.tabControlNavigation.Controls.Add(this.tabPageQRCode);
             this.tabControlNavigation.Location = new System.Drawing.Point(1, 1);
             this.tabControlNavigation.Name = "tabControlNavigation";
             this.tabControlNavigation.SelectedIndex = 0;
@@ -229,8 +230,8 @@
             this.labelAuthHint.Size = new System.Drawing.Size(240, 83);
             this.labelAuthHint.TabIndex = 9;
             this.labelAuthHint.Text = "Please select what information a client has to provide to connect to your MediaPo" +
-    "rtal.\r\n\r\nOnly authenticated clients are allowed to remote control via WifiRemote" +
-    ".";
+                "rtal.\r\n\r\nOnly authenticated clients are allowed to remote control via WifiRemote" +
+                ".";
             // 
             // label5
             // 
@@ -357,18 +358,19 @@
             this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 329);
             this.dataGridViewPluginList.TabIndex = 0;
             // 
-            // tabPage1
+            // tabPageQRCode
             // 
-            this.tabPage1.Controls.Add(this.checkBoxIncludeAuth);
-            this.tabPage1.Controls.Add(this.btnSaveBarcode);
-            this.tabPage1.Controls.Add(this.pbQrCode);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(255, 335);
-            this.tabPage1.TabIndex = 3;
-            this.tabPage1.Text = "QR Code";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPageQRCode.Controls.Add(this.labelQRDescription);
+            this.tabPageQRCode.Controls.Add(this.checkBoxIncludeAuth);
+            this.tabPageQRCode.Controls.Add(this.btnSaveBarcode);
+            this.tabPageQRCode.Controls.Add(this.pbQrCode);
+            this.tabPageQRCode.Location = new System.Drawing.Point(4, 22);
+            this.tabPageQRCode.Name = "tabPageQRCode";
+            this.tabPageQRCode.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageQRCode.Size = new System.Drawing.Size(255, 335);
+            this.tabPageQRCode.TabIndex = 3;
+            this.tabPageQRCode.Text = "QR Code";
+            this.tabPageQRCode.UseVisualStyleBackColor = true;
             // 
             // checkBoxIncludeAuth
             // 
@@ -391,9 +393,20 @@
             this.btnSaveBarcode.UseVisualStyleBackColor = true;
             this.btnSaveBarcode.Click += new System.EventHandler(this.btnSaveBarcode_Click);
             // 
+            // labelQRDescription
+            // 
+            this.labelQRDescription.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelQRDescription.Location = new System.Drawing.Point(8, 282);
+            this.labelQRDescription.Name = "labelQRDescription";
+            this.labelQRDescription.Size = new System.Drawing.Size(239, 53);
+            this.labelQRDescription.TabIndex = 3;
+            this.labelQRDescription.Text = "You can scan the QR code with supported clients to add this MediaPortal automatic" +
+                "ally.";
+            this.labelQRDescription.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // pbQrCode
             // 
-            this.pbQrCode.Location = new System.Drawing.Point(7, 53);
+            this.pbQrCode.Location = new System.Drawing.Point(7, 35);
             this.pbQrCode.Name = "pbQrCode";
             this.pbQrCode.Size = new System.Drawing.Size(240, 240);
             this.pbQrCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -427,8 +440,8 @@
             this.groupUsernamePassword.PerformLayout();
             this.tabPagePlugins.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPluginList)).EndInit();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabPageQRCode.ResumeLayout(false);
+            this.tabPageQRCode.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbQrCode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).EndInit();
@@ -467,9 +480,10 @@
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.Label labelAuthHint;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPageQRCode;
         private System.Windows.Forms.PictureBox pbQrCode;
         private System.Windows.Forms.Button btnSaveBarcode;
         private System.Windows.Forms.CheckBox checkBoxIncludeAuth;
+        private System.Windows.Forms.Label labelQRDescription;
     }
 }
