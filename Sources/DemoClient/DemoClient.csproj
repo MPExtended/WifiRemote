@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json.Net35">
-      <HintPath>..\..\..\Libs\Newtonsoft.Json.Net35.dll</HintPath>
+      <HintPath>..\..\Libs\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,7 +46,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="ZeroconfService">
-      <HintPath>..\..\..\Libs\ZeroconfService.dll</HintPath>
+      <HintPath>..\..\Libs\ZeroconfService.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
