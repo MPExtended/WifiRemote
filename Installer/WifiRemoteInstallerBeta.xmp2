@@ -40,7 +40,7 @@
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>Files\WifiRemote.xml</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{d1485fa3-78fa-490f-bf94-d17991945e6e}-WifiRemote.xml</ZipFileName>
-              <DestinationFilename>%Base%\InputDeviceMappings\defaults\WifiRemote.xml</DestinationFilename>
+              <DestinationFilename>%Base%\defaults\InputDeviceMappings\WifiRemote.xml</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -179,7 +179,7 @@ It publishes a Bonjour Service on your local network which allows clients (for e
     <OnlineLocation />
     <ReleaseDate>2011-03-01T14:15:56.8287447+01:00</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>C:\Users\fate\Documents\WifiRemote_0.1.0.2.mpe1</Location>
+    <Location>C:\Users\fate\Documents\WifiRemote_0.1.0.2_beta.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -226,27 +226,27 @@ It publishes a Bonjour Service on your local network which allows clients (for e
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>Files\WifiRemote.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{d1485fa3-78fa-490f-bf94-d17991945e6e}-WifiRemote.xml</ZipFileName>
-        <DestinationFilename>%Base%\InputDeviceMappings\defaults\WifiRemote.xml</DestinationFilename>
+        <DestinationFilename>%Base%\defaults\InputDeviceMappings\WifiRemote.xml</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{0597656b-8344-48bc-9e6d-da09d9f53b76}-installer_logo.gif</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{0d6251a0-16f8-4607-99ce-5c00b8adc18b}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{e60b1332-9489-42c5-9921-997a0e7d18a5}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{89314fc6-e61b-4d4a-b68e-3147ea126caa}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
   </UniqueFileList>
   <ProjectSettings>
     <FolderGroups />
-    <ProjectFilename>C:\Users\fate\Documents\Visual Studio 2010\Projects\PluginDev\WifiRemote\WifiRemote\Installer\WifiRemoteInstaller.xmp2</ProjectFilename>
+    <ProjectFilename>C:\Users\fate\Documents\Visual Studio 2010\Projects\PluginDev\WifiRemote\WifiRemote\Installer\WifiRemoteInstallerBeta.xmp2</ProjectFilename>
     <UpdatePath1 />
     <UpdatePath2 />
     <UpdatePath3 />
