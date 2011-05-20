@@ -61,6 +61,7 @@
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Messages\MessageCommand.cs" />
     <Compile Include="Messages\MessageIdentify.cs" />
+    <Compile Include="Messages\MessageRequestNowPlaying.cs" />
     <Compile Include="Messages\MessageVolume.cs" />
     <Compile Include="PasscodeDialog.cs">
       <SubType>Form</SubType>
@@ -102,6 +103,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -112,6 +114,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\options.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application_windows.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\movie_blue.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -54,6 +54,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.showConsoleWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.requestNowPlayingInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -371,6 +374,7 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripDropDownButton1,
             this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 367);
             this.statusStrip1.Name = "statusStrip1";
@@ -384,6 +388,34 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(132, 17);
             this.toolStripStatusLabel1.Text = "Select server to connect";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
+            // 
+            // toolStripDropDownButton1
+            // 
+            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showConsoleWindowToolStripMenuItem,
+            this.requestNowPlayingInfoToolStripMenuItem});
+            this.toolStripDropDownButton1.Image = global::DemoClient.Properties.Resources.options;
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 20);
+            this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+            // 
+            // showConsoleWindowToolStripMenuItem
+            // 
+            this.showConsoleWindowToolStripMenuItem.Image = global::DemoClient.Properties.Resources.application_windows;
+            this.showConsoleWindowToolStripMenuItem.Name = "showConsoleWindowToolStripMenuItem";
+            this.showConsoleWindowToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.showConsoleWindowToolStripMenuItem.Text = "Show console window";
+            this.showConsoleWindowToolStripMenuItem.Click += new System.EventHandler(this.showConsoleWindowToolStripMenuItem_Click);
+            // 
+            // requestNowPlayingInfoToolStripMenuItem
+            // 
+            this.requestNowPlayingInfoToolStripMenuItem.Image = global::DemoClient.Properties.Resources.movie_blue;
+            this.requestNowPlayingInfoToolStripMenuItem.Name = "requestNowPlayingInfoToolStripMenuItem";
+            this.requestNowPlayingInfoToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.requestNowPlayingInfoToolStripMenuItem.Text = "Request now playing info";
+            this.requestNowPlayingInfoToolStripMenuItem.Click += new System.EventHandler(this.requestNowPlayingInfoToolStripMenuItem_Click);
             // 
             // Remote
             // 
@@ -441,6 +473,9 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Label labelVolume;
         private System.Windows.Forms.TrackBar trackBarVolume;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+        private System.Windows.Forms.ToolStripMenuItem requestNowPlayingInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showConsoleWindowToolStripMenuItem;
     }
 }
 

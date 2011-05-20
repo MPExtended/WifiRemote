@@ -17,6 +17,7 @@ namespace DemoClient
             set {
                 log = log + value + "\r\n\r\n";
                 richTextBox1.Text = log;
+                richTextBox1.Focus();
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
 
             }

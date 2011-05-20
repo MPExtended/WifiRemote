@@ -140,6 +140,8 @@ namespace DemoClient
             {
                 msg = Encoding.UTF8.GetString(data);
                 logWindow.Log = "Received message: " + msg;
+                this.Focus();
+
                 // Get json object
                 JObject message = JObject.Parse(msg);
                 string type = (string)message["Type"];
@@ -290,10 +292,12 @@ namespace DemoClient
             if (logWindow.Visible)
             {
                 logWindow.Hide();
+                showConsoleWindowToolStripMenuItem.Text = "Show console window";
             }
             else
             {
                 logWindow.Show();
+                showConsoleWindowToolStripMenuItem.Text = "Hide console window";
             }
         }
 
@@ -395,6 +399,31 @@ namespace DemoClient
             {
                 textBoxPort.Text = "Port";
                 textBoxPort.ForeColor = Color.LightGray;
+            }
+        }
+
+        private void requestNowPlayingInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!logWindow.Visible)
+            {
+                logWindow.Show();
+                showConsoleWindowToolStripMenuItem.Text = "Hide console window";
+            }
+
+            SendCommand(new MessageRequestNowPlaying(), socket);
+        }
+
+        private void showConsoleWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (logWindow.Visible)
+            {
+                logWindow.Hide();
+                showConsoleWindowToolStripMenuItem.Text = "Show console window";
+            }
+            else
+            {
+                logWindow.Show();
+                showConsoleWindowToolStripMenuItem.Text = "Hide console window";
             }
         }
 
@@ -561,9 +590,5 @@ namespace DemoClient
         }
 
         #endregion
-
-
-
-
     }
 }
