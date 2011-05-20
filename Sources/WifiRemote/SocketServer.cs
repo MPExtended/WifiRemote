@@ -23,6 +23,8 @@ namespace WifiRemote
     {
         private UInt16 port;
 
+        private bool isStarted = false;
+
         private AsyncSocket listenSocket;
         private Communication communication;
         private List<AsyncSocket> connectedSockets;
@@ -86,6 +88,14 @@ namespace WifiRemote
 
             this.port = port;
 
+            initSocket();
+        }
+
+        /// <summary>
+        /// Initialise the socket
+        /// </summary>
+        private void initSocket()
+        {
             listenSocket = new AsyncSocket();
 
             // Tell AsyncSocket to allow multi-threaded delegate methods
@@ -96,9 +106,6 @@ namespace WifiRemote
 
             // Initialize list to hold connected sockets
             connectedSockets = new List<AsyncSocket>();
-
-            String welcome = JsonConvert.SerializeObject(welcomeMessage);
-            WifiRemote.LogMessage("Client connected, sending welcome msg: " + welcome, WifiRemote.LogType.Debug);
         }
 
 
@@ -107,6 +114,18 @@ namespace WifiRemote
         /// </summary>
         public void Start()
         {
+            // Abort if already started
+            if (isStarted)
+            {
+                WifiRemote.LogMessage("ListenSocket already accepting connections, aborting start ...", WifiRemote.LogType.Debug);
+                return;
+            }
+
+            if (listenSocket == null)
+            {
+                initSocket();
+            }
+
             Exception error;
             if (!listenSocket.Accept(port, out error))
             {
@@ -114,6 +133,7 @@ namespace WifiRemote
                 return;
             }
 
+            isStarted = true;
             WifiRemote.LogMessage("Now accepting connections.", WifiRemote.LogType.Info);
         }
 
@@ -122,6 +142,12 @@ namespace WifiRemote
         /// </summary>
         public void Stop()
         {
+            if (!isStarted)
+            {
+                WifiRemote.LogMessage("ListenSocket already stopped, ignoring stop command", WifiRemote.LogType.Debug);
+                return;
+            }
+
             // Stop accepting connections
             listenSocket.Close();
 
@@ -133,6 +159,9 @@ namespace WifiRemote
                     socket.CloseAfterReading();
                 }
             }
+
+            isStarted = false;
+            listenSocket = null;
 
             WifiRemote.LogMessage("SocketServer stopped.", WifiRemote.LogType.Info);
         }
