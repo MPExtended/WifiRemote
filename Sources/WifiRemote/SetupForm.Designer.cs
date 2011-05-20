@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupForm));
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.buttonDownloadBonjour = new System.Windows.Forms.Button();
             this.progressBarBonjourDownload = new System.Windows.Forms.ProgressBar();
             this.backgroundWorkerBonjourDownload = new System.ComponentModel.BackgroundWorker();
@@ -39,6 +38,7 @@
             this.checkBoxDisableBonjour = new System.Windows.Forms.CheckBox();
             this.tabControlNavigation = new System.Windows.Forms.TabControl();
             this.tabPageNetwork = new System.Windows.Forms.TabPage();
+            this.labelPortInUse = new System.Windows.Forms.LinkLabel();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -58,12 +58,13 @@
             this.tabPagePlugins = new System.Windows.Forms.TabPage();
             this.dataGridViewPluginList = new System.Windows.Forms.DataGridView();
             this.tabPageQRCode = new System.Windows.Forms.TabPage();
+            this.labelQRDescription = new System.Windows.Forms.Label();
             this.checkBoxIncludeAuth = new System.Windows.Forms.CheckBox();
             this.btnSaveBarcode = new System.Windows.Forms.Button();
-            this.labelQRDescription = new System.Windows.Forms.Label();
             this.pbQrCode = new System.Windows.Forms.PictureBox();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.tabControlNavigation.SuspendLayout();
             this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -86,15 +87,6 @@
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Port:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(169, 13);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(77, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "(Default: 8017)";
             // 
             // buttonDownloadBonjour
             // 
@@ -127,6 +119,7 @@
             this.textBoxPort.Name = "textBoxPort";
             this.textBoxPort.Size = new System.Drawing.Size(108, 20);
             this.textBoxPort.TabIndex = 6;
+            this.textBoxPort.Leave += new System.EventHandler(this.textBoxPort_Leave);
             // 
             // checkBoxDisableBonjour
             // 
@@ -154,11 +147,12 @@
             // 
             // tabPageNetwork
             // 
+            this.tabPageNetwork.Controls.Add(this.linkLabel1);
+            this.tabPageNetwork.Controls.Add(this.labelPortInUse);
             this.tabPageNetwork.Controls.Add(this.textBoxName);
             this.tabPageNetwork.Controls.Add(this.label4);
             this.tabPageNetwork.Controls.Add(this.groupBox1);
             this.tabPageNetwork.Controls.Add(this.label1);
-            this.tabPageNetwork.Controls.Add(this.label2);
             this.tabPageNetwork.Controls.Add(this.textBoxPort);
             this.tabPageNetwork.Location = new System.Drawing.Point(4, 22);
             this.tabPageNetwork.Name = "tabPageNetwork";
@@ -167,6 +161,20 @@
             this.tabPageNetwork.TabIndex = 0;
             this.tabPageNetwork.Text = "Network";
             this.tabPageNetwork.UseVisualStyleBackColor = true;
+            // 
+            // labelPortInUse
+            // 
+            this.labelPortInUse.AutoSize = true;
+            this.labelPortInUse.LinkColor = System.Drawing.Color.Red;
+            this.labelPortInUse.Location = new System.Drawing.Point(55, 63);
+            this.labelPortInUse.Name = "labelPortInUse";
+            this.labelPortInUse.Size = new System.Drawing.Size(129, 13);
+            this.labelPortInUse.TabIndex = 11;
+            this.labelPortInUse.TabStop = true;
+            this.labelPortInUse.Text = "This port is already in use!";
+            this.labelPortInUse.Visible = false;
+            this.labelPortInUse.VisitedLinkColor = System.Drawing.Color.Red;
+            this.labelPortInUse.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.triggerPortReset);
             // 
             // textBoxName
             // 
@@ -372,6 +380,17 @@
             this.tabPageQRCode.Text = "QR Code";
             this.tabPageQRCode.UseVisualStyleBackColor = true;
             // 
+            // labelQRDescription
+            // 
+            this.labelQRDescription.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelQRDescription.Location = new System.Drawing.Point(8, 282);
+            this.labelQRDescription.Name = "labelQRDescription";
+            this.labelQRDescription.Size = new System.Drawing.Size(239, 53);
+            this.labelQRDescription.TabIndex = 3;
+            this.labelQRDescription.Text = "You can scan the QR code with supported clients to add this MediaPortal automatic" +
+                "ally.";
+            this.labelQRDescription.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // checkBoxIncludeAuth
             // 
             this.checkBoxIncludeAuth.AutoSize = true;
@@ -393,17 +412,6 @@
             this.btnSaveBarcode.UseVisualStyleBackColor = true;
             this.btnSaveBarcode.Click += new System.EventHandler(this.btnSaveBarcode_Click);
             // 
-            // labelQRDescription
-            // 
-            this.labelQRDescription.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.labelQRDescription.Location = new System.Drawing.Point(8, 282);
-            this.labelQRDescription.Name = "labelQRDescription";
-            this.labelQRDescription.Size = new System.Drawing.Size(239, 53);
-            this.labelQRDescription.TabIndex = 3;
-            this.labelQRDescription.Text = "You can scan the QR code with supported clients to add this MediaPortal automatic" +
-                "ally.";
-            this.labelQRDescription.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // pbQrCode
             // 
             this.pbQrCode.Location = new System.Drawing.Point(7, 35);
@@ -412,6 +420,19 @@
             this.pbQrCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbQrCode.TabIndex = 0;
             this.pbQrCode.TabStop = false;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.LinkColor = System.Drawing.Color.Gray;
+            this.linkLabel1.Location = new System.Drawing.Point(169, 13);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(77, 13);
+            this.linkLabel1.TabIndex = 12;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "(Default: 8017)";
+            this.linkLabel1.VisitedLinkColor = System.Drawing.Color.Black;
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.triggerPortReset);
             // 
             // SetupForm
             // 
@@ -452,7 +473,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonDownloadBonjour;
         private System.Windows.Forms.ProgressBar progressBarBonjourDownload;
         private System.ComponentModel.BackgroundWorker backgroundWorkerBonjourDownload;
@@ -485,5 +505,7 @@
         private System.Windows.Forms.Button btnSaveBarcode;
         private System.Windows.Forms.CheckBox checkBoxIncludeAuth;
         private System.Windows.Forms.Label labelQRDescription;
+        private System.Windows.Forms.LinkLabel labelPortInUse;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

@@ -16,6 +16,7 @@ using MediaPortal.Profile;
 using System.Net;
 using System.Net.Sockets;
 using Newtonsoft.Json;
+using System.Net.NetworkInformation;
 
 //using ThirstyCrow.WinForms.Controls;
 
@@ -189,13 +190,80 @@ namespace WifiRemote
             }
         }
 
-
+        /// <summary>
+        /// Reset the port to defaults onClick trigger
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void triggerPortReset(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            resetPort(true);
+        }
+        
         /// <summary>
         /// Set the port box to defaults
         /// </summary>
         private void resetPort()
         {
-            textBoxPort.Text = (originalPort != String.Empty) ? originalPort : WifiRemote.DEFAULT_PORT.ToString();
+            resetPort(false);
+        }
+
+        /// <summary>
+        /// Reset the port box to defaults
+        /// </summary>
+        /// <param name="toPluginDefaults">Use plugin defaults or saved value</param>
+        private void resetPort(bool toPluginDefaults)
+        {
+            textBoxPort.Text = (originalPort != String.Empty && !toPluginDefaults) ? originalPort : WifiRemote.DEFAULT_PORT.ToString();
+            checkPortBox();
+        }
+
+        /// <summary>
+        /// Checks if a given port is already in use.
+        /// </summary>
+        /// <param name="port">The port to check</param>
+        /// <returns>true if the port is in use, false otherwise</returns>
+        private bool isPortInUse(int port)
+        {
+            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
+
+            foreach (TcpConnectionInformation tcpi in tcpConnInfoArray)
+            {
+                if (tcpi.LocalEndPoint.Port == port)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if the port textbox contains a port
+        /// that is already in use and display a 
+        /// warning label.
+        /// </summary>
+        private void checkPortBox()
+        {
+            try
+            {
+                labelPortInUse.Visible = isPortInUse(Int32.Parse(textBoxPort.Text));
+            }
+            catch (Exception)
+            {
+                labelPortInUse.Visible = false;
+            }
+        }
+
+        /// <summary>
+        /// The port box was left, check its contents
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void textBoxPort_Leave(object sender, EventArgs e)
+        {
+            checkPortBox();
         }
 
 
@@ -648,6 +716,11 @@ namespace WifiRemote
             }
         }
         #endregion
+
+        private void triggerPortReset(object sender, MouseEventArgs e)
+        {
+
+        }
 
     }
 }
