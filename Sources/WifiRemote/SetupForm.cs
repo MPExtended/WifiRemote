@@ -55,7 +55,7 @@ namespace WifiRemote
         public SetupForm()
         {
             InitializeComponent();
-            label2.Text = String.Format("(Default: {0})", WifiRemote.DEFAULT_PORT);
+            labelDefaultPort.Text = String.Format("(Default: {0})", WifiRemote.DEFAULT_PORT);
 
             // load port from settings
             using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))

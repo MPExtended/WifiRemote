@@ -64,7 +64,7 @@
             this.pbQrCode = new System.Windows.Forms.PictureBox();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.labelDefaultPort = new System.Windows.Forms.LinkLabel();
             this.tabControlNavigation.SuspendLayout();
             this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -147,7 +147,7 @@
             // 
             // tabPageNetwork
             // 
-            this.tabPageNetwork.Controls.Add(this.linkLabel1);
+            this.tabPageNetwork.Controls.Add(this.labelDefaultPort);
             this.tabPageNetwork.Controls.Add(this.labelPortInUse);
             this.tabPageNetwork.Controls.Add(this.textBoxName);
             this.tabPageNetwork.Controls.Add(this.label4);
@@ -421,18 +421,18 @@
             this.pbQrCode.TabIndex = 0;
             this.pbQrCode.TabStop = false;
             // 
-            // linkLabel1
+            // labelDefaultPort
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.LinkColor = System.Drawing.Color.Gray;
-            this.linkLabel1.Location = new System.Drawing.Point(169, 13);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(77, 13);
-            this.linkLabel1.TabIndex = 12;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "(Default: 8017)";
-            this.linkLabel1.VisitedLinkColor = System.Drawing.Color.Black;
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.triggerPortReset);
+            this.labelDefaultPort.AutoSize = true;
+            this.labelDefaultPort.LinkColor = System.Drawing.Color.Gray;
+            this.labelDefaultPort.Location = new System.Drawing.Point(169, 13);
+            this.labelDefaultPort.Name = "labelDefaultPort";
+            this.labelDefaultPort.Size = new System.Drawing.Size(77, 13);
+            this.labelDefaultPort.TabIndex = 12;
+            this.labelDefaultPort.TabStop = true;
+            this.labelDefaultPort.Text = "(Default: 8017)";
+            this.labelDefaultPort.VisitedLinkColor = System.Drawing.Color.Black;
+            this.labelDefaultPort.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.triggerPortReset);
             // 
             // SetupForm
             // 
@@ -506,6 +506,6 @@
         private System.Windows.Forms.CheckBox checkBoxIncludeAuth;
         private System.Windows.Forms.Label labelQRDescription;
         private System.Windows.Forms.LinkLabel labelPortInUse;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel labelDefaultPort;
     }
 }
