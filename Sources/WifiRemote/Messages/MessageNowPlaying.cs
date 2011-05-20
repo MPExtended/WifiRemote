@@ -33,7 +33,15 @@ namespace WifiRemote
         /// </summary>
         public int Duration
         {
-            get { return (int)g_Player.Player.Duration; }
+            get 
+            {
+                if (!g_Player.Playing)
+                {
+                    return 0;
+                }
+
+                return (int)g_Player.Player.Duration; 
+            }
         }
 
         /// <summary>
@@ -41,7 +49,15 @@ namespace WifiRemote
         /// </summary>
         public String File
         {
-            get { return g_Player.CurrentFile; }
+            get 
+            {
+                if (!g_Player.Playing)
+                {
+                    return String.Empty;
+                }
+
+                return g_Player.CurrentFile; 
+            }
         }
 
         /// <summary>
@@ -49,7 +65,15 @@ namespace WifiRemote
         /// </summary>
         public int Position
         {
-            get { return (int)g_Player.Player.CurrentPosition; }
+            get 
+            {
+                if (!g_Player.Playing)
+                {
+                    return 0;
+                }
+
+                return (int)g_Player.Player.CurrentPosition; 
+            }
         }
 
         /// <summary>
@@ -57,7 +81,15 @@ namespace WifiRemote
         /// </summary>
         public bool IsTv
         {
-            get { return g_Player.Player.IsTV; }
+            get 
+            {
+                if (!g_Player.Playing)
+                {
+                    return false;
+                }
+
+                return g_Player.Player.IsTV; 
+            }
         }
 
         public IAdditionalNowPlayingInfo MediaInfo

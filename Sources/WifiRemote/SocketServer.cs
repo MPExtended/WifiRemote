@@ -561,6 +561,16 @@ namespace WifiRemote
                             SendImageToClient(sender, path);
                         }
                     }
+                    // Send the current status to the client
+                    else if (type == "requeststatus")
+                    {
+                        SendMessageToClient(statusMessage, sender);
+                    }
+                    // Send the current now playing message to the client
+                    else if (type == "requestnowplaying")
+                    {
+                        SendMessageToClient(nowPlayingMessage, sender);
+                    }
                     else
                     {
                         // Unknown command. Log or inform user ...
