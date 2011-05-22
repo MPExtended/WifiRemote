@@ -38,6 +38,7 @@
             this.checkBoxDisableBonjour = new System.Windows.Forms.CheckBox();
             this.tabControlNavigation = new System.Windows.Forms.TabControl();
             this.tabPageNetwork = new System.Windows.Forms.TabPage();
+            this.labelDefaultPort = new System.Windows.Forms.LinkLabel();
             this.labelPortInUse = new System.Windows.Forms.LinkLabel();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -64,7 +65,10 @@
             this.pbQrCode = new System.Windows.Forms.PictureBox();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.labelDefaultPort = new System.Windows.Forms.LinkLabel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownAutologin = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabControlNavigation.SuspendLayout();
             this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -77,6 +81,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbQrCode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutologin)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -162,6 +168,19 @@
             this.tabPageNetwork.Text = "Network";
             this.tabPageNetwork.UseVisualStyleBackColor = true;
             // 
+            // labelDefaultPort
+            // 
+            this.labelDefaultPort.AutoSize = true;
+            this.labelDefaultPort.LinkColor = System.Drawing.Color.Gray;
+            this.labelDefaultPort.Location = new System.Drawing.Point(169, 13);
+            this.labelDefaultPort.Name = "labelDefaultPort";
+            this.labelDefaultPort.Size = new System.Drawing.Size(77, 13);
+            this.labelDefaultPort.TabIndex = 12;
+            this.labelDefaultPort.TabStop = true;
+            this.labelDefaultPort.Text = "(Default: 8017)";
+            this.labelDefaultPort.VisitedLinkColor = System.Drawing.Color.Black;
+            this.labelDefaultPort.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.triggerPortReset);
+            // 
             // labelPortInUse
             // 
             this.labelPortInUse.AutoSize = true;
@@ -217,6 +236,7 @@
             // 
             // tabPageAuthentication
             // 
+            this.tabPageAuthentication.Controls.Add(this.groupBox2);
             this.tabPageAuthentication.Controls.Add(this.labelAuthHint);
             this.tabPageAuthentication.Controls.Add(this.label5);
             this.tabPageAuthentication.Controls.Add(this.cbAuthMethod);
@@ -233,13 +253,11 @@
             // labelAuthHint
             // 
             this.labelAuthHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.labelAuthHint.Location = new System.Drawing.Point(7, 247);
+            this.labelAuthHint.Location = new System.Drawing.Point(7, 301);
             this.labelAuthHint.Name = "labelAuthHint";
-            this.labelAuthHint.Size = new System.Drawing.Size(240, 83);
+            this.labelAuthHint.Size = new System.Drawing.Size(240, 34);
             this.labelAuthHint.TabIndex = 9;
-            this.labelAuthHint.Text = "Please select what information a client has to provide to connect to your MediaPo" +
-                "rtal.\r\n\r\nOnly authenticated clients are allowed to remote control via WifiRemote" +
-                ".";
+            this.labelAuthHint.Text = "Select what information a client has to provide to connect to your MediaPortal.";
             // 
             // label5
             // 
@@ -261,7 +279,7 @@
             "Both"});
             this.cbAuthMethod.Location = new System.Drawing.Point(132, 18);
             this.cbAuthMethod.Name = "cbAuthMethod";
-            this.cbAuthMethod.Size = new System.Drawing.Size(111, 21);
+            this.cbAuthMethod.Size = new System.Drawing.Size(117, 21);
             this.cbAuthMethod.TabIndex = 1;
             this.cbAuthMethod.SelectedIndexChanged += new System.EventHandler(this.cbAuthMethod_SelectedIndexChanged);
             // 
@@ -269,7 +287,7 @@
             // 
             this.groupPasscode.Controls.Add(this.txtPasscode);
             this.groupPasscode.Controls.Add(this.label7);
-            this.groupPasscode.Location = new System.Drawing.Point(7, 171);
+            this.groupPasscode.Location = new System.Drawing.Point(9, 158);
             this.groupPasscode.Name = "groupPasscode";
             this.groupPasscode.Size = new System.Drawing.Size(240, 63);
             this.groupPasscode.TabIndex = 0;
@@ -421,18 +439,42 @@
             this.pbQrCode.TabIndex = 0;
             this.pbQrCode.TabStop = false;
             // 
-            // labelDefaultPort
+            // groupBox2
             // 
-            this.labelDefaultPort.AutoSize = true;
-            this.labelDefaultPort.LinkColor = System.Drawing.Color.Gray;
-            this.labelDefaultPort.Location = new System.Drawing.Point(169, 13);
-            this.labelDefaultPort.Name = "labelDefaultPort";
-            this.labelDefaultPort.Size = new System.Drawing.Size(77, 13);
-            this.labelDefaultPort.TabIndex = 12;
-            this.labelDefaultPort.TabStop = true;
-            this.labelDefaultPort.Text = "(Default: 8017)";
-            this.labelDefaultPort.VisitedLinkColor = System.Drawing.Color.Black;
-            this.labelDefaultPort.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.triggerPortReset);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.numericUpDownAutologin);
+            this.groupBox2.Location = new System.Drawing.Point(9, 228);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(240, 65);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Autologin";
+            // 
+            // numericUpDownAutologin
+            // 
+            this.numericUpDownAutologin.Location = new System.Drawing.Point(18, 39);
+            this.numericUpDownAutologin.Name = "numericUpDownAutologin";
+            this.numericUpDownAutologin.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownAutologin.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(84, 41);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(106, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "minutes (0 to disable)";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(15, 16);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(190, 13);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Allow access without renewed login for";
             // 
             // SetupForm
             // 
@@ -466,6 +508,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbQrCode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutologin)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -507,5 +552,9 @@
         private System.Windows.Forms.Label labelQRDescription;
         private System.Windows.Forms.LinkLabel labelPortInUse;
         private System.Windows.Forms.LinkLabel labelDefaultPort;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numericUpDownAutologin;
     }
 }

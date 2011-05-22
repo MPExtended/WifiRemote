@@ -69,6 +69,7 @@ namespace WifiRemote
                 txtPasscode.Text = WifiRemote.DecryptString(reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", ""));
 
                 cbAuthMethod.SelectedIndex = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
+                numericUpDownAutologin.Value = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "autologinTimeout", 0);
 
                 resetPort();
             }
@@ -187,6 +188,7 @@ namespace WifiRemote
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "password", WifiRemote.EncryptString(txtPassword.Text));
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "passcode", WifiRemote.EncryptString(txtPasscode.Text));
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "auth", cbAuthMethod.SelectedIndex);
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "autologinTimeout", numericUpDownAutologin.Value);
             }
         }
 

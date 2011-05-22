@@ -221,6 +221,7 @@ namespace WifiRemote
             String password = null;
             String passcode = null;
             AuthMethod auth = AuthMethod.None;
+            int autologinTimeout = 0;
 
             // Load port from config
             using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
@@ -236,7 +237,7 @@ namespace WifiRemote
                 passcode = WifiRemote.DecryptString(passcode);
 
                 auth = (AuthMethod)reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
-        
+                autologinTimeout = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "autologinTimeout", 0);        
             }
 
             // Start listening for client connections
@@ -245,6 +246,7 @@ namespace WifiRemote
             socketServer.Password = password;
             socketServer.PassCode = passcode;
             socketServer.AllowedAuth = auth;
+            socketServer.AutologinTimeout = autologinTimeout;
             socketServer.Start();
 
             // Publish the service via bonjour to the network

@@ -29,6 +29,7 @@ namespace WifiRemote
         private Communication communication;
         private List<AsyncSocket> connectedSockets;
         private AuthMethod allowedAuth;
+        private List<AutoLoginToken> loginTokens;
 
         private MessageWelcome welcomeMessage;
         private MessageStatus statusMessage;
@@ -54,6 +55,14 @@ namespace WifiRemote
         /// Passcode for client authentification
         /// </summary>
         internal String PassCode {get; set;}
+
+        /// <summary>
+        /// Time in minutes that an authenticated client is
+        /// able to send commands without authenticating again.
+        /// 
+        /// 0 to disable autologin.
+        /// </summary>
+        internal int AutologinTimeout { get; set; }
 
         /// <summary>
         /// Passcode for client authentification
@@ -134,6 +143,7 @@ namespace WifiRemote
             }
 
             isStarted = true;
+            loginTokens = new List<AutoLoginToken>();
             WifiRemote.LogMessage("Now accepting connections.", WifiRemote.LogType.Info);
         }
 
@@ -422,6 +432,30 @@ namespace WifiRemote
                 JObject message = JObject.Parse(msg);
                 string type = (string)message["Type"];
                 RemoteClient client = sender.GetRemoteClient();
+
+                // Autologin handling
+                if (AutologinTimeout > 0 && !client.IsAuthenticated)
+                {
+                    string key = (string)message["AutologinKey"];
+                    if (key != null)
+                    {
+                        AutoLoginToken token = new AutoLoginToken(key, client);
+                        // the client token is in the list
+                        foreach (AutoLoginToken aToken in loginTokens)
+                        {
+                            if (aToken.Key == token.Key)
+                            {
+                                // Check if the autologin key was issued within the timeout
+                                TimeSpan elapsed = DateTime.Now - aToken.Issued;
+                                client.IsAuthenticated = (elapsed.Minutes < AutologinTimeout);
+                                client = aToken.Client;
+
+                                // Renew the timeout
+                                aToken.Issued = DateTime.Now;
+                            }
+                        }
+                    }
+                }
                 
                 // The client is already authentificated or we don't need authentification
                 if (type != null && client.IsAuthenticated && type != "identify")
@@ -607,7 +641,7 @@ namespace WifiRemote
                         }
 
                         // Authentication
-                        if (AllowedAuth == AuthMethod.None || (message["Authenticate"] != null && 
+                        if (AllowedAuth == AuthMethod.None || (message["Authenticate"] != null &&
                             CheckAuthenticationRequest(client, (JObject)message["Authenticate"])))
                         {
                             // User successfully authenticated
@@ -621,6 +655,14 @@ namespace WifiRemote
                             // authenticated or authenticate failed
                             SendAuthenticationResponse(sender, false);
                         }
+                    }
+                    else
+                    {
+                        // Client needs to authenticate first
+                        MessageAuthenticationResponse response = new MessageAuthenticationResponse(false);
+                        response.ErrorMessage = "You need to authenticate yourself.";
+                        SendMessageToClient(response, sender);
+                        SendMessageToClient(welcomeMessage, sender);
                     }
                 }
 
@@ -730,6 +772,9 @@ namespace WifiRemote
             else
             {
                 WifiRemote.LogMessage("Client identified: " + socket.GetRemoteClient().ToString(), WifiRemote.LogType.Debug);
+                string key = getRandomMD5();
+                authResponse.AutologinKey = key;
+                loginTokens.Add(new AutoLoginToken(key, socket.GetRemoteClient()));
             }
 
             SendMessageToClient(authResponse, socket, true);
@@ -859,6 +904,27 @@ namespace WifiRemote
             {
                 SendMessageToClient(this.nowPlayingMessage, client);
             }
+        }
+
+        /// <summary>
+        /// Get a random md5 hash
+        /// </summary>
+        /// <returns></returns>
+        private String getRandomMD5()
+        {
+            string randomString = System.IO.Path.GetRandomFileName();
+            randomString = randomString.Replace(".", "");
+
+            System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            byte[] randomBytes = System.Text.Encoding.UTF8.GetBytes(randomString);
+            randomBytes = md5.ComputeHash(randomBytes);
+            System.Text.StringBuilder hash = new System.Text.StringBuilder();
+            foreach (byte b in randomBytes)
+            {
+                hash.Append(b.ToString("x2").ToLower());
+            }
+
+            return hash.ToString();
         }
     }
 }
