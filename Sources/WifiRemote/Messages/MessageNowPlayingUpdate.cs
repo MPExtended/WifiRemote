@@ -49,5 +49,13 @@ namespace WifiRemote
         {
             get { return g_Player.Player.IsTV; }
         }
+
+        /// <summary>
+        /// Is the player in fullscreen mode
+        /// </summary>
+        public bool IsFullscreen
+        {
+            get { return (g_Player.Playing && g_Player.FullScreen); }
+        }
     }
 }

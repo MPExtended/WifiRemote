@@ -92,6 +92,17 @@ namespace WifiRemote
             }
         }
 
+        /// <summary>
+        /// Is the player in fullscreen mode
+        /// </summary>
+        public bool IsFullscreen
+        {
+            get
+            {
+                return (g_Player.Playing && g_Player.FullScreen);
+            }
+        }
+
         public IAdditionalNowPlayingInfo MediaInfo
         {
             get 
