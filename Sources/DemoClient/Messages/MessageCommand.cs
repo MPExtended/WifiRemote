@@ -13,6 +13,12 @@ namespace DemoClient
             get { return type; }
         }
 
+        public String AutologinKey
+        {
+            get;
+            set;
+        }
+
         public String Command { get; set; }
     }
 }

@@ -16,5 +16,10 @@ namespace DemoClient
             get;
         }
 
+        String AutologinKey
+        {
+            get;
+            set;
+        }
     }
 }

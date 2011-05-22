@@ -20,6 +20,12 @@ namespace DemoClient
             Volume = vol;
         }
 
+        public String AutologinKey
+        {
+            get;
+            set;
+        }
+
         public MessageVolume()
         {
             Volume = 0;

@@ -35,6 +35,11 @@ namespace DemoClient
         private string domain = "";
 
         /// <summary>
+        /// Key used to auto-login
+        /// </summary>
+        private string autologinKey;
+
+        /// <summary>
         /// Window to show output in
         /// </summary>
         MessageLog logWindow = new MessageLog();
@@ -42,6 +47,8 @@ namespace DemoClient
         // Reusable commands
         MessageVolume volumeMessage = new MessageVolume();
         MessageCommand commandMessage = new MessageCommand();
+
+        
 
 
         public Remote()
@@ -157,7 +164,8 @@ namespace DemoClient
 
                         // {"Type":"authenticationresponse","Success":true,"ErrorMessage":null}
                         case "authenticationresponse":
-                            handleAuthenticationResponse((bool)message["Success"], (String)message["ErrorMessage"]);
+                            // handleAuthenticationResponse((bool)message["Success"], (String)message["ErrorMessage"]);
+                            handleAuthenticationResponse((bool)message["Success"], (String)message["ErrorMessage"], (string)message["AutologinKey"]);
                             break;
 
                         // {"Type":"status","IsPlaying":false,"IsPaused":false,"Title":"","CurrentModule":"Startbildschirm","SelectedItem":""}
@@ -205,7 +213,15 @@ namespace DemoClient
         /// <param name="port"></param>
         void socket_DidConnect(AsyncSocket sender, System.Net.IPAddress address, ushort port)
         {
-            Log("Authenticating with server", "Connected, waiting for welcome message", "Authenticating ...");
+            if (autologinKey == null)
+            {
+                Log("Authenticating with server", "Connected, waiting for welcome message", "Authenticating ...");
+            }
+            else
+            {
+                Log("Reconnected to server", "Reconnected with autologin key", "Connected");
+            }
+
             socket.Read(AsyncSocket.CRLFData, -1, 0);
         }
 
@@ -445,6 +461,11 @@ namespace DemoClient
                 return;
             }
 
+            if (autologinKey != null)
+            {
+                message.AutologinKey = autologinKey;
+            }
+
             string messageString = JsonConvert.SerializeObject(message);
             SendCommand(messageString, client);
         }
@@ -475,6 +496,9 @@ namespace DemoClient
 
         private void handleWelcomeMessage(int serverVersion, int authMethod)
         {
+            // We have some autologin going, ignore welcome message
+            if (autologinKey != null) return;
+
             switch (authMethod)
             {
                 // AuthMethod: User&Password or Both
@@ -527,6 +551,20 @@ namespace DemoClient
             else
             {
                 Log("Disconnected", "Failed to authenticate with server: "+ error, "Auth failed");
+            }
+        }
+
+        private void handleAuthenticationResponse(bool success, String error, String key)
+        {
+            if (success)
+            {
+                Log("", "Successfully authenticated with server", "Connected");
+                autologinKey = key;
+            }
+            else
+            {
+                Log("Disconnected", "Failed to authenticate with server: " + error, "Auth failed");
+                autologinKey = null;
             }
         }
 

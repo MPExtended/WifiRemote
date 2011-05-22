@@ -28,6 +28,12 @@ namespace DemoClient
             get { return "0.1"; }
         }
 
+        public String AutologinKey
+        {
+            get;
+            set;
+        }
+
         public Authenticate Authenticate
         {
             get;
