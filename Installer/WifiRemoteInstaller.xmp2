@@ -167,8 +167,8 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <UpdateUrl />
     <Version>
       <Major>0</Major>
-      <Minor>1</Minor>
-      <Build>1</Build>
+      <Minor>2</Minor>
+      <Build>0</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
@@ -179,7 +179,7 @@ It publishes a Bonjour Service on your local network which allows clients (for e
     <OnlineLocation />
     <ReleaseDate>2011-03-01T14:15:56.8287447+01:00</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>C:\Users\fate\Documents\WifiRemote_0.1.1.mpe1</Location>
+    <Location>C:\Users\fate\Documents\WifiRemote_0.2.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -232,14 +232,14 @@ It publishes a Bonjour Service on your local network which allows clients (for e
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{0997e415-9242-4f49-bb5a-e41442f005f1}-installer_logo.gif</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{1bf1f016-a4cd-4c76-82e6-93179e99b6ce}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{75e9fd0f-7772-4e9a-947c-bab54774dcbf}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{74cffbe7-01a5-4197-8011-c41317501561}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
