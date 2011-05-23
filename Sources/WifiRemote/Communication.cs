@@ -445,6 +445,29 @@ namespace WifiRemote
         /// <param name="volume">The new volume, ranging from 0 to 100</param>
         internal void SetVolume(int volume)
         {
+            SetVolume(volume, false);
+        }
+
+        /// <summary>
+        /// Sets the volume of the client
+        /// </summary>
+        /// <param name="volume">The new volume, ranging from 0 to 100</param>
+        /// <param name="relative">True if the volume should be changed relative to the current volume</param>
+        internal void SetVolume(int volume, bool relative)
+        {
+            if (relative)
+            {
+                int currentVolume = 0;
+
+                try
+                {
+                    currentVolume = VolumeHandler.Instance.Volume / (VolumeHandler.Instance.Maximum / 100);
+                }
+                catch (Exception) { }
+
+                volume += currentVolume;
+            }
+
             if (volume >= 0 && volume <= 100)
             {
                 VolumeHandler.Instance.Volume = (int)Math.Floor(volume * VolumeHandler.Instance.Maximum / 100.0);

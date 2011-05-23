@@ -512,7 +512,13 @@ namespace WifiRemote
                     else if (type == "volume")
                     {
                         int volume = (int)message["Volume"];
-                        communication.SetVolume(volume);
+                        bool relative = false;
+                        if (message["Relative"] != null)
+                        {
+                            relative = (bool)message["Relative"];
+                        }
+
+                        communication.SetVolume(volume, relative);
                     }
                     // Set the position of the media item
                     else if (type == "position")
