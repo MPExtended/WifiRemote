@@ -537,12 +537,12 @@ namespace WifiRemote
                         }
                         if (seekType == 2)
                         {
-                            double position = (double)message["Position"];
+                            double position = Convert.ToDouble((decimal)message["Position"]);
                             communication.SetPosition(position, true);
                         }
                         else if (seekType == 3)
                         {
-                            double position = (double)message["Position"];
+                            double position = Convert.ToDouble((decimal)message["Position"]);
                             communication.SetPosition(position, false);
                         }
                     }
