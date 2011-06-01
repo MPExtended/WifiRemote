@@ -39,7 +39,17 @@ namespace WifiRemote
         /// </summary>
         public int Speed
         {
-            get { return (int)g_Player.Player.Speed; }
+            get 
+            {
+                try
+                {
+                    return g_Player.Player.Speed;
+                }
+                catch (Exception)
+                {
+                    return 1;
+                }
+            }
         }
 
         /// <summary>
