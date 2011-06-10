@@ -217,37 +217,8 @@ namespace WifiRemote
             System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
 
-            String userName = null;
-            String password = null;
-            String passcode = null;
-            AuthMethod auth = AuthMethod.None;
-            int autologinTimeout = 0;
-
-            // Load port from config
-            using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
-            {
-                port = (UInt16)reader.GetValueAsInt(PLUGIN_NAME, "port", DEFAULT_PORT);
-                disableBonjour = reader.GetValueAsBool(PLUGIN_NAME, "disableBonjour", false);
-                serviceName = reader.GetValueAsString(PLUGIN_NAME, "serviceName", "");
-                userName = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", "");
-                userName = WifiRemote.DecryptString(userName);
-                password = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", "");
-                password = WifiRemote.DecryptString(password);
-                passcode = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", "");
-                passcode = WifiRemote.DecryptString(passcode);
-
-                auth = (AuthMethod)reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
-                autologinTimeout = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "autologinTimeout", 0);        
-            }
-
-            // Start listening for client connections
-            socketServer = new SocketServer(port);
-            socketServer.UserName = userName;
-            socketServer.Password = password;
-            socketServer.PassCode = passcode;
-            socketServer.AllowedAuth = auth;
-            socketServer.AutologinTimeout = autologinTimeout;
-            socketServer.Start();
+            // Init and start the socket
+            InitAndStartSocket();
 
             // Publish the service via bonjour to the network
             if (!disableBonjour)
@@ -271,11 +242,12 @@ namespace WifiRemote
                 WifiRemote.LogMessage("Resuming WifiRemote, starting server", LogType.Debug);
 
                 // Restart the socket server
-                socketServer.Start();
+                InitAndStartSocket();
 
                 // Restart bonjour service
                 if (!disableBonjour)
                 {
+                    WifiRemote.LogMessage("Restarting bonjour service", LogType.Debug);
                     PublishBonjourService();
                 }
             }
@@ -307,11 +279,12 @@ namespace WifiRemote
                 WifiRemote.LogMessage("Network connected, starting server", LogType.Debug);
 
                 // Restart the socket server
-                socketServer.Start();
+                InitAndStartSocket();
 
                 // Restart bonjour service
                 if (!disableBonjour)
                 {
+                    WifiRemote.LogMessage("Restarting bonjour service", LogType.Debug);
                     PublishBonjourService();
                 }
             }
@@ -513,6 +486,16 @@ namespace WifiRemote
             // Get the MAC addresses and set it as bonjour txt record
             // Needed by the clients to implement wake on lan
             Hashtable dict = new Hashtable();
+            dict.Add("hwAddr", GetHardwareAddresses());
+            publishService.TXTRecordData = NetService.DataFromTXTRecordDictionary(dict);
+            publishService.DidPublishService += new NetService.ServicePublished(publishService_DidPublishService);
+            publishService.DidNotPublishService += new NetService.ServiceNotPublished(publishService_DidNotPublishService);
+
+            publishService.Publish();
+        }
+
+        public static String GetHardwareAddresses()
+        {
             StringBuilder hardwareAddresses = new StringBuilder();
             try
             {
@@ -538,12 +521,8 @@ namespace WifiRemote
             {
                 LogMessage("Could not get hardware address: " + e.Message, LogType.Error);
             }
-            dict.Add("hwAddr", hardwareAddresses.ToString());
-            publishService.TXTRecordData = NetService.DataFromTXTRecordDictionary(dict);
-            publishService.DidPublishService += new NetService.ServicePublished(publishService_DidPublishService);
-            publishService.DidNotPublishService += new NetService.ServiceNotPublished(publishService_DidNotPublishService);
 
-            publishService.Publish();
+            return hardwareAddresses.ToString();
         }
 
         /// <summary>
@@ -631,6 +610,53 @@ namespace WifiRemote
         }
 
         #endregion
+
+        #region WifiRemote methods
+
+        /// <summary>
+        /// Initialise the socket server if necessary
+        /// </summary>
+        internal void InitAndStartSocket()
+        {
+            if (socketServer == null)
+            {
+                WifiRemote.LogMessage("Setting up socket server", LogType.Debug);
+
+                String userName = null;
+                String password = null;
+                String passcode = null;
+                AuthMethod auth = AuthMethod.None;
+                int autologinTimeout = 0;
+
+                // Load port from config
+                using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
+                {
+                    port = (UInt16)reader.GetValueAsInt(PLUGIN_NAME, "port", DEFAULT_PORT);
+                    disableBonjour = reader.GetValueAsBool(PLUGIN_NAME, "disableBonjour", false);
+                    serviceName = reader.GetValueAsString(PLUGIN_NAME, "serviceName", "");
+                    userName = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", "");
+                    userName = WifiRemote.DecryptString(userName);
+                    password = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", "");
+                    password = WifiRemote.DecryptString(password);
+                    passcode = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", "");
+                    passcode = WifiRemote.DecryptString(passcode);
+
+                    auth = (AuthMethod)reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
+                    autologinTimeout = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "autologinTimeout", 0);
+                }
+
+                // Start listening for client connections
+                socketServer = new SocketServer(port);
+                socketServer.UserName = userName;
+                socketServer.Password = password;
+                socketServer.PassCode = passcode;
+                socketServer.AllowedAuth = auth;
+                socketServer.AutologinTimeout = autologinTimeout;
+            }
+
+            socketServer.Start();
+        }
+
 
         /// <summary>
         /// Get all active window plugins and the corresponding window IDs.
@@ -815,5 +841,8 @@ namespace WifiRemote
 
             return encrypted;
         }
+
+        #endregion
+
     }
 }

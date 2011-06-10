@@ -45,6 +45,10 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPageAuthentication = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numericUpDownAutologin = new System.Windows.Forms.NumericUpDown();
             this.labelAuthHint = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.cbAuthMethod = new System.Windows.Forms.ComboBox();
@@ -65,14 +69,12 @@
             this.pbQrCode = new System.Windows.Forms.PictureBox();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.numericUpDownAutologin = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.tabControlNavigation.SuspendLayout();
             this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPageAuthentication.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutologin)).BeginInit();
             this.groupPasscode.SuspendLayout();
             this.groupUsernamePassword.SuspendLayout();
             this.tabPagePlugins.SuspendLayout();
@@ -81,8 +83,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbQrCode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutologin)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -250,6 +250,43 @@
             this.tabPageAuthentication.Text = "Authentication";
             this.tabPageAuthentication.UseVisualStyleBackColor = true;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.numericUpDownAutologin);
+            this.groupBox2.Location = new System.Drawing.Point(9, 228);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(240, 65);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Autologin";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(15, 16);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(190, 13);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Allow access without renewed login for";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(84, 41);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(106, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "minutes (0 to disable)";
+            // 
+            // numericUpDownAutologin
+            // 
+            this.numericUpDownAutologin.Location = new System.Drawing.Point(18, 39);
+            this.numericUpDownAutologin.Name = "numericUpDownAutologin";
+            this.numericUpDownAutologin.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownAutologin.TabIndex = 0;
+            // 
             // labelAuthHint
             // 
             this.labelAuthHint.ForeColor = System.Drawing.SystemColors.GrayText;
@@ -369,9 +406,9 @@
             // 
             // dataGridViewPluginList
             // 
+            this.dataGridViewPluginList.AllowDrop = true;
             this.dataGridViewPluginList.AllowUserToAddRows = false;
             this.dataGridViewPluginList.AllowUserToDeleteRows = false;
-            this.dataGridViewPluginList.AllowUserToOrderColumns = true;
             this.dataGridViewPluginList.AllowUserToResizeColumns = false;
             this.dataGridViewPluginList.AllowUserToResizeRows = false;
             this.dataGridViewPluginList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -383,6 +420,10 @@
             this.dataGridViewPluginList.RowHeadersVisible = false;
             this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 329);
             this.dataGridViewPluginList.TabIndex = 0;
+            this.dataGridViewPluginList.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridViewPluginList_DragDrop);
+            this.dataGridViewPluginList.DragOver += new System.Windows.Forms.DragEventHandler(this.dataGridViewPluginList_DragOver);
+            this.dataGridViewPluginList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridViewPluginList_MouseDown);
+            this.dataGridViewPluginList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridViewPluginList_MouseMove);
             // 
             // tabPageQRCode
             // 
@@ -439,43 +480,6 @@
             this.pbQrCode.TabIndex = 0;
             this.pbQrCode.TabStop = false;
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.numericUpDownAutologin);
-            this.groupBox2.Location = new System.Drawing.Point(9, 228);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(240, 65);
-            this.groupBox2.TabIndex = 10;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Autologin";
-            // 
-            // numericUpDownAutologin
-            // 
-            this.numericUpDownAutologin.Location = new System.Drawing.Point(18, 39);
-            this.numericUpDownAutologin.Name = "numericUpDownAutologin";
-            this.numericUpDownAutologin.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownAutologin.TabIndex = 0;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(84, 41);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "minutes (0 to disable)";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 16);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(190, 13);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "Allow access without renewed login for";
-            // 
             // SetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -497,6 +501,9 @@
             this.groupBox1.PerformLayout();
             this.tabPageAuthentication.ResumeLayout(false);
             this.tabPageAuthentication.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutologin)).EndInit();
             this.groupPasscode.ResumeLayout(false);
             this.groupPasscode.PerformLayout();
             this.groupUsernamePassword.ResumeLayout(false);
@@ -508,9 +515,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbQrCode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutologin)).EndInit();
             this.ResumeLayout(false);
 
         }

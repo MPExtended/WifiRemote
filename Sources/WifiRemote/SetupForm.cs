@@ -36,6 +36,10 @@ namespace WifiRemote
         private ArrayList plugins;
         private ImageList pluginIcons;
 
+        private Rectangle dragBoxFromMouseDown;
+        private int rowIndexFromMouseDown;
+        private int rowIndexOfItemUnderMouseToDrop;
+
         private class ItemTag
         {
             public string DllName;
@@ -107,19 +111,21 @@ namespace WifiRemote
             availablePlugins = new ArrayList();
             plugins = new ArrayList();
             pluginIcons = new ImageList();
-            pluginIcons.ImageSize = new Size(30, 30);
+            pluginIcons.ImageSize = new Size(20, 20);
 
             EnumerateWindowPlugins();
             LoadPlugins();
             LoadSettings();
 
             DataGridViewImageColumn iconColumn = new DataGridViewImageColumn(false);
-            iconColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
+            iconColumn.ImageLayout = DataGridViewImageCellLayout.Zoom;
             iconColumn.Width = 20;
             dataGridViewPluginList.Columns.Add(iconColumn);
 
             DataGridViewColumn nameColumn = new DataGridViewTextBoxColumn();
+            nameColumn.Width = 219;
             dataGridViewPluginList.Columns.Add(nameColumn);
+
 
 
 
@@ -662,6 +668,8 @@ namespace WifiRemote
                 ServerDescription desc = new ServerDescription();
                 desc.Port = Int32.Parse(textBoxPort.Text);
                 desc.Name = textBoxName.Text;
+                desc.HardwareAddresses = WifiRemote.GetHardwareAddresses();
+                desc.Hostname = WifiRemote.GetServiceName();
 
                 IPHostEntry host;
                 string localIP = "?";
@@ -719,10 +727,79 @@ namespace WifiRemote
         }
         #endregion
 
-        private void triggerPortReset(object sender, MouseEventArgs e)
-        {
 
+        #region Plugin sorting
+        // See: http://stackoverflow.com/questions/1620947/how-could-i-drag-and-drop-datagridview-rows-under-each-other/1623968#1623968
+
+        private void dataGridViewPluginList_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Get the index of the item the mouse is below.
+            rowIndexFromMouseDown = dataGridViewPluginList.HitTest(e.X, e.Y).RowIndex;
+            if (rowIndexFromMouseDown != -1)
+            {
+                // Remember the point where the mouse down occurred. 
+                // The DragSize indicates the size that the mouse can move 
+                // before a drag event should be started.                
+                Size dragSize = SystemInformation.DragSize;
+
+                // Create a rectangle using the DragSize, with the mouse position being
+                // at the center of the rectangle.
+                dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2),
+                                                               e.Y - (dragSize.Height / 2)),
+                                                        dragSize);
+            }
+            else
+            {
+                // Reset the rectangle if the mouse is not over an item in the ListBox.
+                dragBoxFromMouseDown = Rectangle.Empty;
+            }
         }
 
+        private void dataGridViewPluginList_MouseMove(object sender, MouseEventArgs e)
+        {
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+            {
+                // If the mouse moves outside the rectangle, start the drag.
+                if (dragBoxFromMouseDown != Rectangle.Empty &&
+                    !dragBoxFromMouseDown.Contains(e.X, e.Y))
+                {
+
+                    // Proceed with the drag and drop, passing in the list item.                    
+                    DragDropEffects dropEffect = dataGridViewPluginList.DoDragDrop(
+                        dataGridViewPluginList.Rows[rowIndexFromMouseDown],
+                        DragDropEffects.Move);
+                }
+            }
+        }
+
+        private void dataGridViewPluginList_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void dataGridViewPluginList_DragDrop(object sender, DragEventArgs e)
+        {
+            // The mouse locations are relative to the screen, so they must be 
+            // converted to client coordinates.
+            Point clientPoint = dataGridViewPluginList.PointToClient(new Point(e.X, e.Y));
+
+            // Get the row index of the item the mouse is below. 
+            rowIndexOfItemUnderMouseToDrop =
+                dataGridViewPluginList.HitTest(clientPoint.X, clientPoint.Y).RowIndex;
+
+            // If the drag operation was a move then remove and insert the row.
+            if (e.Effect == DragDropEffects.Move)
+            {
+                DataGridViewRow rowToMove = e.Data.GetData(
+                        typeof(DataGridViewRow)) as DataGridViewRow;
+                dataGridViewPluginList.Rows.RemoveAt(rowIndexFromMouseDown);
+                dataGridViewPluginList.Rows.Insert(rowIndexOfItemUnderMouseToDrop, rowToMove);
+
+                // Save priority change for plugin
+
+            }
+        }        
+
+        #endregion
     }
 }

@@ -12,6 +12,8 @@ namespace WifiRemote
     {
         public String Address { get; set; }
         public int Port { get; set; }
+        public String Hostname { get; set; }
+        public String HardwareAddresses { get; set; }
         public String Name { get; set; }
         public String User { get; set; }
         public String Password { get; set; }
