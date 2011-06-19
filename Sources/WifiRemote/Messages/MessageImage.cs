@@ -20,6 +20,11 @@ namespace WifiRemote
 
         public String ImagePath { get; set; }
 
+        /// <summary>
+        /// User definable tag for this image request
+        /// </summary>
+        public String UserTag { get; set; }
+
         byte[] image;
         public byte[] Image
         {
@@ -43,11 +48,12 @@ namespace WifiRemote
             }
         }
 
-        public MessageImage(String path)
+        public MessageImage(String path, String tag)
         {
             image = new byte[0];
             thumbFolder = Config.GetFolder(Config.Dir.Thumbs);
             ImagePath = path;
+            UserTag = tag;
         }
 
 
