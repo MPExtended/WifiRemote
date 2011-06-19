@@ -2,6 +2,7 @@
 using MediaPortal.Player;
 using MediaPortal.Video.Database;
 using MediaPortal.GUI.Library;
+using MediaPortal.Music.Database;
 
 namespace WifiRemote
 {
@@ -112,7 +113,19 @@ namespace WifiRemote
                     // Music
                     if (g_Player.IsMusic)
                     {
-                        return new NowPlayingMusic();
+                        Song song = new Song();
+                        MusicDatabase musicDatabase = MusicDatabase.Instance;
+                        musicDatabase.GetSongByFileName(g_Player.Player.CurrentFile, ref song);
+
+                        // MyMusic song
+                        if (song != null)
+                        {
+                            return new NowPlayingMusic(song);
+                        }
+                        else
+                        {
+                            return null;
+                        }
                     }
                     // Video
                     else if (g_Player.IsVideo)
