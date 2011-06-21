@@ -18,7 +18,6 @@ using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.Net.NetworkInformation;
 
-//using ThirstyCrow.WinForms.Controls;
 
 namespace WifiRemote
 {
@@ -28,7 +27,7 @@ namespace WifiRemote
 
         private String originalPort;
 
-        private String downloadUrl32Bit = "http://support.apple.com/downloads/DL755/en_US/BonjourSetup.exe";
+        private String downloadUrl32Bit = "http://download.info.apple.com/Mac_OS_X/061-5788.20081215.5t9Uk/BonjourSetup.exe";
         private String downloadUrl64Bit = "http://download.info.apple.com/Mac_OS_X/061-5788.20081215.5t9Uk/Bonjour64Setup.exe";
         private String downloadTarget;
 
