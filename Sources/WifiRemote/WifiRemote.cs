@@ -263,7 +263,10 @@ namespace WifiRemote
                 }
 
                 // Stop socket server
-                socketServer.Stop();
+                if (socketServer != null)
+                {
+                    socketServer.Stop();
+                }
             }
         }
 
@@ -299,7 +302,10 @@ namespace WifiRemote
                 }
 
                 // Stop socket server
-                socketServer.Stop();
+                if (socketServer != null)
+                {
+                    socketServer.Stop();
+                }
             }
         }
 
