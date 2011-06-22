@@ -365,7 +365,7 @@ namespace WifiRemote
         private void DoKeyDown()
         {
             isCommandDown = true;
-            while (isCommandDown || m_keyDownTimer.ElapsedMilliseconds > KEY_DOWN_TIMEOUT)
+            while (isCommandDown && m_keyDownTimer.ElapsedMilliseconds < KEY_DOWN_TIMEOUT)
             {
                 SendCommand(commandDownChar);
                 Thread.Sleep(commandDownPauses);
