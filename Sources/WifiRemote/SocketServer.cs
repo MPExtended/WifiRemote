@@ -317,9 +317,9 @@ namespace WifiRemote
         /// <summary>
         /// Send the image of the currently played media to all clients as byte array
         /// </summary>
-        public void SendImageToClient(AsyncSocket sender, String imagePath, String userTag)
+        public void SendImageToClient(AsyncSocket sender, String imagePath, String userTag, int width, int height)
         {
-            MessageImage imageMessage = new MessageImage(imagePath, userTag);
+            MessageImage imageMessage = new MessageImage(imagePath, userTag, width, height);
             SendMessageToClient(imageMessage, sender);
         }
 
@@ -328,7 +328,7 @@ namespace WifiRemote
         /// </summary>
         public void SendImageToClient(AsyncSocket sender, String imagePath)
         {
-            SendImageToClient(sender, imagePath, String.Empty);
+            SendImageToClient(sender, imagePath, String.Empty, 0, 0);
         }
 
         /// <summary>
@@ -606,7 +606,9 @@ namespace WifiRemote
                         String path = (string)message["ImagePath"];
                         if (path != null)
                         {
-                            SendImageToClient(sender, path, (string)message["UserTag"]);
+                            int imageWidth = (message["MaximumWidth"] != null) ? (int)message["MaximumWidth"] : 0;
+                            int imageHeight = (message["MaximumHeight"] != null) ? (int)message["MaximumHeight"] : 0;
+                            SendImageToClient(sender, path, (string)message["UserTag"], imageWidth, imageHeight);
                         }
                     }
                     // Send the current status to the client
