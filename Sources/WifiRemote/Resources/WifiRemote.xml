@@ -67,6 +67,27 @@
 			<action layer="0" condition="FULLSCREEN" conproperty="true" command="ACTION" cmdproperty="24" sound="click.wav" />
 			<action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="106" sound="click.wav" />
 		</button>
+		<button name="Menu" code="40">
+      <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="106" sound="click.wav" />
+    </button>
+    <button name="First" code="41">
+      <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="109" sound="click.wav" />
+    </button>
+    <button name="Last" code="42">
+      <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="110" sound="click.wav" />
+    </button>
+    <button name="Fullscreen" code="43">
+      <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="18" sound="click.wav" />
+    </button>
+    <button name="Subtitles" code="44">
+      <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="119" sound="click.wav" />
+    </button>    
+    <button name="Audio Track" code="45">
+      <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="26" sound="click.wav" />
+    </button>
+    <button name="Screenshot" code="46">
+      <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="85" sound="click.wav" />
+    </button> 
 		<button name="Volume +" code="16">
 			<action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="103" sound="cursor.wav" />
 		</button>
