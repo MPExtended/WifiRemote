@@ -478,10 +478,12 @@ namespace WifiRemote
         /// Plays the local file on the MediaPortal client
         /// </summary>
         /// <param name="video">Path to the video</param>
-        internal void PlayVideoFile(string video)
+        /// <param name="position">Start position</param>
+        internal void PlayVideoFile(string video, int position)
         {
             if (video != null && File.Exists(video))
             {
+                WifiRemote.LogMessage("Play video file: " + video + ", pos: " + position, WifiRemote.LogType.Debug);
                 // from MP-TvSeries code:
                 // sometimes it takes up to 30+ secs to go to fullscreen even though the video is already playing
                 // lets force fullscreen here
@@ -493,7 +495,28 @@ namespace WifiRemote
 
                 // Play File
                 g_Player.Play(video, g_Player.MediaType.Video);
+                if (position != 0)
+                {
+                    g_Player.SeekAbsolute(position);
+                }
                 g_Player.ShowFullScreenWindowVideo();
+            }
+        }
+
+        /// <summary>
+        /// Plays the local audio file on the MediaPortal client
+        /// </summary>
+        /// <param name="video">Path to the audio file</param>
+        internal void PlayAudioFile(string audio, double position)
+        {
+            if (audio != null && File.Exists(audio))
+            {
+                WifiRemote.LogMessage("Play audio file: " + audio + ", pos: " + position, WifiRemote.LogType.Debug);
+                g_Player.Play(audio, g_Player.MediaType.Music);
+                if (position != 0)
+                {
+                    g_Player.SeekAbsolute(position);
+                }
             }
         }
 
@@ -515,9 +538,9 @@ namespace WifiRemote
         }
 
         /// <summary>
-        /// Set the player position to the given absolute time (in ms)
+        /// Set the player position to the given absolute time (in s)
         /// </summary>
-        /// <param name="position">position in ms</param>
+        /// <param name="position">position in s</param>
         /// <param name="absolute">absolute or relative to current position</param>
         internal void SetPosition(double position, bool absolute)
         {
@@ -531,16 +554,6 @@ namespace WifiRemote
             }
         }
 
-        /// <summary>
-        /// Plays the local audio file on the MediaPortal client
-        /// </summary>
-        /// <param name="video">Path to the audio file</param>
-        internal void PlayAudioFile(string audio)
-        {
-            if (audio != null && File.Exists(audio))
-            {
-                g_Player.Play(audio, g_Player.MediaType.Music);
-            }
-        }
+
     }
 }

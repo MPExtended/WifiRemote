@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MediaPortal.GUI.Library;
 using WifiRemote.Messages;
+using WifiRemote.MPPlayList;
 
 namespace WifiRemote
 {
@@ -44,17 +45,17 @@ namespace WifiRemote
         /// <summary>
         /// Username  for client authentification
         /// </summary>
-        internal String UserName {get; set;}
+        internal String UserName { get; set; }
 
         /// <summary>
         /// Password for client authentification
         /// </summary>
-        internal String Password {get; set;}
+        internal String Password { get; set; }
 
         /// <summary>
         /// Passcode for client authentification
         /// </summary>
-        internal String PassCode {get; set;}
+        internal String PassCode { get; set; }
 
         /// <summary>
         /// Time in minutes that an authenticated client is
@@ -67,10 +68,11 @@ namespace WifiRemote
         /// <summary>
         /// Passcode for client authentification
         /// </summary>
-        internal AuthMethod AllowedAuth 
+        internal AuthMethod AllowedAuth
         {
-            get { 
-                return allowedAuth; 
+            get
+            {
+                return allowedAuth;
             }
 
             set
@@ -431,7 +433,7 @@ namespace WifiRemote
         void newSocket_DidRead(AsyncSocket sender, byte[] data, long tag)
         {
             String msg = null;
-            
+
             try
             {
                 msg = Encoding.UTF8.GetString(data);
@@ -464,7 +466,7 @@ namespace WifiRemote
                         }
                     }
                 }
-                
+
                 // The client is already authentificated or we don't need authentification
                 if (type != null && client.IsAuthenticated && type != "identify")
                 {
@@ -545,12 +547,12 @@ namespace WifiRemote
                         }
                         if (seekType == 2)
                         {
-                            double position = Convert.ToDouble((decimal)message["Position"]);
+                            int position = (int)message["Position"];
                             communication.SetPosition(position, true);
                         }
                         else if (seekType == 3)
                         {
-                            double position = Convert.ToDouble((decimal)message["Position"]);
+                            int position = (int)message["Position"];
                             communication.SetPosition(position, false);
                         }
                     }
@@ -559,18 +561,19 @@ namespace WifiRemote
                     {
                         string fileType = (string)message["FileType"];
                         string filePath = (string)message["Filepath"];
+                        int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
 
                         if (fileType != null && filePath != null)
                         {
                             // Play a video file
                             if (fileType == "video")
                             {
-                                communication.PlayVideoFile(filePath);
+                                communication.PlayVideoFile(filePath, startPos);
                             }
                             // Play an audio file
                             else if (fileType == "audio")
                             {
-                                communication.PlayAudioFile(filePath);
+                                communication.PlayAudioFile(filePath, startPos);
                             }
                         }
                     }
@@ -609,6 +612,78 @@ namespace WifiRemote
                             int imageWidth = (message["MaximumWidth"] != null) ? (int)message["MaximumWidth"] : 0;
                             int imageHeight = (message["MaximumHeight"] != null) ? (int)message["MaximumHeight"] : 0;
                             SendImageToClient(sender, path, (string)message["UserTag"], imageWidth, imageHeight);
+                        }
+                    }
+                    //playlist actions
+                    else if (type == "playlist")
+                    {
+                        String action = (string)message["PlaylistAction"];
+                        String playlistType = (message["PlaylistType"] != null) ? (string)message["PlaylistType"] : null;
+                        bool autoPlay = (message["AutoPlay"] != null) ? (bool)message["AutoPlay"] : false;
+
+                        if (action.Equals("new") || action.Equals("append"))
+                        {
+                            int insertIndex = 0;
+                            if (message["InsertIndex"] != null)
+                            {
+                                insertIndex = (int)message["InsertIndex"];
+                            }
+
+                            JArray array = (message["PlaylistItems"] != null) ? (JArray)message["PlaylistItems"] : null;
+                            if (array != null)
+                            {
+                                if (action.Equals("new"))
+                                {
+                                    PlaylistHelper.ClearPlaylist(playlistType);
+                                }
+
+                                int index = insertIndex;
+                                foreach (JObject o in array)
+                                {
+                                    PlaylistEntry entry = new PlaylistEntry();
+                                    entry.FileName = (o["FileName"] != null) ? (string)o["FileName"] : null;
+                                    entry.Name = (o["Name"] != null) ? (string)o["Name"] : null;
+                                    entry.Duration = (o["Duration"] != null) ? (int)o["Duration"] : 0;
+                                    PlaylistHelper.AddSongToPlaylist(playlistType, entry, index);
+                                    index++;
+                                }
+
+                                if (autoPlay)
+                                {
+                                    PlaylistHelper.StartPlayingPlaylist(playlistType, insertIndex);
+                                }
+                            }
+                        }
+                        else if (action.Equals("get"))
+                        {
+                            List<PlaylistEntry> items = PlaylistHelper.GetPlaylistItems(playlistType);
+
+                            MessagePlaylist returnPlaylist = new MessagePlaylist();
+                            returnPlaylist.PlaylistType = type;
+                            returnPlaylist.PlaylistItems = items;
+
+                            SendMessageToClient(returnPlaylist, sender);
+                        }
+                        else if (action.Equals("remove"))
+                        {
+                            int indexToRemove = (message["Index"] != null) ? (int)message["Index"] : 0;
+
+                            PlaylistHelper.RemoveSongFromPlaylist(playlistType, indexToRemove);
+                        }
+                        else if (action.Equals("move"))
+                        {
+                            int oldIndex = (message["OldIndex"] != null) ? (int)message["OldIndex"] : 0;
+                            int newIndex = (message["NewIndex"] != null) ? (int)message["NewIndex"] : 0;
+                            PlaylistHelper.ChangePlaylistItemPosition(playlistType, oldIndex, newIndex);
+                        }
+                        else if (action.Equals("play"))
+                        {
+                            int index = (message["Index"] != null) ? (int)message["Index"] : 0;
+                            PlaylistHelper.StartPlayingPlaylist(playlistType, index);
+                        }
+                        else if (action.Equals("clear"))
+                        {
+                            PlaylistHelper.ClearPlaylist(playlistType);
                         }
                     }
                     // Send the current status to the client
@@ -708,11 +783,11 @@ namespace WifiRemote
             // For AuthMethod.Both we have to check which method was choosen.
             if (AllowedAuth == AuthMethod.Both)
             {
-                if (message["AuthMethod"] == null) 
-                {            
+                if (message["AuthMethod"] == null)
+                {
                     WifiRemote.LogMessage("User " + client.ToString() + " authentification failed, no authMethod submitted", WifiRemote.LogType.Info);
                     return false;
-                } 
+                }
                 else
                 {
                     String authString = (string)message["AuthMethod"];
@@ -910,7 +985,7 @@ namespace WifiRemote
         /// Send current status, volume and nowplaying info to a client
         /// </summary>
         /// <param name="client"></param>
-        private void sendOverviewInformationToClient(AsyncSocket client) 
+        private void sendOverviewInformationToClient(AsyncSocket client)
         {
             SendMessageToClient(this.statusMessage, client);
             SendMessageToClient(this.volumeMessage, client);

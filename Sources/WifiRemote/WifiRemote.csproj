@@ -101,6 +101,7 @@
     <Compile Include="Messages\MessageAuthenticationResponse.cs" />
     <Compile Include="Messages\MessageNowPlayingUpdate.cs" />
     <Compile Include="Messages\MessageOnscreenKeyboard.cs" />
+    <Compile Include="Messages\MessagePlaylist.cs" />
     <Compile Include="Messages\MessagePlugins.cs" />
     <Compile Include="Messages\MessageProperties.cs" />
     <Compile Include="Messages\MessagePropertyChanged.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="Messages\MessageVolume.cs" />
     <Compile Include="Messages\MessageWelcome.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingMusic.cs" />
+    <Compile Include="MPPlayList\PlaylistHelper.cs" />
+    <Compile Include="MPPlayList\PlaylistEntry.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
