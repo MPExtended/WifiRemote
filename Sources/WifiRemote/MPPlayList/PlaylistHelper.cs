@@ -6,6 +6,7 @@ using MediaPortal.Playlists;
 using WifiRemote.MPPlayList;
 using MediaPortal.GUI.Library;
 using MediaPortal.Music.Database;
+using MediaPortal.Video.Database;
 
 namespace WifiRemote.MPPlayList
 {
@@ -27,18 +28,23 @@ namespace WifiRemote.MPPlayList
             PlayListType plType = GetTypeFromString(type);
             PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
             PlayList playList = playListPlayer.GetPlaylist(plType);
-
-            MusicDatabase mpMusicDb = MusicDatabase.Instance;
-            Song song = new Song();
-            bool inDb = mpMusicDb.GetSongByFileName(entry.FileName, ref song);
-
             PlayListItem item = null;
-            if (inDb)
+
+            //If it's a music item, try to find it in the db
+            if (plType == PlayListType.PLAYLIST_MUSIC)
             {
-                item = song.ToPlayListItem();
-            }
-            else
-            {
+                MusicDatabase mpMusicDb = MusicDatabase.Instance;
+                Song song = new Song();
+                bool inDb = mpMusicDb.GetSongByFileName(entry.FileName, ref song);
+
+
+                if (inDb)
+                {
+                    item = song.ToPlayListItem();
+                }
+            }            
+            
+            if(item == null){
                 item = new PlayListItem(entry.Name, entry.FileName, entry.Duration);
             }
 
@@ -168,22 +174,31 @@ namespace WifiRemote.MPPlayList
                 StartPlayingPlaylistDelegate d = StartPlayingPlaylist;
                 GUIGraphicsContext.form.Invoke(d);
             }
-
-            PlayListPlayer playlistPlayer = PlayListPlayer.SingletonPlayer;
-            // if we got a playlist
-            if (playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_MUSIC).Count > 0)
+            else
             {
-                // then get 1st song
-                PlayList playlist = playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_MUSIC);
-                PlayListItem item = playlist[0];
+                PlayListPlayer playlistPlayer = PlayListPlayer.SingletonPlayer;
+                PlayList playlist = playlistPlayer.GetPlaylist(mPlaylistStartType);
+                // if we got a playlist
+                if (playlist.Count > 0)
+                {
+                    // then get 1st song
+                    PlayListItem item = playlist[0];
 
-                // and start playing it
-                playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_MUSIC;
-                playlistPlayer.Reset();
-                playlistPlayer.Play(mPlaylistStartIndex);
+                    // and activate the playlist window if its not activated yet
+                    if (mPlaylistStartType == PlayListType.PLAYLIST_MUSIC)
+                    {
+                        GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_MUSIC_PLAYLIST);
+                    }
+                    else if (mPlaylistStartType == PlayListType.PLAYLIST_VIDEO)
+                    {
+                        GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_VIDEO_PLAYLIST);
+                    }
 
-                // and activate the playlist window if its not activated yet
-                GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_MUSIC_PLAYLIST);
+                    // and start playing it
+                    playlistPlayer.CurrentPlaylistType = mPlaylistStartType;
+                    playlistPlayer.Reset();
+                    playlistPlayer.Play(mPlaylistStartIndex);
+                }
             }
         }
     }

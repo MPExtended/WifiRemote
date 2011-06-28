@@ -619,10 +619,11 @@ namespace WifiRemote
                     {
                         String action = (string)message["PlaylistAction"];
                         String playlistType = (message["PlaylistType"] != null) ? (string)message["PlaylistType"] : null;
-                        bool autoPlay = (message["AutoPlay"] != null) ? (bool)message["AutoPlay"] : false;
+                        
 
                         if (action.Equals("new") || action.Equals("append"))
                         {
+                            bool autoPlay = (message["AutoPlay"] != null) ? (bool)message["AutoPlay"] : false;
                             int insertIndex = 0;
                             if (message["InsertIndex"] != null)
                             {
@@ -650,6 +651,11 @@ namespace WifiRemote
 
                                 if (autoPlay)
                                 {
+                                    if (message["StartPosition"] != null)
+                                    {
+                                        int startPos = (int)message["StartPosition"];
+                                        insertIndex += startPos;
+                                    }
                                     PlaylistHelper.StartPlayingPlaylist(playlistType, insertIndex);
                                 }
                             }
