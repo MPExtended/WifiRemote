@@ -324,12 +324,15 @@ namespace WifiRemote
                     button = RemoteButton.Screenshot;
                     break;
 
+                case "aspectratio":
+                    button = RemoteButton.AspectRatio;
+                    break;
+
                 default:
                     return;
             }
 
             remoteHandler.MapAction((int)button);
-            //System.Threading.Thread.Sleep(100);
         }
 
 
