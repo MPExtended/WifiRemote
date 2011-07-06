@@ -80,7 +80,6 @@ namespace WifiRemote
             // Test if Bonjour is installed
             try
             {
-                //float bonjourVersion = ZeroconfService.NetService.GetVersion();
                 Version bonjourVersion = ZeroconfService.NetService.DaemonVersion;
                 buttonDownloadBonjour.Enabled = false;
                 checkBoxDisableBonjour.Enabled = false;
@@ -144,7 +143,6 @@ namespace WifiRemote
 
 
                     dataGridViewPluginList[1, i].Value = plugin.SetupForm.PluginName();
-                    //StarRating stars = new StarRating();
                 }
 
             }

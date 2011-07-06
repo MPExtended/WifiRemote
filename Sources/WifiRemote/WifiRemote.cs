@@ -479,11 +479,13 @@ namespace WifiRemote
             {
                 //float bonjourVersion = NetService.GetVersion();
                 Version bonjourVersion = NetService.DaemonVersion;
-                Log.Info(String.Format("{0} Bonjour version {1} found.", LOG_PREFIX, bonjourVersion.ToString()));
+                LogMessage(String.Format("Bonjour version {0} found.", bonjourVersion.ToString()), LogType.Info);
             }
             catch
             {
-                Log.Error(String.Format("{0} This plugin needs Bonjour installed! Get it at http://support.apple.com/downloads/Bonjour_for_Windows", LOG_PREFIX));
+                LogMessage("Bonjour enabled but not installed! Get it at http://support.apple.com/downloads/Bonjour_for_Windows", LogType.Error);
+                LogMessage("Disabling Bonjour for this session.", LogType.Info);
+                disableBonjour = true;
                 return;
             }
 
@@ -538,7 +540,7 @@ namespace WifiRemote
         /// <param name="exception"></param>
         void publishService_DidNotPublishService(NetService service, DNSServiceException exception)
         {
-            Log.Error(String.Format("{0} Bonjour publish error: {1}", LOG_PREFIX, exception.Message));
+            LogMessage(String.Format("Bonjour publish error: {0}", exception.Message), LogType.Error);
         }
 
         /// <summary>
@@ -547,7 +549,7 @@ namespace WifiRemote
         /// <param name="service"></param>
         void publishService_DidPublishService(NetService service)
         {
-            Log.Info(String.Format("{0} Published Service via Bonjour!", LOG_PREFIX));
+            LogMessage("Published Service via Bonjour!", LogType.Info);
             servicePublished = true;
         }
 
