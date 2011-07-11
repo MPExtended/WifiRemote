@@ -168,7 +168,8 @@ namespace WifiRemote
             {
                 foreach (AsyncSocket socket in connectedSockets)
                 {
-                    socket.CloseAfterReading();
+                    //socket.CloseAfterReading();
+                    socket.Close();
                 }
             }
 
@@ -400,6 +401,7 @@ namespace WifiRemote
             // Remove the client from the client list.
             lock (connectedSockets)
             {
+                WifiRemote.LogMessage("removing client " + sender.GetRemoteClient().ClientName + " from connected sockets", WifiRemote.LogType.Info);
                 connectedSockets.Remove(sender);
             }
         }
