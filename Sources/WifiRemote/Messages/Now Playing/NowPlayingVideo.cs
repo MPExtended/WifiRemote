@@ -16,6 +16,16 @@ namespace WifiRemote
             get { return mediaType; }
         }
 
+        int itemId;
+        /// <summary>
+        /// ID of the movie in MyMovie's DB
+        /// </summary>
+        public int ItemId
+        {
+            get { return itemId; }
+            set { itemId = value; }
+        }
+
         string summary;
         /// <summary>
         /// Plot summary
@@ -144,6 +154,7 @@ namespace WifiRemote
         /// <param name="aMovie">The currently playing movie</param>
         public NowPlayingVideo(IMDBMovie aMovie)
         {
+            ItemId = aMovie.ID;
             Summary = aMovie.Plot;
             Title = aMovie.Title;
             Tagline = aMovie.TagLine;

@@ -14,6 +14,7 @@ namespace WifiRemote
             get { return mediaType; }
         }
 
+        public int ItemId { get; set; }
         public string Album { get; set; }
         public string AlbumArtist { get; set; }
         public string Artist { get; set; }
@@ -45,6 +46,7 @@ namespace WifiRemote
 
         public NowPlayingMusic(Song song)
         {
+            ItemId = song.Id;
             Album = song.Album;
             AlbumArtist = song.AlbumArtist;
             Artist = song.Artist;

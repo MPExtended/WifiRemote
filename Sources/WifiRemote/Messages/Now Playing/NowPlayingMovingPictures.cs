@@ -19,6 +19,11 @@ namespace WifiRemote
             get { return mediaType; }
         }
 
+        /// <summary>
+        /// Movie ID in moving pictures database table "movie_info"
+        /// </summary>
+        public int ItemId { get; set; }
+
         string summary;
         /// <summary>
         /// Plot summary
@@ -194,6 +199,10 @@ namespace WifiRemote
                     {
                         switch (movieProp.ToString())
                         {
+                            case "System.Nullable`1[System.Int32] ID":
+                                ItemId = (int)movieProp.GetValue(attachedMovies[0], null);
+                                break;
+
                             case "System.String Title":
                                 Title = movieProp.GetValue(attachedMovies[0], null).ToString();
                                 break;

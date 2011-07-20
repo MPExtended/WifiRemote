@@ -20,6 +20,36 @@ namespace WifiRemote
             get { return mediaType; }
         }
 
+        int seriesId;
+        /// <summary>
+        /// ID of the series in TVSeries' DB
+        /// </summary>
+        public int SeriesId
+        {
+            get { return seriesId; }
+            set { seriesId = value; }
+        }
+
+        int seasonId;
+        /// <summary>
+        /// ID of the season in TVSeries' DB
+        /// </summary>
+        public int SeasonId
+        {
+            get { return seasonId; }
+            set { seasonId = value; }
+        }
+
+        int episodeId;
+        /// <summary>
+        /// ID of the episode in TVSeries' DB
+        /// </summary>
+        public int EpisodeId
+        {
+            get { return episodeId; }
+            set { episodeId = value; }
+        }
+
         string series;
         /// <summary>
         /// Series name
@@ -214,6 +244,11 @@ namespace WifiRemote
                     Type onlineEpisodeType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBOnlineEpisode");
                     PropertyInfo item = onlineEpisodeType.GetProperty("Item");
 
+                    // TheTVDB IDs
+                    SeriesId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cSeriesID").GetValue(null) }).ToString());
+                    SeasonId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cSeasonID").GetValue(null) }).ToString());
+                    EpisodeId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cID").GetValue(null) }).ToString());
+
                     // Episode = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
                     Episode = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cEpisodeIndex").GetValue(null) }).ToString();
                     
@@ -254,8 +289,7 @@ namespace WifiRemote
                     // Get series object
                     Type helperType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.Helper");
                     MethodInfo getCorrespondingSeries = helperType.GetMethod("getCorrespondingSeries");
-                    int seriesId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cSeriesID").GetValue(null) }).ToString());
-                    object dbSeries = getCorrespondingSeries.Invoke(null, new object[] { seriesId });
+                    object dbSeries = getCorrespondingSeries.Invoke(null, new object[] { SeriesId });
 
                     // Get pretty name
                     PropertyInfo sItem = dbSeriesType.GetProperty("Item");
