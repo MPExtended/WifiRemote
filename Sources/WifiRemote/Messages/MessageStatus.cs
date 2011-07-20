@@ -12,6 +12,16 @@ namespace WifiRemote
     /// </summary>
     class MessageStatus : IMessage
     {
+        /// <summary>
+        /// The localized name of "fullscreen".
+        /// Used to detect if the player is in fullscreen
+        /// mode without any dialog on top.
+        /// </summary>
+        private String localizedFullscreen;
+        private String localizedFullscreenVideo;
+        private String localizedFullscreenTV;
+        private String localizedFullscreenMusic;
+
         public string Type
         {
             get { return "status"; }
@@ -40,6 +50,20 @@ namespace WifiRemote
             {
                 isPaused = g_Player.Paused;
                 return isPaused; 
+            }
+        }
+
+        /// <summary>
+        /// <code>true</code> if g_Play is in fullscreen and on top
+        /// </summary>
+        public bool IsFullscreen
+        {
+            get 
+            { 
+                return (currentModule == localizedFullscreen ||
+                        currentModule == localizedFullscreenMusic ||
+                        currentModule == localizedFullscreenTV ||
+                        currentModule == localizedFullscreenVideo); 
             }
         }
 
@@ -117,7 +141,10 @@ namespace WifiRemote
         /// </summary>
         public MessageStatus()
         {
-        
+            localizedFullscreen = GUILocalizeStrings.Get(595);
+            localizedFullscreenTV = GUILocalizeStrings.Get(100000 + (int)GUIWindow.Window.WINDOW_TVFULLSCREEN);
+            localizedFullscreenVideo = GUILocalizeStrings.Get(100000 + (int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
+            localizedFullscreenMusic = GUILocalizeStrings.Get(100000 + (int)GUIWindow.Window.WINDOW_FULLSCREEN_MUSIC);
         }
 
 
