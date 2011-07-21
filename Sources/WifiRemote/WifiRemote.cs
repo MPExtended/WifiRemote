@@ -13,6 +13,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace WifiRemote
 {
@@ -651,6 +652,7 @@ namespace WifiRemote
 
                     auth = (AuthMethod)reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
                     autologinTimeout = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "autologinTimeout", 0);
+
                 }
 
                 // Start listening for client connections
@@ -675,12 +677,32 @@ namespace WifiRemote
         internal static ArrayList GetActiveWindowPluginsAndIDs(bool sendIcons)
         {
             ArrayList plugins = new ArrayList();
+            ArrayList sortedPlugins = new ArrayList();
+
+            int[] savedPlugins;
             int[] ignoredPluginIds = new int[] { 
                 -1, 
                 0,          // home
                 3005,       // GUITopbar
                 730716      // fanart handler
-            }; 
+            };
+
+            // Bad for performance, but I see no other way here?
+            using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"))) 
+            {
+                // Read plugin ids and convert them to int
+                String[] savedPluginStrings = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "savedPlugins", "").Split('|');
+                List<int> savedPluginIds = new List<int>();
+                foreach (string idString in savedPluginStrings)
+                {
+                    int i;
+                    if (int.TryParse(idString, out i))
+                    {
+                        savedPluginIds.Add(i);
+                    }
+                }
+                savedPlugins = savedPluginIds.ToArray();
+            }
 
             foreach (ISetupForm plugin in PluginManager.SetupForms)
             {
@@ -724,7 +746,31 @@ namespace WifiRemote
                 }
             }
 
-            return plugins;
+            // Sort plugins
+            foreach (int pluginId in savedPlugins)
+            {
+                // Find saved plugin with this window id
+                var query = from WindowPlugin p in plugins
+                            where p.WindowId == pluginId
+                            select p;
+
+                // Add the first found plugin to the list
+                foreach (WindowPlugin plugin in query)
+                {
+                    sortedPlugins.Add(plugin);
+                    break;
+                }
+            }
+
+            foreach (WindowPlugin plugin in plugins)
+            {
+                if (!sortedPlugins.Contains(plugin))
+                {
+                    sortedPlugins.Add(plugin);
+                }
+            }
+
+            return sortedPlugins;
         }
 
         /// <summary>

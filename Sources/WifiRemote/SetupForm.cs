@@ -17,6 +17,7 @@ using System.Net;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.Net.NetworkInformation;
+using System.Xml;
 
 
 namespace WifiRemote
@@ -33,6 +34,8 @@ namespace WifiRemote
 
         private ArrayList availablePlugins;
         private ArrayList plugins;
+        private ArrayList sortedPlugins;
+        private int[] savedPlugins;
         private ImageList pluginIcons;
 
         private Rectangle dragBoxFromMouseDown;
@@ -75,6 +78,19 @@ namespace WifiRemote
                 numericUpDownAutologin.Value = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "autologinTimeout", 0);
 
                 resetPort();
+
+                // Read plugin ids and convert them to int
+                String[] savedPluginStrings = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "savedPlugins", "").Split('|');
+                List<int> savedPluginIds = new List<int>();
+                foreach (string idString in savedPluginStrings)
+                {
+                    int i;
+                    if (int.TryParse(idString, out i))
+                    {
+                        savedPluginIds.Add(i);
+                    }
+                }
+                savedPlugins = savedPluginIds.ToArray();
             }
 
             // Test if Bonjour is installed
@@ -107,6 +123,7 @@ namespace WifiRemote
 
             // Setup plugins list
             availablePlugins = new ArrayList();
+            sortedPlugins = new ArrayList();
             plugins = new ArrayList();
             pluginIcons = new ImageList();
             pluginIcons.ImageSize = new Size(20, 20);
@@ -121,32 +138,42 @@ namespace WifiRemote
             dataGridViewPluginList.Columns.Add(iconColumn);
 
             DataGridViewColumn nameColumn = new DataGridViewTextBoxColumn();
-            nameColumn.Width = 219;
+            nameColumn.Width = 200;
             dataGridViewPluginList.Columns.Add(nameColumn);
 
-
-
-
-            foreach (ItemTag plugin in plugins)
+            
+            // Add saved plugins to list for ordering
+            foreach (int pluginId in savedPlugins)
             {
-                if (plugin.IsEnabled)
+                // Find saved plugin with this window id
+                var query = from ItemTag p in plugins
+                            where p.WindowId == pluginId
+                            select p;
+
+                // Add the first found plugin to the list
+                foreach (ItemTag plugin in query)
                 {
-                    int i = dataGridViewPluginList.Rows.Add();
-                    if (plugin.ActiveImage != null)
+                    addPluginToList(plugin);
+                    if (plugin.IsEnabled)
                     {
-                        dataGridViewPluginList[0, i].Value = plugin.ActiveImage;
+                        sortedPlugins.Add(plugin);
                     }
-                    else
-                    {
-                        dataGridViewPluginList[0, i].Value = Properties.Resources.NoPluginImage;
-                    }
-
-
-                    dataGridViewPluginList[1, i].Value = plugin.SetupForm.PluginName();
+                    break;
                 }
-
             }
 
+            // Add rest of the plugins to the list
+            foreach (ItemTag plugin in plugins)
+            {
+                if (!savedPlugins.Contains<int>(plugin.WindowId))
+                {
+                    addPluginToList(plugin);
+                    if (plugin.IsEnabled)
+                    {
+                        sortedPlugins.Add(plugin);
+                    }                    
+                }
+            }
         }
 
 
@@ -192,6 +219,14 @@ namespace WifiRemote
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "passcode", WifiRemote.EncryptString(txtPasscode.Text));
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "auth", cbAuthMethod.SelectedIndex);
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "autologinTimeout", numericUpDownAutologin.Value);
+
+                // Save plugins order
+                List<string> pluginIdsToSave = new List<String>();
+                foreach (ItemTag plugin in sortedPlugins)
+                {
+                    pluginIdsToSave.Add(plugin.WindowId.ToString());
+                }
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "savedPlugins", String.Join("|", pluginIdsToSave.ToArray()));
             }
         }
 
@@ -395,6 +430,28 @@ namespace WifiRemote
 
         #region Plugin List
 
+        /// <summary>
+        /// Add a plugin to the display list if it is active
+        /// </summary>
+        /// <param name="plugin"></param>
+        private void addPluginToList(ItemTag plugin)
+        {
+            if (plugin.IsEnabled)
+            {
+                int i = dataGridViewPluginList.Rows.Add();
+                if (plugin.ActiveImage != null)
+                {
+                    dataGridViewPluginList[0, i].Value = plugin.ActiveImage;
+                }
+                else
+                {
+                    dataGridViewPluginList[0, i].Value = Properties.Resources.NoPluginImage;
+                }
+
+
+                dataGridViewPluginList[1, i].Value = plugin.SetupForm.PluginName();
+            }
+        }
 
         /// <summary>
         /// List all window plugin dll's
@@ -525,7 +582,7 @@ namespace WifiRemote
                 Log.Error("[WifiRemote Setup] Error loading plugins: " + excep.Message);
             }
         }
-
+        
 
         /// <summary>
         /// Checks whether the a plugin has a <see cref="PluginIconsAttribute"/> defined.  If it has, the images that are indicated
@@ -785,7 +842,7 @@ namespace WifiRemote
                 dataGridViewPluginList.HitTest(clientPoint.X, clientPoint.Y).RowIndex;
 
             // If the drag operation was a move then remove and insert the row.
-            if (e.Effect == DragDropEffects.Move)
+            if (e.Effect == DragDropEffects.Move && sortedPlugins.Count > rowIndexFromMouseDown)
             {
                 DataGridViewRow rowToMove = e.Data.GetData(
                         typeof(DataGridViewRow)) as DataGridViewRow;
@@ -793,7 +850,9 @@ namespace WifiRemote
                 dataGridViewPluginList.Rows.Insert(rowIndexOfItemUnderMouseToDrop, rowToMove);
 
                 // Save priority change for plugin
-
+                ItemTag pluginToMove = (ItemTag)sortedPlugins[rowIndexFromMouseDown];
+                sortedPlugins.RemoveAt(rowIndexFromMouseDown);
+                sortedPlugins.Insert(rowIndexOfItemUnderMouseToDrop, pluginToMove);
             }
         }        
 
