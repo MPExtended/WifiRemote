@@ -56,7 +56,7 @@ namespace WifiRemote
         /// <summary>
         /// <code>true</code> if g_Play is in fullscreen and on top
         /// </summary>
-        public bool IsFullscreen
+        public bool IsPlayerOnTop
         {
             get 
             { 
