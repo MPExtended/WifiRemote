@@ -444,6 +444,12 @@ namespace DemoClient
             }
         }
 
+        private void cmdStartChannel_Click(object sender, EventArgs e)
+        {
+            MessageStartChannel channel = new MessageStartChannel(706, true);
+            SendCommand(channel, socket);
+        }
+
         #endregion
 
 
@@ -630,10 +636,5 @@ namespace DemoClient
 
         #endregion
 
-        private void cmdStartChannel_Click(object sender, EventArgs e)
-        {
-            MessageStartChannel channel = new MessageStartChannel(706, true);
-            SendCommand(channel, socket);
-        }
     }
 }
