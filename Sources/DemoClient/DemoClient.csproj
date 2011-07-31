@@ -62,6 +62,7 @@
     <Compile Include="Messages\MessageCommand.cs" />
     <Compile Include="Messages\MessageIdentify.cs" />
     <Compile Include="Messages\MessageRequestNowPlaying.cs" />
+    <Compile Include="Messages\MessageStartChannel.cs" />
     <Compile Include="Messages\MessageVolume.cs" />
     <Compile Include="PasscodeDialog.cs">
       <SubType>Form</SubType>

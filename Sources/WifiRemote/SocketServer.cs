@@ -579,6 +579,14 @@ namespace WifiRemote
                             }
                         }
                     }
+                    // play a tv channel on the client
+                    else if (type == "playchannel")
+                    {
+                        int channelId = (int)message["ChannelId"];
+                        bool startFullscreen = (message["StartFullscreen"] != null) ? (bool)message["StartFullscreen"] : false;
+                        WifiRemote.LogMessage("playchannel: channelId: " + channelId + " fullscreen: " + startFullscreen, WifiRemote.LogType.Debug);
+                        communication.PlayTvChannel(channelId, startFullscreen);
+                    }
                     // Reply with a list of installed and active window plugins
                     // with icon and windowId
                     else if (type == "plugins")
@@ -621,7 +629,7 @@ namespace WifiRemote
                     {
                         String action = (string)message["PlaylistAction"];
                         String playlistType = (message["PlaylistType"] != null) ? (string)message["PlaylistType"] : null;
-                        
+
 
                         if (action.Equals("new") || action.Equals("append"))
                         {

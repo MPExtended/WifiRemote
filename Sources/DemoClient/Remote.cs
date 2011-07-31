@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Deusty.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using DemoClient.Messages;
 
 namespace DemoClient
 {
@@ -628,5 +629,11 @@ namespace DemoClient
         }
 
         #endregion
+
+        private void cmdStartChannel_Click(object sender, EventArgs e)
+        {
+            MessageStartChannel channel = new MessageStartChannel(706, true);
+            SendCommand(channel, socket);
+        }
     }
 }

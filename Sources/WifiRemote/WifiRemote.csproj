@@ -65,6 +65,14 @@
     <Reference Include="Dialogs">
       <HintPath>..\..\Libs\Dialogs.dll</HintPath>
     </Reference>
+    <Reference Include="Gentle.Common, Version=1.5.0.29111, Culture=neutral, PublicKeyToken=80b5de62e27be49b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Gentle.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Gentle.Framework, Version=1.5.0.29111, Culture=neutral, PublicKeyToken=80b5de62e27be49b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Gentle.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json.Net35">
       <HintPath>..\..\Libs\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
@@ -82,6 +90,14 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.XML" />
+    <Reference Include="TVDatabase, Version=1.1.7.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\TVDatabase.dll</HintPath>
+    </Reference>
+    <Reference Include="TvPlugin, Version=1.1.7.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\TvPlugin.dll</HintPath>
+    </Reference>
     <Reference Include="Utils">
       <HintPath>..\..\Libs\Utils.dll</HintPath>
     </Reference>
