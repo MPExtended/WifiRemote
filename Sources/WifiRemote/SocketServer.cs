@@ -272,10 +272,12 @@ namespace WifiRemote
         public void SendMessageToAllClients(String message, bool ignoreAuth)
         {
             if (message == null) return;
-
-            foreach (AsyncSocket socket in connectedSockets)
+            lock (connectedSockets)
             {
-                SendMessageToClient(message, socket, ignoreAuth);
+                foreach (AsyncSocket socket in connectedSockets)
+                {
+                    SendMessageToClient(message, socket, ignoreAuth);
+                }
             }
         }
 
@@ -967,24 +969,27 @@ namespace WifiRemote
 
                 if (connectedSockets != null)
                 {
-                    foreach (AsyncSocket socket in connectedSockets)
+                    lock (connectedSockets)
                     {
-                        RemoteClient client = socket.GetRemoteClient();
-                        if (client.IsAuthenticated && client.Properties != null)
+                        foreach (AsyncSocket socket in connectedSockets)
                         {
-                            MessagePropertyChanged changed = null;
-                            foreach (String t in client.Properties)
+                            RemoteClient client = socket.GetRemoteClient();
+                            if (client.IsAuthenticated && client.Properties != null)
                             {
-                                if (t.Equals(tag))
+                                MessagePropertyChanged changed = null;
+                                foreach (String t in client.Properties)
                                 {
-                                    if (messageData == null)
+                                    if (t.Equals(tag))
                                     {
+                                        if (messageData == null)
+                                        {
 
-                                        //init variable only when at least on client has it on the request list
-                                        changed = new MessagePropertyChanged(tag, tagValue);
-                                        WifiRemote.LogMessage("Changed property: " + tag + "|" + tagValue, WifiRemote.LogType.Debug);
+                                            //init variable only when at least on client has it on the request list
+                                            changed = new MessagePropertyChanged(tag, tagValue);
+                                            WifiRemote.LogMessage("Changed property: " + tag + "|" + tagValue, WifiRemote.LogType.Debug);
+                                        }
+                                        SendMessageToClient(changed, socket);
                                     }
-                                    SendMessageToClient(changed, socket);
                                 }
                             }
                         }
