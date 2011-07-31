@@ -533,6 +533,12 @@ namespace WifiRemote
         /// <param name="startFullscreen">If true, will switch to fullscreen after playback is started</param>
         internal void PlayTvChannel(int channelId, bool startFullscreen)
         {
+            if (!WifiRemote.IsAssemblyAvailable("TVPlugin", new Version(1, 0, 0, 0)))
+            {
+                WifiRemote.LogMessage("No TVPlugin installed: Aborting playchannel", WifiRemote.LogType.Error);
+                return;
+            }
+
             if (GUIGraphicsContext.form.InvokeRequired)
             {
                 PlayTvChannelDelegate d = PlayTvChannel;
