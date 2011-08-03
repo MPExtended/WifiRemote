@@ -40,7 +40,7 @@ namespace WifiRemote.MPPlayList
 
                 if (inDb)
                 {
-                    item = song.ToPlayListItem();
+                    item = ToPlayListItem(song);
                 }
             }            
             
@@ -49,6 +49,30 @@ namespace WifiRemote.MPPlayList
             }
 
             playList.Insert(item, index);
+        }
+
+        /// <summary>
+        /// Returns a playlistitem from a song
+        /// 
+        /// Note: this method is available in MediaPortal 1.2 in 
+        /// MediaPortal.Music.Database.Song.ToPlayListItem()
+        /// 
+        /// As it wasn't available in 1.1.3 this was copied to a private method
+        /// TODO: Remove this once 1.2 has become stable and 1.1.3 is not needed anymore
+        /// </summary>
+        /// <param name="song">Song</param>
+        /// <returns>Playlistitem from a song</returns>
+        private static PlayListItem ToPlayListItem(Song song)
+        {
+            PlayListItem pli = new PlayListItem();
+
+            pli.Type = PlayListItem.PlayListItemType.Audio;
+            pli.FileName = song.FileName;
+            pli.Description = song.Title;
+            pli.Duration = song.Duration;
+            pli.MusicTag = song.ToMusicTag();
+
+            return pli;
         }
 
         /// <summary>
