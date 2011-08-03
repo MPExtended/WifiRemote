@@ -26,6 +26,7 @@ namespace WifiRemote
             get { return icon; }
         }
 
+        [Newtonsoft.Json.JsonIgnore]
         public bool DisplayPlugin { get; set; }
 
         public WindowPlugin(string aName, int aWindowId, byte[] anIcon) : this(aName, aWindowId, anIcon, true)
