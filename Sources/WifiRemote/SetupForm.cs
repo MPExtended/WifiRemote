@@ -34,7 +34,6 @@ namespace WifiRemote
 
         private ArrayList availablePlugins;
         private ArrayList plugins;
-        private ArrayList sortedPlugins;
         private Dictionary<int, String> savedPlugins;
         private List<int> ignoredPluginsList;
         private ImageList pluginIcons;
@@ -146,7 +145,6 @@ namespace WifiRemote
 
             // Setup plugins list
             availablePlugins = new ArrayList();
-            sortedPlugins = new ArrayList();
             plugins = new ArrayList();
             pluginIcons = new ImageList();
             pluginIcons.ImageSize = new Size(20, 20);
