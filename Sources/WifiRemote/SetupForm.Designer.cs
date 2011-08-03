@@ -416,8 +416,8 @@
             this.dataGridViewPluginList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewPluginList.Location = new System.Drawing.Point(3, 3);
             this.dataGridViewPluginList.Name = "dataGridViewPluginList";
-            this.dataGridViewPluginList.ReadOnly = true;
             this.dataGridViewPluginList.RowHeadersVisible = false;
+            this.dataGridViewPluginList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 329);
             this.dataGridViewPluginList.TabIndex = 0;
             this.dataGridViewPluginList.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridViewPluginList_DragDrop);

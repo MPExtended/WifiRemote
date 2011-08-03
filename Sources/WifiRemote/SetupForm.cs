@@ -35,12 +35,15 @@ namespace WifiRemote
         private ArrayList availablePlugins;
         private ArrayList plugins;
         private ArrayList sortedPlugins;
-        private int[] savedPlugins;
+        private Dictionary<int, String> savedPlugins;
+        private List<int> ignoredPluginsList;
         private ImageList pluginIcons;
 
         private Rectangle dragBoxFromMouseDown;
         private int rowIndexFromMouseDown;
         private int rowIndexOfItemUnderMouseToDrop;
+
+        private BindingSource pluginsDataSource = new BindingSource();
 
         private class ItemTag
         {
@@ -81,16 +84,36 @@ namespace WifiRemote
 
                 // Read plugin ids and convert them to int
                 String[] savedPluginStrings = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "savedPlugins", "").Split('|');
-                List<int> savedPluginIds = new List<int>();
-                foreach (string idString in savedPluginStrings)
+                savedPlugins = new Dictionary<int, string>();
+
+                for (int j = 0; j + 1 < savedPluginStrings.Length; j = j + 2) 
                 {
+                    // Add plugin id and name
                     int i;
-                    if (int.TryParse(idString, out i))
+                    if (int.TryParse(savedPluginStrings[j], out i))
                     {
-                        savedPluginIds.Add(i);
+                        savedPlugins.Add(i, savedPluginStrings[j + 1]);
                     }
                 }
-                savedPlugins = savedPluginIds.ToArray();
+
+                // Read ignored plugins
+                // Ignored by default: 
+                //     -1: 
+                //      0: home
+                //   3005: GUITopbar
+                // 730716: fanart handler
+                String[] ignoredPluginsString = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "ignoredPlugins", "-1|0|3005|730716").Split('|');
+                ignoredPluginsList = new List<int>();
+
+                foreach (String pluginId in ignoredPluginsString)
+                {
+                    int i;
+                    if (int.TryParse(pluginId, out i))
+                    {
+                        ignoredPluginsList.Add(i);
+                    }
+                }
+
             }
 
             // Test if Bonjour is installed
@@ -131,32 +154,26 @@ namespace WifiRemote
             EnumerateWindowPlugins();
             LoadPlugins();
             LoadSettings();
-
-            DataGridViewImageColumn iconColumn = new DataGridViewImageColumn(false);
-            iconColumn.ImageLayout = DataGridViewImageCellLayout.Zoom;
-            iconColumn.Width = 20;
-            dataGridViewPluginList.Columns.Add(iconColumn);
-
-            DataGridViewColumn nameColumn = new DataGridViewTextBoxColumn();
-            nameColumn.Width = 200;
-            dataGridViewPluginList.Columns.Add(nameColumn);
-
             
             // Add saved plugins to list for ordering
-            foreach (int pluginId in savedPlugins)
+            foreach (var aSavedPlugin in savedPlugins)
             {
                 // Find saved plugin with this window id
                 var query = from ItemTag p in plugins
-                            where p.WindowId == pluginId
+                            where p.WindowId == aSavedPlugin.Key
                             select p;
 
                 // Add the first found plugin to the list
                 foreach (ItemTag plugin in query)
                 {
-                    addPluginToList(plugin);
                     if (plugin.IsEnabled)
                     {
-                        sortedPlugins.Add(plugin);
+                        pluginsDataSource.Add(new WindowPlugin(aSavedPlugin.Value, 
+                                                               aSavedPlugin.Key, 
+                                                               (plugin.ActiveImage != null) 
+                                                                    ? WifiRemote.imageToByteArray(plugin.ActiveImage, System.Drawing.Imaging.ImageFormat.Png) 
+                                                                    : WifiRemote.imageToByteArray(Properties.Resources.NoPluginImage, System.Drawing.Imaging.ImageFormat.Png),
+                                                               !ignoredPluginsList.Contains(aSavedPlugin.Key)));
                     }
                     break;
                 }
@@ -165,14 +182,53 @@ namespace WifiRemote
             // Add rest of the plugins to the list
             foreach (ItemTag plugin in plugins)
             {
-                if (!savedPlugins.Contains<int>(plugin.WindowId))
+                if (!savedPlugins.ContainsKey(plugin.WindowId))
                 {
                     addPluginToList(plugin);
-                    if (plugin.IsEnabled)
-                    {
-                        sortedPlugins.Add(plugin);
-                    }                    
                 }
+            }
+
+            dataGridViewPluginList.AutoGenerateColumns = false;
+            dataGridViewPluginList.AutoSize = true;
+            dataGridViewPluginList.DataSource = pluginsDataSource;
+            dataGridViewPluginList.CurrentCellDirtyStateChanged += new EventHandler(dataGridViewPluginList_CurrentCellDirtyStateChanged);
+
+            DataGridViewCheckBoxColumn displayColumn = new DataGridViewCheckBoxColumn();
+            displayColumn.ReadOnly = false;
+            displayColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            displayColumn.DataPropertyName = "DisplayPlugin";
+            displayColumn.Name = "";
+            dataGridViewPluginList.Columns.Add(displayColumn);
+
+            DataGridViewImageColumn iconColumn = new DataGridViewImageColumn(false);
+            iconColumn.ReadOnly = true;
+            iconColumn.ImageLayout = DataGridViewImageCellLayout.Zoom;
+            iconColumn.Width = 20;
+            iconColumn.DataPropertyName = "Icon";
+            iconColumn.Name = "";
+            dataGridViewPluginList.Columns.Add(iconColumn);
+
+            DataGridViewColumn nameColumn = new DataGridViewTextBoxColumn();
+            nameColumn.ReadOnly = false;
+            nameColumn.MinimumWidth = 200;
+            nameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            nameColumn.DataPropertyName = "Name";
+            nameColumn.Name = "Plugin";
+            dataGridViewPluginList.Columns.Add(nameColumn);
+
+        }
+
+        /// <summary>
+        /// Apparently checkboxes fire changed events only after the cell was left
+        /// Let's do it manually.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dataGridViewPluginList_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewPluginList.IsCurrentCellDirty && dataGridViewPluginList.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                dataGridViewPluginList.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
         }
 
@@ -220,13 +276,28 @@ namespace WifiRemote
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "auth", cbAuthMethod.SelectedIndex);
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "autologinTimeout", numericUpDownAutologin.Value);
 
-                // Save plugins order
+                // Save plugins order, custom names and if they should be displayed
                 List<string> pluginIdsToSave = new List<String>();
-                foreach (ItemTag plugin in sortedPlugins)
+
+                foreach (WindowPlugin plugin in pluginsDataSource)
                 {
                     pluginIdsToSave.Add(plugin.WindowId.ToString());
+                    pluginIdsToSave.Add(plugin.Name);
+
+                    // Don't display plugin
+                    if (!plugin.DisplayPlugin && !ignoredPluginsList.Contains(plugin.WindowId))
+                    {
+                        // Plugin disabled, add to ignored plugins list
+                        ignoredPluginsList.Add(plugin.WindowId);
+                    }
+                    else if (plugin.DisplayPlugin && ignoredPluginsList.Contains(plugin.WindowId))
+                    {
+                        // Plugin not disabled but on disabled list. Remove it.
+                        ignoredPluginsList.Remove(plugin.WindowId);
+                    }
                 }
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "savedPlugins", String.Join("|", pluginIdsToSave.ToArray()));
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "ignoredPlugins", String.Join("|", ignoredPluginsList.ConvertAll<string>(x => x.ToString()).ToArray()));
             }
         }
 
@@ -438,18 +509,12 @@ namespace WifiRemote
         {
             if (plugin.IsEnabled)
             {
-                int i = dataGridViewPluginList.Rows.Add();
-                if (plugin.ActiveImage != null)
-                {
-                    dataGridViewPluginList[0, i].Value = plugin.ActiveImage;
-                }
-                else
-                {
-                    dataGridViewPluginList[0, i].Value = Properties.Resources.NoPluginImage;
-                }
-
-
-                dataGridViewPluginList[1, i].Value = plugin.SetupForm.PluginName();
+                pluginsDataSource.Add(
+                    new WindowPlugin(plugin.SetupForm.PluginName(), 
+                                     plugin.WindowId, 
+                                     (plugin.ActiveImage != null) ? WifiRemote.imageToByteArray(plugin.ActiveImage, System.Drawing.Imaging.ImageFormat.Png) 
+                                                                  : WifiRemote.imageToByteArray(Properties.Resources.NoPluginImage, System.Drawing.Imaging.ImageFormat.Png),
+                                     !ignoredPluginsList.Contains(plugin.WindowId)));
             }
         }
 
@@ -498,7 +563,6 @@ namespace WifiRemote
                     Assembly pluginAssembly = null;
                     try
                     {
-                        Log.Debug("[WifiRemote Setup] loadPlugins {0}", pluginFile);
                         pluginAssembly = Assembly.LoadFrom(pluginFile);
                     }
                     catch (BadImageFormatException)
@@ -534,9 +598,7 @@ namespace WifiRemote
                                     }
                                     catch (TargetInvocationException)
                                     {
-                                        Log.Warn(
-                                          "[WifiRemote Setup] Plugin {0} is incompatible with the current MediaPortal version! (File: {1})",
-                                          type.FullName, pluginFile.Substring(pluginFile.LastIndexOf(@"\") + 1));
+                                        // Plugin is incompatible with current MediaPortal
                                         continue;
                                     }
 
@@ -569,9 +631,7 @@ namespace WifiRemote
                         }
                         catch (Exception ex)
                         {
-                            Log.Warn(
-                              "[WifiRemote Setup] Plugin file {0} is broken or incompatible with the current MediaPortal version and won't be loaded!",
-                              pluginFile.Substring(pluginFile.LastIndexOf(@"\") + 1));
+                            // plugin broken or incompatible
                             Log.Error("[WifiRemote Setup] Exception: {0}", ex);
                         }
                     }
@@ -603,7 +663,6 @@ namespace WifiRemote
             string resourceName = icons[0].ActivatedResourceName;
             if (!string.IsNullOrEmpty(resourceName))
             {
-                Log.Debug("[WifiRemote Setup] load active image from resource - {0}", resourceName);
                 tag.ActiveImage = LoadImageFromResource(type, resourceName);
             }
         }
@@ -751,7 +810,7 @@ namespace WifiRemote
             }
             catch (Exception ex)
             {
-                WifiRemote.LogMessage("Error generating barcode: " + ex.Message, WifiRemote.LogType.Error);
+                Log.Error("[WifiRemote Setup] Error generating barcode: {0}", ex.Message);
             }
         }
 
@@ -842,18 +901,13 @@ namespace WifiRemote
                 dataGridViewPluginList.HitTest(clientPoint.X, clientPoint.Y).RowIndex;
 
             // If the drag operation was a move then remove and insert the row.
-            if (e.Effect == DragDropEffects.Move && sortedPlugins.Count > rowIndexFromMouseDown)
+            if (e.Effect == DragDropEffects.Move && pluginsDataSource.Count > rowIndexFromMouseDown)
             {
-                DataGridViewRow rowToMove = e.Data.GetData(
-                        typeof(DataGridViewRow)) as DataGridViewRow;
-                dataGridViewPluginList.Rows.RemoveAt(rowIndexFromMouseDown);
-                dataGridViewPluginList.Rows.Insert(rowIndexOfItemUnderMouseToDrop, rowToMove);
-
-                // Save priority change for plugin
-                ItemTag pluginToMove = (ItemTag)sortedPlugins[rowIndexFromMouseDown];
-                sortedPlugins.RemoveAt(rowIndexFromMouseDown);
-                sortedPlugins.Insert(rowIndexOfItemUnderMouseToDrop, pluginToMove);
+                WindowPlugin pluginToMove = (WindowPlugin)pluginsDataSource[rowIndexFromMouseDown];
+                pluginsDataSource.RemoveAt(rowIndexFromMouseDown);
+                pluginsDataSource.Insert(rowIndexOfItemUnderMouseToDrop, pluginToMove);
             }
+
         }        
 
         #endregion
