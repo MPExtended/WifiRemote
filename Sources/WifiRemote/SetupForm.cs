@@ -597,11 +597,13 @@ namespace WifiRemote
                                     catch (TargetInvocationException)
                                     {
                                         // Plugin is incompatible with current MediaPortal
+                                        Log.Error("[WifiRemote Setup] Plugin " + pluginFile + " incompatible");
                                         continue;
                                     }
 
                                     if (isPlugin)
                                     {
+
                                         ISetupForm pluginForm = pluginObject as ISetupForm;
 
                                         if (pluginForm != null)

@@ -9,11 +9,11 @@ using MediaPortal.Common.Utils;
 // Version Compatibility
 // http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/18_Contribute/6_Plugins/Plugin_Related_Changes/1.1.0_to_1.2.0/Version_Compatibility
 [assembly: CompatibleVersion("1.1.6.27644")]
+//[assembly: UsesSubsystem("MP.DB.Music")]
+//[assembly: UsesSubsystem("MP.DB.Videos")]
 //[assembly: UsesSubsystem("MP.Config")]
 //[assembly: UsesSubsystem("MP.Input.Mapping")]
 //[assembly: UsesSubsystem("MP.Players")]
-//[assembly: UsesSubsystem("MP.DB")]
-//[assembly: UsesSubsystem("MP.Plugins")]
 #endif
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
@@ -46,5 +46,5 @@ using MediaPortal.Common.Utils;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.4.0.0")]
+[assembly: AssemblyFileVersion("0.4.0.0")]

@@ -112,11 +112,6 @@ namespace WifiRemote
         private bool disableBonjour = false;
 
         /// <summary>
-        /// <code>true</code> if the tv plugin is installed
-        /// </summary>
-        private bool isTvEnabled = false;
-
-        /// <summary>
         /// Thread for sending now playing updates
         /// </summary>
         private Thread nowPlayingUpdateThread;
@@ -137,6 +132,46 @@ namespace WifiRemote
             Error
         }
 
+        /// <summary>
+        /// <code>true</code> if TVPlugin is loaded
+        /// </summary>
+        public static bool IsAvailableTVPlugin
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// <code>true</code> if moving pictures is available
+        /// </summary>
+        public static bool IsAvailableMovingPictures
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// <code>true</code> if TV-Series is available
+        /// </summary>
+        public static bool IsAvailableTVSeries
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// <code>true</code> if Fanart Handler is available
+        /// </summary>
+        public static bool IsAvailableFanartHandler
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// List of plugins
+        /// </summary>
+        public static ArrayList savedAndSortedPlugins;
        
 
         #region ISetupForm Member
@@ -200,8 +235,11 @@ namespace WifiRemote
         public void Start()
         {
             // Check if TV plugin is installed
-            isTvEnabled = IsAssemblyAvailable("TvControl", null);
-            
+            WifiRemote.IsAvailableTVPlugin = IsAssemblyAvailable("TVPlugin", new Version(1, 0, 0, 0));
+            WifiRemote.IsAvailableMovingPictures = IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
+            WifiRemote.IsAvailableTVSeries = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
+            WifiRemote.IsAvailableFanartHandler = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
+           
 
             Log.Debug(String.Format("{0} Started!", LOG_PREFIX));
             // register event handlers
@@ -676,37 +714,62 @@ namespace WifiRemote
         /// </summary>
         internal static ArrayList GetActiveWindowPluginsAndIDs(bool sendIcons)
         {
+            // Return cached data
+            if (WifiRemote.savedAndSortedPlugins != null)
+            {
+                return WifiRemote.savedAndSortedPlugins;
+            }
+
+            // Init cache
+            savedAndSortedPlugins = new ArrayList();
+
+            // No cache yet, build plugin list
             ArrayList plugins = new ArrayList();
             ArrayList sortedPlugins = new ArrayList();
 
-            int[] savedPlugins;
-            int[] ignoredPluginIds = new int[] { 
-                -1, 
-                0,          // home
-                3005,       // GUITopbar
-                730716      // fanart handler
-            };
+            Dictionary<int, String> savedPlugins;
+            List<int> ignoredPluginsList;
 
-            // Bad for performance, but I see no other way here?
             using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"))) 
             {
                 // Read plugin ids and convert them to int
                 String[] savedPluginStrings = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "savedPlugins", "").Split('|');
-                List<int> savedPluginIds = new List<int>();
-                foreach (string idString in savedPluginStrings)
+                savedPlugins = new Dictionary<int, string>();
+
+                for (int j = 0; j + 1 < savedPluginStrings.Length; j = j + 2)
                 {
+                    // Add plugin id and name
                     int i;
-                    if (int.TryParse(idString, out i))
+                    if (int.TryParse(savedPluginStrings[j], out i))
                     {
-                        savedPluginIds.Add(i);
+                        savedPlugins.Add(i, savedPluginStrings[j + 1]);
                     }
                 }
-                savedPlugins = savedPluginIds.ToArray();
+
+                // Read ignored plugins
+                // Ignored by default: 
+                //     -1: 
+                //      0: home
+                //   3005: GUITopbar
+                // 730716: fanart handler
+                String[] ignoredPluginsString = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "ignoredPlugins", "-1|0|3005|730716").Split('|');
+                ignoredPluginsList = new List<int>();
+
+                foreach (String pluginId in ignoredPluginsString)
+                {
+                    int i;
+                    if (int.TryParse(pluginId, out i))
+                    {
+                        ignoredPluginsList.Add(i);
+                    }
+                }
             }
 
+            // Fetch all active plugins
             foreach (ISetupForm plugin in PluginManager.SetupForms)
             {
-                if (!ignoredPluginIds.Contains<int>(plugin.GetWindowId()))
+                // Plugin not hidden
+                if (!ignoredPluginsList.Contains(plugin.GetWindowId()))
                 {
                     if (sendIcons)
                     {
@@ -746,31 +809,32 @@ namespace WifiRemote
                 }
             }
 
-            // Sort plugins
-            foreach (int pluginId in savedPlugins)
+            // Add sorted plugins
+            foreach (var aSavedPlugin in savedPlugins)
             {
                 // Find saved plugin with this window id
                 var query = from WindowPlugin p in plugins
-                            where p.WindowId == pluginId
+                            where p.WindowId == aSavedPlugin.Key
                             select p;
 
                 // Add the first found plugin to the list
                 foreach (WindowPlugin plugin in query)
                 {
-                    sortedPlugins.Add(plugin);
+                    WifiRemote.savedAndSortedPlugins.Add(new WindowPlugin(aSavedPlugin.Value, aSavedPlugin.Key, plugin.Icon));
                     break;
                 }
             }
 
+            // Add rest of plugins
             foreach (WindowPlugin plugin in plugins)
             {
-                if (!sortedPlugins.Contains(plugin))
+                if (!savedPlugins.ContainsKey(plugin.WindowId))
                 {
-                    sortedPlugins.Add(plugin);
+                    WifiRemote.savedAndSortedPlugins.Add(plugin);
                 }
             }
 
-            return sortedPlugins;
+            return WifiRemote.savedAndSortedPlugins;
         }
 
         /// <summary>
