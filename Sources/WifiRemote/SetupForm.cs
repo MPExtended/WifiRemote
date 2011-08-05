@@ -586,7 +586,7 @@ namespace WifiRemote
                                 }
 
                                 // Try to locate the interface we're interested in
-                                if (isPlugin && isGuiWindow)
+                                if (isPlugin || isGuiWindow)
                                 {
                                     // Create instance of the current type
                                     object pluginObject;
