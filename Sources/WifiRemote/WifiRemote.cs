@@ -845,32 +845,20 @@ namespace WifiRemote
         /// <returns>true if the assembly is available</returns>
         internal static bool IsAssemblyAvailable(string name, Version ver)
         {
-            bool result = false;
-
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly a in assemblies)
             {
                 try
                 {
-                    if (a.GetName().Name == name)
+                    if (a.GetName().Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        if (ver == null || a.GetName().Version >= ver)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        return (ver == null || a.GetName().Version >= ver);
                     }
                 }
-                catch
-                {
-                    result = false;
-                }
+                catch {}
             }
 
-            return result;
+            return false;
         }
 
         /// <summary>
