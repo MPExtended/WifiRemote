@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Collections;
 using System.Net;
 using System.Threading;
+using System.Runtime.InteropServices;
 using Deusty.Net;
 using MediaPortal.Player;
 using Newtonsoft.Json;
@@ -22,6 +23,15 @@ namespace WifiRemote
     /// </summary>
     class SocketServer
     {
+        // Send left shift key to disable screensaver interop
+        [DllImport("user32")]
+        private static extern void keybd_event(byte bVirtualKey, byte bScanCode, int dwFlags, int dwExtraInfo);
+
+        private const byte VK_LSHIFT = 0xA0;
+        private const int KEYEVENTF_KEYUP = 0x0002;
+
+
+        // SocketServer
         private UInt16 port;
 
         private bool isStarted = false;
@@ -757,6 +767,9 @@ namespace WifiRemote
                             sender.GetRemoteClient().IsAuthenticated = true;
                             SendAuthenticationResponse(sender, true);
                             sendOverviewInformationToClient(sender);
+
+                            // Turn on display
+                            keybd_event(VK_LSHIFT, 0x45, KEYEVENTF_KEYUP, 0);
                         }
                         else
                         {
