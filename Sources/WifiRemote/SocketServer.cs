@@ -458,12 +458,16 @@ namespace WifiRemote
                 RemoteClient client = sender.GetRemoteClient();
 
                 // Autologin handling
-                if (AutologinTimeout > 0 && !client.IsAuthenticated)
+                //
+                // Has to be activated in WifiRemote configuration.
+                string clientKey = (string)message["AutologinKey"];
+
+                // Key is set: try to authenticate by AutoLoginKey
+                if (clientKey != null && !client.IsAuthenticated)
                 {
-                    string key = (string)message["AutologinKey"];
-                    if (key != null)
+                    if (AutologinTimeout > 0)
                     {
-                        AutoLoginToken token = new AutoLoginToken(key, client);
+                        AutoLoginToken token = new AutoLoginToken(clientKey, client);
                         // the client token is in the list
                         foreach (AutoLoginToken aToken in loginTokens)
                         {
@@ -478,6 +482,23 @@ namespace WifiRemote
                                 aToken.Issued = DateTime.Now;
                             }
                         }
+
+                        // MediaPortal was rebooted (will wipe all AutoLoginKeys) or
+                        // autologin time out period is over (configurable in settings).
+                        //
+                        // Tell the client to reauthenticate.
+                        if (!client.IsAuthenticated)
+                        {
+                            WifiRemote.LogMessage("AutoLoginToken timed out. Client needs to reauthenticate.", WifiRemote.LogType.Debug);
+                            TellClientToReAuthenticate(sender);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        WifiRemote.LogMessage("AutoLogin is disabled but client tried to auto-authenticate.", WifiRemote.LogType.Debug);
+                        TellClientToReAuthenticate(sender);
+                        return;
                     }
                 }
 
@@ -781,10 +802,7 @@ namespace WifiRemote
                     else
                     {
                         // Client needs to authenticate first
-                        MessageAuthenticationResponse response = new MessageAuthenticationResponse(false);
-                        response.ErrorMessage = "You need to authenticate yourself.";
-                        SendMessageToClient(response, sender);
-                        SendMessageToClient(welcomeMessage, sender);
+                        TellClientToReAuthenticate(sender);
                     }
                 }
 
@@ -801,7 +819,6 @@ namespace WifiRemote
                 //dialog.SetText(e.Message);
                 //dialog.DoModal(MediaPortal.GUI.Library.GUIWindowManager.ActiveWindow);
             }
-
 
             // Continue listening
             sender.Read(AsyncSocket.CRLFData, -1, 0);
@@ -882,6 +899,19 @@ namespace WifiRemote
 
             WifiRemote.LogMessage("User " + client.ToString() + " authentification failed", WifiRemote.LogType.Info);
             return false;
+        }
+
+        /// <summary>
+        /// Send a "You need to authenticate yourself." error followed by the
+        /// welcome message.
+        /// </summary>
+        /// <param name="socket"></param>
+        private void TellClientToReAuthenticate(AsyncSocket socket)
+        {
+            MessageAuthenticationResponse response = new MessageAuthenticationResponse(false);
+            response.ErrorMessage = "You need to authenticate yourself.";
+            SendMessageToClient(response, socket, true);
+            SendMessageToClient(welcomeMessage, socket, true);
         }
 
         private void SendAuthenticationResponse(AsyncSocket socket, bool _success)
