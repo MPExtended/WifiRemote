@@ -785,16 +785,28 @@ namespace WifiRemote
                 desc.Hostname = WifiRemote.GetServiceName();
 
                 IPHostEntry host;
-                string localIP = "?";
+                String localIP = "?";
+                StringBuilder localIPs = new StringBuilder();
                 host = Dns.GetHostEntry(Dns.GetHostName());
                 foreach (IPAddress ip in host.AddressList)
                 {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    if (ip.AddressFamily == AddressFamily.InterNetwork || ip.AddressFamily == AddressFamily.InterNetworkV6)
                     {
+                        // Single address field
                         localIP = ip.ToString();
+
+                        // Multiple addresses field
+                        if (localIPs.Length > 0)
+                        {
+                            localIPs.Append(";");
+                        }
+
+                        localIPs.Append(ip.ToString());
                     }
                 }
+
                 desc.Address = localIP;
+                desc.Addresses = (localIPs.Length > 0) ? localIPs.ToString() : "?";
 
                 desc.AuthOptions = cbAuthMethod.SelectedIndex;
                 if (checkBoxIncludeAuth.Checked)

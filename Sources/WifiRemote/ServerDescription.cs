@@ -10,7 +10,10 @@ namespace WifiRemote
     /// </summary>
     public class ServerDescription
     {
+        [Obsolete("Replaced by semicolon seperated adresses")]
         public String Address { get; set; }
+
+        public String Addresses { get; set; }
         public int Port { get; set; }
         public String Hostname { get; set; }
         public String HardwareAddresses { get; set; }
