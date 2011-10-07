@@ -200,7 +200,7 @@ It publishes a Bonjour Service on your local network which allows clients (for e
 * Fixed autoconnect issue
 * Close screensaver on connect</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote.0.4.2.mpe1</OnlineLocation>
+    <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.4.2.mpe1</OnlineLocation>
     <ReleaseDate>2011-10-07T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
     <Location>D:\Documents\WifiRemote_0.4.2.mpe1</Location>
@@ -256,7 +256,7 @@ It publishes a Bonjour Service on your local network which allows clients (for e
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{06379ed7-5602-499f-9c6b-5551517851a3}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{8b8fa1c0-889e-46e1-9228-5d19d9642555}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

@@ -7,7 +7,7 @@
         <Items>
           <GroupItem Name="Default">
             <DisplayName>Default</DisplayName>
-            <DefaulChecked>false</DefaulChecked>
+            <DefaulChecked>true</DefaulChecked>
             <Description>Default</Description>
             <Files>
               <Items />
@@ -15,7 +15,7 @@
           </GroupItem>
           <GroupItem Name="plugin_files">
             <DisplayName>plugin_files</DisplayName>
-            <DefaulChecked>false</DefaulChecked>
+            <DefaulChecked>true</DefaulChecked>
             <Description>plugin_files</Description>
             <Files>
               <Items />
@@ -23,7 +23,7 @@
           </GroupItem>
           <GroupItem Name="config_files">
             <DisplayName>config_files</DisplayName>
-            <DefaulChecked>false</DefaulChecked>
+            <DefaulChecked>true</DefaulChecked>
             <Description>config_files</Description>
             <Files>
               <Items />
@@ -83,10 +83,10 @@ It publishes a Bonjour Service on your local network which allows clients (for e
 * Fixed autoconnect issue
 * Close screensaver on connect</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
-        <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote.0.4.2.mpe1</OnlineLocation>
+        <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.4.2.mpe1</OnlineLocation>
         <ReleaseDate>2011-10-07T20:16:04</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
-        <Location />
+        <Location>D:\Documents\WifiRemote_0.4.2.mpe1</Location>
         <Params>
           <Items>
             <SectionParam Name="Online Icon">
