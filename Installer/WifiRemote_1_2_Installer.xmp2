@@ -65,12 +65,12 @@ Click Next to continue or Cancel to exit Setup.</Value>
               <Description />
             </SectionParam>
             <SectionParam Name="Left part image">
-              <Value />
+              <Value>installer_logo.gif</Value>
               <ValueType>File</ValueType>
               <Description />
             </SectionParam>
             <SectionParam Name="Header image">
-              <Value />
+              <Value>logo_radio.png</Value>
               <ValueType>File</ValueType>
               <Description>Image in upper right part</Description>
             </SectionParam>
@@ -97,7 +97,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
               <Description>Description of section, shown in under section title</Description>
             </SectionParam>
             <SectionParam Name="Header image">
-              <Value />
+              <Value>logo_radio.png</Value>
               <ValueType>File</ValueType>
               <Description>Image in upper right part</Description>
             </SectionParam>
@@ -126,7 +126,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
               <Description />
             </SectionParam>
             <SectionParam Name="Left part image">
-              <Value />
+              <Value>installer_logo.gif</Value>
               <ValueType>File</ValueType>
               <Description />
             </SectionParam>
@@ -136,7 +136,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
               <Description>Use radiobutton in place of combobox</Description>
             </SectionParam>
             <SectionParam Name="Header image">
-              <Value />
+              <Value>logo_radio.png</Value>
               <ValueType>File</ValueType>
               <Description>Image in upper right part</Description>
             </SectionParam>
@@ -255,8 +255,15 @@ It publishes a Bonjour Service on your local network which allows clients (for e
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>installer_logo.gif</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{90b1efc9-0974-4645-b7fa-3133b615324e}-installer_logo.gif</ZipFileName>
+        <DestinationFilename />
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{8b8fa1c0-889e-46e1-9228-5d19d9642555}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{2c74db06-34ea-46d3-920c-ca07ba76e538}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
