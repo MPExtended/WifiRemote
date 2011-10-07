@@ -22,7 +22,7 @@
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>Files\WifiRemote.dll</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{73768cb3-f25c-40eb-a4eb-0a5a0f8ef172}-WifiRemote.dll</ZipFileName>
+              <ZipFileName>Installer{CopyFile}\{47ebbed8-e5ed-48ae-a744-0ebb6b7edb28}-WifiRemote.dll</ZipFileName>
               <DestinationFilename>%Base%\plugins\process\WifiRemote.dll</DestinationFilename>
             </FileItem>
           </Items>
@@ -30,7 +30,7 @@
       </GroupItem>
       <GroupItem Name="config_files">
         <ParentGroup />
-        <DisplayName>Config Files</DisplayName>
+        <DisplayName>Cofig Files</DisplayName>
         <DefaulChecked>true</DefaulChecked>
         <Description>config_files</Description>
         <Files>
@@ -39,7 +39,7 @@
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>Files\WifiRemote.xml</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{d1485fa3-78fa-490f-bf94-d17991945e6e}-WifiRemote.xml</ZipFileName>
+              <ZipFileName>Installer{CopyFile}\{79fa7c59-61fd-4b3f-ac4c-01609d154548}-WifiRemote.xml</ZipFileName>
               <DestinationFilename>%Base%\defaults\InputDeviceMappings\WifiRemote.xml</DestinationFilename>
             </FileItem>
           </Items>
@@ -49,32 +49,28 @@
   </Groups>
   <Sections>
     <Items>
-      <SectionItem Guid="a5767533-b37a-442e-8a9a-5ae9b188719c" Name="Welcome Screen" ConditionGroup="">
+      <SectionItem Guid="49b05e2e-cbf5-4409-ae99-af6277534e26" Name="Welcome Screen" ConditionGroup="">
         <Params>
           <Items>
             <SectionParam Name="Header text">
-              <Value>Welcome to [Name] Installer</Value>
+              <Value>Welcome to the Extension Installer for [Name]</Value>
               <ValueType>String</ValueType>
               <Description />
             </SectionParam>
             <SectionParam Name="Description">
               <Value>This will install [Name] version [Version] on your computer.
 It is recommended that you close all other applications before continuing.
-
-
-[Name] is a  plugin for remote controlling a running MediaPortal clients via the network.
-
 Click Next to continue or Cancel to exit Setup.</Value>
               <ValueType>String</ValueType>
               <Description />
             </SectionParam>
             <SectionParam Name="Left part image">
-              <Value>installer_logo.gif</Value>
+              <Value />
               <ValueType>File</ValueType>
               <Description />
             </SectionParam>
             <SectionParam Name="Header image">
-              <Value>logo_radio.png</Value>
+              <Value />
               <ValueType>File</ValueType>
               <Description>Image in upper right part</Description>
             </SectionParam>
@@ -87,21 +83,21 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <PanelName>Welcome Screen</PanelName>
         <WizardButtonsEnum>NextCancel</WizardButtonsEnum>
       </SectionItem>
-      <SectionItem Guid="e518cf5e-adc1-4820-bba6-670c26498f7c" Name="Install Section" ConditionGroup="">
+      <SectionItem Guid="fc3d7719-5105-4152-920c-caa7e4e60826" Name="Install Section" ConditionGroup="">
         <Params>
           <Items>
             <SectionParam Name="Header Title">
-              <Value>Installing ...</Value>
+              <Value />
               <ValueType>String</ValueType>
               <Description>Header title</Description>
             </SectionParam>
             <SectionParam Name="Header description">
-              <Value>Copying all neccessary files</Value>
+              <Value />
               <ValueType>String</ValueType>
               <Description>Description of section, shown in under section title</Description>
             </SectionParam>
             <SectionParam Name="Header image">
-              <Value>logo_radio.png</Value>
+              <Value />
               <ValueType>File</ValueType>
               <Description>Image in upper right part</Description>
             </SectionParam>
@@ -121,21 +117,21 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <PanelName>Install Section</PanelName>
         <WizardButtonsEnum>Next</WizardButtonsEnum>
       </SectionItem>
-      <SectionItem Guid="8ba3806c-8a07-4433-b81d-fc49e156d8dd" Name="Setup Complete" ConditionGroup="">
+      <SectionItem Guid="4d6fe749-e930-4bca-b211-37c8a58477ce" Name="Setup Complete" ConditionGroup="">
         <Params>
           <Items>
             <SectionParam Name="Header text">
-              <Value>[Name] has been successfully installed on your computer.</Value>
+              <Value>The Extension Installer Wizard has successfully installed [Name].</Value>
               <ValueType>String</ValueType>
               <Description />
             </SectionParam>
             <SectionParam Name="Left part image">
-              <Value>installer_logo.gif</Value>
+              <Value />
               <ValueType>File</ValueType>
               <Description />
             </SectionParam>
             <SectionParam Name="Show radio buttons">
-              <Value>YES</Value>
+              <Value />
               <ValueType>Bool</ValueType>
               <Description>Use radiobutton in place of combobox</Description>
             </SectionParam>
@@ -183,33 +179,35 @@ Click Next to continue or Cancel to exit Setup.</Value>
   </PluginDependencies>
   <GeneralInfo>
     <Name>WifiRemote</Name>
-    <Id>d2277c74-fdce-4146-9e23-d080d1799f72</Id>
+    <Id>4368f682-e27b-4e52-a477-24f08b76d524</Id>
     <Author>Shukuyen, DieBagger</Author>
     <HomePage>http://code.google.com/p/wifiremote/</HomePage>
     <ForumPage>http://forum.team-mediaportal.com/mediaportal-plugins-47/wifiremote-tcp-remote-control-server-0-1-2011-05-05-a-96251</ForumPage>
-    <UpdateUrl />
+    <UpdateUrl>http://wifiremote.googlecode.com/svn/trunk/Installer/update.xml</UpdateUrl>
     <Version>
       <Major>0</Major>
       <Minor>4</Minor>
       <Build>2</Build>
       <Revision>0</Revision>
     </Version>
-    <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
-
+    <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
+
+
+
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-    <VersionDescription>* Fixed keymap
-* Added addresses field to qr code
-* Fixed autoconnect issue
+    <VersionDescription>* Fixed keymap
+* Added addresses field to qr code
+* Fixed autoconnect issue
 * Close screensaver on connect</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote.0.4.2_beta.mpe1</OnlineLocation>
-    <ReleaseDate>2011-10-07T14:15:56</ReleaseDate>
+    <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote.0.4.2.mpe1</OnlineLocation>
+    <ReleaseDate>2011-10-07T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>C:\Users\fate\Documents\WifiRemote_0.4.2_beta.mpe1</Location>
+    <Location>D:\Documents\WifiRemote_0.4.2.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
-          <Value />
+          <Value>logo_radio.png</Value>
           <ValueType>File</ValueType>
           <Description>The icon file of the package (jpg,png,bmp)</Description>
         </SectionParam>
@@ -244,35 +242,28 @@ It publishes a Bonjour Service on your local network which allows clients (for e
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>Files\WifiRemote.dll</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{73768cb3-f25c-40eb-a4eb-0a5a0f8ef172}-WifiRemote.dll</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{47ebbed8-e5ed-48ae-a744-0ebb6b7edb28}-WifiRemote.dll</ZipFileName>
         <DestinationFilename>%Base%\plugins\process\WifiRemote.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>Files\WifiRemote.xml</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{d1485fa3-78fa-490f-bf94-d17991945e6e}-WifiRemote.xml</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{79fa7c59-61fd-4b3f-ac4c-01609d154548}-WifiRemote.xml</ZipFileName>
         <DestinationFilename>%Base%\defaults\InputDeviceMappings\WifiRemote.xml</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{a8a17e86-6cf0-45d3-bd1f-8ccf09ad1245}-installer_logo.gif</ZipFileName>
-        <DestinationFilename />
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{9a843395-6d23-4b41-89b6-67a6e771bdb8}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{06379ed7-5602-499f-9c6b-5551517851a3}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
   </UniqueFileList>
   <ProjectSettings>
     <FolderGroups />
-    <ProjectFilename>WifiRemoteInstallerBeta.xmp2</ProjectFilename>
+    <ProjectFilename>WifiRemote_1_2_Installer.xmp2</ProjectFilename>
     <UpdatePath1>D:\Documents\Visual Studio 2010\Projects\PluginDev\WifiRemote\WifiRemote\Installer\update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
