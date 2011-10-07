@@ -179,7 +179,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
   </PluginDependencies>
   <GeneralInfo>
     <Name>WifiRemote</Name>
-    <Id>4368f682-e27b-4e52-a477-24f08b76d524</Id>
+    <Id>d2277c74-fdce-4146-9e23-d080d1799f72</Id>
     <Author>Shukuyen, DieBagger</Author>
     <HomePage>http://code.google.com/p/wifiremote/</HomePage>
     <ForumPage>http://forum.team-mediaportal.com/mediaportal-plugins-47/wifiremote-tcp-remote-control-server-0-1-2011-05-05-a-96251</ForumPage>
