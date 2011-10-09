@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using MediaPortal.GUI.Library;
 using WifiRemote.Messages;
 using WifiRemote.MPPlayList;
+using MediaPortal.Configuration;
 
 namespace WifiRemote
 {
@@ -544,6 +545,14 @@ namespace WifiRemote
                         int windowId = (int)message["Window"];
                         communication.OpenWindow(windowId);
                     }
+                    // Activate a window without resetting last activity
+                    else if (type == "activatewindow")
+                    {
+                        int windowId = (int)message["Window"];
+                        string param = (string)message["Parameter"];
+
+                        communication.ActivateWindow(windowId, param);
+                    }
                     // Shutdown/hibernate/reboot system or exit mediaportal
                     else if (type == "powermode")
                     {
@@ -661,20 +670,23 @@ namespace WifiRemote
                     else if (type == "playlist")
                     {
                         String action = (string)message["PlaylistAction"];
-                        String playlistType = (message["PlaylistType"] != null) ? (string)message["PlaylistType"] : null;
-
+                        String playlistType = (message["PlaylistType"] != null) ? (string)message["PlaylistType"] : "music";
+                        bool shuffle = (message["Shuffle"] != null) ? (bool)message["Shuffle"] : false;
+                        bool autoPlay = (message["AutoPlay"] != null) ? (bool)message["AutoPlay"] : false;
 
                         if (action.Equals("new") || action.Equals("append"))
                         {
-                            bool autoPlay = (message["AutoPlay"] != null) ? (bool)message["AutoPlay"] : false;
+                            
                             int insertIndex = 0;
                             if (message["InsertIndex"] != null)
                             {
                                 insertIndex = (int)message["InsertIndex"];
                             }
 
+                            // Add items from JSON or SQL
                             JArray array = (message["PlaylistItems"] != null) ? (JArray)message["PlaylistItems"] : null;
-                            if (array != null)
+                            JObject sql = (message["PlayListSQL"] != null) ? (JObject)message["PlayListSQL"] : null;
+                            if (array != null || sql != null)
                             {
                                 if (action.Equals("new"))
                                 {
@@ -682,14 +694,32 @@ namespace WifiRemote
                                 }
 
                                 int index = insertIndex;
-                                foreach (JObject o in array)
+
+                                if (array != null)
                                 {
-                                    PlaylistEntry entry = new PlaylistEntry();
-                                    entry.FileName = (o["FileName"] != null) ? (string)o["FileName"] : null;
-                                    entry.Name = (o["Name"] != null) ? (string)o["Name"] : null;
-                                    entry.Duration = (o["Duration"] != null) ? (int)o["Duration"] : 0;
-                                    PlaylistHelper.AddSongToPlaylist(playlistType, entry, index);
-                                    index++;
+                                    // Add items from JSON
+                                    foreach (JObject o in array)
+                                    {
+                                        PlaylistEntry entry = new PlaylistEntry();
+                                        entry.FileName = (o["FileName"] != null) ? (string)o["FileName"] : null;
+                                        entry.Name = (o["Name"] != null) ? (string)o["Name"] : null;
+                                        entry.Duration = (o["Duration"] != null) ? (int)o["Duration"] : 0;
+                                        PlaylistHelper.AddSongToPlaylist(playlistType, entry, index);
+                                        index++;
+                                    }
+
+                                    if (shuffle)
+                                    {
+                                        PlaylistHelper.Shuffle(playlistType);
+                                    }
+                                }
+                                else
+                                {
+                                    // Add items with SQL
+                                    string where = (sql["Where"] != null) ? (string)sql["Where"] : String.Empty;
+                                    int limit = (sql["Limit"] != null) ? (int)sql["Limit"] : 0;
+
+                                    PlaylistHelper.AddSongsToPlaylistWithSQL(playlistType, where, limit, shuffle, insertIndex);
                                 }
 
                                 if (autoPlay)
@@ -702,6 +732,19 @@ namespace WifiRemote
                                     PlaylistHelper.StartPlayingPlaylist(playlistType, insertIndex);
                                 }
                             }
+                        }
+                        else if (action.Equals("load"))
+                        {
+                            string playlistName = (string)message["PlayListName"];
+                            
+                            if (!string.IsNullOrEmpty(playlistName))
+                            {
+                                PlaylistHelper.LoadPlaylist(playlistType, playlistName, shuffle);
+                                if (autoPlay)
+                                {
+                                    PlaylistHelper.StartPlayingPlaylist(playlistType, 0);
+                                }
+                            }                          
                         }
                         else if (action.Equals("get"))
                         {

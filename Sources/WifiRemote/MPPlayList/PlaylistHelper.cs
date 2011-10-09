@@ -7,6 +7,9 @@ using WifiRemote.MPPlayList;
 using MediaPortal.GUI.Library;
 using MediaPortal.Music.Database;
 using MediaPortal.Video.Database;
+using MediaPortal.Util;
+using MediaPortal.Configuration;
+using System.IO;
 
 namespace WifiRemote.MPPlayList
 {
@@ -51,6 +54,91 @@ namespace WifiRemote.MPPlayList
             playList.Insert(item, index);
         }
 
+        /// <summary>
+        /// Adds songs to a playlist by querying the music database
+        /// </summary>
+        /// <param name="type">Type of the playlist</param>
+        /// <param name="where">SQL where condition</param>
+        /// <param name="limit">Maximum number of songs</param>
+        /// <param name="shuffle"><code>true</code> to shuffle the playlist</param>
+        /// <param name="startIndex">Index to at the songs at</param>
+        public static void AddSongsToPlaylistWithSQL(string type, string where, int limit, bool shuffle, int startIndex)
+        {
+            // Only works for music atm
+            PlayListType plType = GetTypeFromString(type);
+            if (plType == PlayListType.PLAYLIST_MUSIC)
+            {
+                List<Song> songs = new List<Song>();
+
+                string sql = "select * from tracks where " + where;
+                MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
+                if (songs.Count > 0)
+                {
+                    if (shuffle)
+                    {
+                        songs.Shuffle();
+                    }
+                    
+                    PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
+                    int numberOfSongsAvailable = songs.Count - 1;
+
+                    // Limit 0 means unlimited
+                    if (limit == 0) limit = songs.Count;
+
+                    for (int i = 0; i < limit && i < songs.Count; i++)
+                    {
+                        PlayListItem playListItem = ToPlayListItem(songs[i]);
+                        playListPlayer.GetPlaylist(PlayListType.PLAYLIST_MUSIC).Insert(playListItem, startIndex + i);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Load a playlist from disc.
+        /// </summary>
+        /// <param name="type">Type of the playlist</param>
+        /// <param name="name">Name of the playlist (file)</param>
+        /// <param name="shuffle"><code>true</code> to shuffle the playlist</param>
+        public static void LoadPlaylist(string type, string name, bool shuffle)
+        {
+            // Only working for music atm
+            PlayListType plType = GetTypeFromString(type);
+            if (plType == PlayListType.PLAYLIST_MUSIC)
+            {
+                // Get playlist folder from mp config
+                using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
+                {
+                    string playlistFolder = reader.GetValueAsString("music", "playlist", "");
+                    string playlistPath = playlistFolder + Path.DirectorySeparatorChar + name + ".m3u";
+                    if (File.Exists(playlistPath))
+                    {
+                        // Load playlist from file
+                        PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
+                        PlayList playList = playListPlayer.GetPlaylist(PlayListType.PLAYLIST_MUSIC);
+                        PlayListM3uIO m3uPlayList = new PlayListM3uIO();
+                        m3uPlayList.Load(playList, playlistPath);
+
+                        // Shuffle playlist
+                        if (shuffle)
+                        {
+                            Shuffle(type);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shuffle a playlist
+        /// </summary>
+        /// <param name="type">Type of the playlist</param>
+        public static void Shuffle(string type)
+        {
+            PlayListType plType = GetTypeFromString(type);
+            PlayListPlayer.SingletonPlayer.GetPlaylist(plType).Shuffle();
+        }
+       
         /// <summary>
         /// Returns a playlistitem from a song
         /// 

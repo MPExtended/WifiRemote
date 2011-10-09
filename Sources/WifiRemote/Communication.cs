@@ -409,6 +409,33 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// Activate a window by id without resetting the last activity
+        /// </summary>
+        /// <param name="windowId"></param>
+        public void ActivateWindow(int windowId)
+        {
+            ActivateWindow(windowId, null);
+        }
+
+        /// <summary>
+        /// Activate a window by id without resetting the last activity
+        /// and supply a loadParameter.
+        /// </summary>
+        /// <param name="windowId"></param>
+        /// <param name="param"></param>
+        public void ActivateWindow(int windowId, string param)
+        {
+            if (param == null)
+            {
+                GUIWindowManager.ActivateWindow(windowId);
+            }
+            else
+            {
+                GUIWindowManager.ActivateWindow(windowId, param);
+            }
+        }
+
+        /// <summary>
         /// Shutdown/hibernate/reboot the htpc or exit mediaportal
         /// </summary>
         /// <param name="shutdownType">logoff|suspend|hibernate|reboot|shutdown|exit</param>

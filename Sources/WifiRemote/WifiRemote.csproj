@@ -154,6 +154,7 @@
     <Compile Include="SocketServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WifiRemote.cs" />
+    <Compile Include="WifiRemoteExtensions.cs" />
     <Compile Include="WindowPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
