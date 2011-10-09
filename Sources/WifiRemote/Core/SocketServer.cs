@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Net.Sockets;
-using System.Collections;
-using System.Net;
-using System.Threading;
 using System.Runtime.InteropServices;
 using Deusty.Net;
 using MediaPortal.Player;
@@ -14,7 +9,6 @@ using Newtonsoft.Json.Linq;
 using MediaPortal.GUI.Library;
 using WifiRemote.Messages;
 using WifiRemote.MPPlayList;
-using MediaPortal.Configuration;
 
 namespace WifiRemote
 {
@@ -787,6 +781,35 @@ namespace WifiRemote
                     else if (type == "requestnowplaying")
                     {
                         SendMessageToClient(nowPlayingMessage, sender);
+                    }
+                    // MovingPictures related commands
+                    else if (type == "movingpictures")
+                    {
+                        if (WifiRemote.IsAvailableMovingPictures)
+                        {
+                            string action = (string)message["Action"];
+
+                            if (!string.IsNullOrEmpty(action))
+                            {
+                                // Show movie details for this movie
+                                if (action == "moviedetails")
+                                {
+                                    string movieName = (string)message["MovieName"];
+                                    if (!string.IsNullOrEmpty(movieName))
+                                    {
+                                        int movieId = MovingPicturesHelper.GetMovieIdByName(movieName);
+                                        if (movieId > 0)
+                                        {
+                                            communication.ActivateWindow(96742, "movieid:" + movieId.ToString());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            WifiRemote.LogMessage("MovingPictures not installed but required!", WifiRemote.LogType.Error);
+                        }
                     }
                     else
                     {
