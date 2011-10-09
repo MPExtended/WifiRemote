@@ -71,14 +71,14 @@ namespace WifiRemote.MPPlayList
                 List<Song> songs = new List<Song>();
 
                 string sql = "select * from tracks where " + where;
+                if (shuffle)
+                {
+                    sql += " ORDER BY random()";
+                }
+
                 MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
                 if (songs.Count > 0)
                 {
-                    if (shuffle)
-                    {
-                        songs.Shuffle();
-                    }
-                    
                     PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
                     int numberOfSongsAvailable = songs.Count - 1;
 
