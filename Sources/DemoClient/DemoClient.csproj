@@ -51,6 +51,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncSocket.cs" />
+    <Compile Include="PlaylistLoadDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlaylistLoadDialog.Designer.cs">
+      <DependentUpon>PlaylistLoadDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data.cs" />
     <Compile Include="MessageLog.cs">
       <SubType>Form</SubType>
@@ -58,6 +64,7 @@
     <Compile Include="MessageLog.Designer.cs">
       <DependentUpon>MessageLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Messages\MessagePlayMusicSql.cs" />
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Messages\MessageCommand.cs" />
     <Compile Include="Messages\MessageIdentify.cs" />
@@ -76,6 +83,12 @@
     <Compile Include="PasswordDialog.Designer.cs">
       <DependentUpon>PasswordDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="PlaylistAddDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlaylistAddDialog.Designer.cs">
+      <DependentUpon>PlaylistAddDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Remote.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +97,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="PlaylistLoadDialog.resx">
+      <DependentUpon>PlaylistLoadDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="MessageLog.resx">
       <DependentUpon>MessageLog.cs</DependentUpon>
     </EmbeddedResource>
@@ -93,11 +110,14 @@
     <EmbeddedResource Include="PasswordDialog.resx">
       <DependentUpon>PasswordDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PlaylistAddDialog.resx">
+      <DependentUpon>PlaylistAddDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Remote.resx">
       <DependentUpon>Remote.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -129,6 +149,8 @@
     <Content Include="readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\playlist.png" />
+    <None Include="Resources\playlist_load.png" />
     <None Include="Resources\channel_switch.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

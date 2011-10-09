@@ -450,6 +450,30 @@ namespace DemoClient
             SendCommand(channel, socket);
         }
 
+
+        private void sQLMusicTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PlaylistAddDialog plDialog = new PlaylistAddDialog();
+            plDialog.ShowDialog();
+            if (plDialog.DialogResult.Equals(DialogResult.OK))
+            {
+                MessagePlayMusicSql musicSql = new MessagePlayMusicSql("strAlbum LIKE '%"+ plDialog.GetAlbum() +"%'", plDialog.GetLimit(), plDialog.Shuffle(), plDialog.Autoplay(), plDialog.Append());
+                SendCommand(musicSql, socket);
+            }
+        }
+
+
+        private void loadPlaylistToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PlaylistLoadDialog plDialog = new PlaylistLoadDialog();
+            plDialog.ShowDialog();
+            if (plDialog.DialogResult.Equals(DialogResult.OK))
+            {
+                MessagePlayMusicSql musicSql = new MessagePlayMusicSql(plDialog.GetPlaylistName(), plDialog.Shuffle(), plDialog.Autoplay());
+                SendCommand(musicSql, socket);
+            }
+        }
+
         #endregion
 
 
@@ -635,6 +659,8 @@ namespace DemoClient
         }
 
         #endregion
+
+
 
     }
 }
