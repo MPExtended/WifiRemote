@@ -110,7 +110,13 @@ namespace WifiRemote.MPPlayList
                 using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
                 {
                     string playlistFolder = reader.GetValueAsString("music", "playlist", "");
-                    string playlistPath = playlistFolder + Path.DirectorySeparatorChar + name + ".m3u";
+                    
+                    if (!Path.IsPathRooted(playlistFolder))
+                    {
+                        playlistFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), playlistFolder);
+                    }
+
+                    string playlistPath = Path.Combine(playlistFolder, name + ".m3u");
                     if (File.Exists(playlistPath))
                     {
                         // Load playlist from file
