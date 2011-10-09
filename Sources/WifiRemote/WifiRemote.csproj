@@ -109,11 +109,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncSocket.cs" />
-    <Compile Include="AsyncSocketExtension.cs" />
-    <Compile Include="AuthMethod.cs" />
-    <Compile Include="AutoLoginToken.cs" />
-    <Compile Include="Communication.cs" />
+    <Compile Include="Core\AsyncSocket.cs" />
+    <Compile Include="Core\AsyncSocketExtension.cs" />
+    <Compile Include="Core\AuthMethod.cs" />
+    <Compile Include="Core\AutoLoginToken.cs" />
+    <Compile Include="Core\Communication.cs" />
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Messages\MessageAuthenticationResponse.cs" />
     <Compile Include="Messages\MessageNowPlayingUpdate.cs" />
@@ -126,7 +126,7 @@
     <Compile Include="Messages\Now Playing\NowPlayingMovingPictures.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingDVD.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingVideo.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="Core\Data.cs" />
     <Compile Include="Messages\Now Playing\IAdditionalNowPlayingInfo.cs" />
     <Compile Include="Messages\MessageImage.cs" />
     <Compile Include="Messages\MessageNowPlaying.cs" />
@@ -141,28 +141,29 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Property.cs" />
-    <Compile Include="QRCodeGenerator.cs" />
-    <Compile Include="RemoteClient.cs" />
-    <Compile Include="ServerDescription.cs" />
-    <Compile Include="SetupForm.cs">
+    <Compile Include="Core\Property.cs" />
+    <Compile Include="Utility\QRCodeGenerator.cs" />
+    <Compile Include="Core\RemoteClient.cs" />
+    <Compile Include="Core\ServerDescription.cs" />
+    <Compile Include="Core\SetupForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SetupForm.Designer.cs">
+    <Compile Include="Core\SetupForm.Designer.cs">
       <DependentUpon>SetupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SocketServer.cs" />
+    <Compile Include="Core\SocketServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WifiRemote.cs" />
-    <Compile Include="WifiRemoteExtensions.cs" />
-    <Compile Include="WindowPlugin.cs" />
+    <Compile Include="Core\WifiRemote.cs" />
+    <Compile Include="Utility\WifiRemoteExtensions.cs" />
+    <Compile Include="Core\WindowPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SetupForm.resx">
+    <EmbeddedResource Include="Core\SetupForm.resx">
       <DependentUpon>SetupForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -191,6 +192,7 @@
     <None Include="Resources\NoPluginImage.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="PluginConnection\" />
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <ItemGroup>
