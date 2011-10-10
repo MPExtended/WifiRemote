@@ -15,7 +15,7 @@ namespace WifiRemote.MPPlayList
 {
     class PlaylistHelper
     {
-        protected delegate void StartPlayingPlaylistDelegate();
+        protected delegate void StartPlayingPlaylistDelegate(bool switchToPlaylistView);
         private static int mPlaylistStartIndex = 0;
         private static PlayListType mPlaylistStartType;
 
@@ -253,12 +253,13 @@ namespace WifiRemote.MPPlayList
         /// </summary>
         /// <param name="type">Type of the playlist</param>
         /// <param name="index">Index where playback is started</param>
-        public static void StartPlayingPlaylist(String type, int index)
+        /// <param name="switchToPlaylistView"><code>true</code> to switch to playlist view</param>
+        public static void StartPlayingPlaylist(String type, int index, bool switchToPlaylistView)
         {
             mPlaylistStartIndex = index;
             mPlaylistStartType = GetTypeFromString(type);
 
-            StartPlayingPlaylist();
+            StartPlayingPlaylist(switchToPlaylistView);
         }
 
         /// <summary>
@@ -285,12 +286,12 @@ namespace WifiRemote.MPPlayList
         /// <summary>
         /// Private method to start playlist (needed for the invoke callback)
         /// </summary>
-        private static void StartPlayingPlaylist()
+        private static void StartPlayingPlaylist(bool switchToPlaylistView)
         {
             if (GUIGraphicsContext.form.InvokeRequired)
             {
                 StartPlayingPlaylistDelegate d = StartPlayingPlaylist;
-                GUIGraphicsContext.form.Invoke(d);
+                GUIGraphicsContext.form.Invoke(d, new object[] { switchToPlaylistView });
             }
             else
             {
@@ -299,17 +300,17 @@ namespace WifiRemote.MPPlayList
                 // if we got a playlist
                 if (playlist.Count > 0)
                 {
-                    // then get 1st song
-                    PlayListItem item = playlist[0];
-
                     // and activate the playlist window if its not activated yet
-                    if (mPlaylistStartType == PlayListType.PLAYLIST_MUSIC)
+                    if (switchToPlaylistView)
                     {
-                        GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_MUSIC_PLAYLIST);
-                    }
-                    else if (mPlaylistStartType == PlayListType.PLAYLIST_VIDEO)
-                    {
-                        GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_VIDEO_PLAYLIST);
+                        if (mPlaylistStartType == PlayListType.PLAYLIST_MUSIC)
+                        {
+                            GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_MUSIC_PLAYLIST);
+                        }
+                        else if (mPlaylistStartType == PlayListType.PLAYLIST_VIDEO)
+                        {
+                            GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_VIDEO_PLAYLIST);
+                        }
                     }
 
                     // and start playing it

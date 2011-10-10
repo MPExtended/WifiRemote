@@ -667,6 +667,7 @@ namespace WifiRemote
                         String playlistType = (message["PlaylistType"] != null) ? (string)message["PlaylistType"] : "music";
                         bool shuffle = (message["Shuffle"] != null) ? (bool)message["Shuffle"] : false;
                         bool autoPlay = (message["AutoPlay"] != null) ? (bool)message["AutoPlay"] : false;
+                        bool showPlaylist = (message["ShowPlaylist"] != null) ? (bool)message["ShowPlaylist"] : true;
 
                         if (action.Equals("new") || action.Equals("append"))
                         {
@@ -723,7 +724,7 @@ namespace WifiRemote
                                         int startPos = (int)message["StartPosition"];
                                         insertIndex += startPos;
                                     }
-                                    PlaylistHelper.StartPlayingPlaylist(playlistType, insertIndex);
+                                    PlaylistHelper.StartPlayingPlaylist(playlistType, insertIndex, showPlaylist);
                                 }
                             }
                         }
@@ -736,7 +737,7 @@ namespace WifiRemote
                                 PlaylistHelper.LoadPlaylist(playlistType, playlistName, shuffle);
                                 if (autoPlay)
                                 {
-                                    PlaylistHelper.StartPlayingPlaylist(playlistType, 0);
+                                    PlaylistHelper.StartPlayingPlaylist(playlistType, 0, showPlaylist);
                                 }
                             }                          
                         }
@@ -765,7 +766,7 @@ namespace WifiRemote
                         else if (action.Equals("play"))
                         {
                             int index = (message["Index"] != null) ? (int)message["Index"] : 0;
-                            PlaylistHelper.StartPlayingPlaylist(playlistType, index);
+                            PlaylistHelper.StartPlayingPlaylist(playlistType, index, showPlaylist);
                         }
                         else if (action.Equals("clear"))
                         {
