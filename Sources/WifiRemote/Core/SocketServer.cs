@@ -500,6 +500,9 @@ namespace WifiRemote
                 // The client is already authentificated or we don't need authentification
                 if (type != null && client.IsAuthenticated && type != "identify")
                 {
+                    // Turn on display
+                    keybd_event(VK_LSHIFT, 0x45, KEYEVENTF_KEYUP, 0);
+
                     // Send a command
                     if (type == "command")
                     {
@@ -803,6 +806,23 @@ namespace WifiRemote
                                         {
                                             communication.ActivateWindow(96742, "movieid:" + movieId.ToString());
                                         }
+                                    }
+                                }
+                                // Play a movie with MovingPictures
+                                else if (action == "playmovie")
+                                {
+                                    int movieId = (message["MovieId"] != null) ? (int)message["MovieId"] : -1;
+                                    string movieName = (string)message["MovieName"];
+
+                                    // Play by movie id
+                                    if (movieId != -1)
+                                    {
+                                        MovingPicturesHelper.PlayMovie(movieId);
+                                    }
+                                    else if (!string.IsNullOrEmpty(movieName))
+                                    {
+                                        // Play by name
+                                        MovingPicturesHelper.PlayMovie(movieName);
                                     }
                                 }
                             }
