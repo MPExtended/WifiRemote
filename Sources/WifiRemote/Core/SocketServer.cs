@@ -832,6 +832,50 @@ namespace WifiRemote
                             WifiRemote.LogMessage("MovingPictures not installed but required!", WifiRemote.LogType.Error);
                         }
                     }
+                    // MP-TVSeries related commands
+                    else if (type == "tvseries")
+                    {
+                        if (WifiRemote.IsAvailableTVSeries)
+                        {
+                            string action = (string)message["Action"];
+
+                            if (!string.IsNullOrEmpty(action))
+                            {
+                                // A series id is needed for the following actions. 
+                                // If a series id was supplied we use this, otherwise we
+                                // try to get an id by the series name.
+                                //
+                                // If this isn't successful we do nothing.
+                                int? seriesId = (int?)message["SeriesId"];
+                                string seriesName = (string)message["SeriesName"];
+
+                                // Get series id by show name if no id supplied
+                                if (seriesId == null && !string.IsNullOrEmpty(seriesName))
+                                {
+                                    seriesId = TVSeriesHelper.GetSeriesIdByName(seriesName);
+                                }
+
+                                if (seriesId != null)
+                                {
+                                    // Play specific episode of series
+                                    if (action == "playepisode")
+                                    {
+                                        int? season = (int?)message["SeasonNumber"];
+                                        int? episode = (int?)message["EpisodeNumber"];
+
+                                        if (season != null && episode != null)
+                                        {
+                                            TVSeriesHelper.Play((int)seriesId, (int)season, (int)episode);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            WifiRemote.LogMessage("MP-TVSeries not installed but required!", WifiRemote.LogType.Error);
+                        }
+                    }
                     else
                     {
                         // Unknown command. Log or inform user ...

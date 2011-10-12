@@ -79,6 +79,9 @@
     <Reference Include="MovingPictures">
       <HintPath>..\..\Libs\MovingPictures.dll</HintPath>
     </Reference>
+    <Reference Include="MP-TVSeries">
+      <HintPath>..\..\Libs\MP-TVSeries.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json.Net35">
       <HintPath>..\..\Libs\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
@@ -143,6 +146,7 @@
     <Compile Include="MPPlayList\PlaylistHelper.cs" />
     <Compile Include="MPPlayList\PlaylistEntry.cs" />
     <Compile Include="PluginConnection\MovingPicturesHelper.cs" />
+    <Compile Include="PluginConnection\TVSeriesHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
