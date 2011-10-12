@@ -868,6 +868,16 @@ namespace WifiRemote
                                             TVSeriesHelper.Play((int)seriesId, (int)season, (int)episode);
                                         }
                                     }
+                                    // Play first unwatched or last added episode of a series
+                                    else if (action == "playunwatchedepisode")
+                                    {
+                                        TVSeriesHelper.PlayFirstUnwatchedEpisode((int)seriesId);
+                                    }
+                                    // Play random episode of a series
+                                    else if (action == "playrandomepisode")
+                                    {
+                                        TVSeriesHelper.PlayRandomEpisode((int)seriesId);
+                                    }
                                 }
                             }
                         }
