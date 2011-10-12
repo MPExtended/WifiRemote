@@ -104,32 +104,45 @@ namespace WifiRemote.MPPlayList
         {
             // Only working for music atm
             PlayListType plType = GetTypeFromString(type);
+            
             if (plType == PlayListType.PLAYLIST_MUSIC)
             {
-                // Get playlist folder from mp config
-                using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
+                string playlistPath = String.Empty;
+
+                // Playlist path supplied
+                if (name.EndsWith(".m3u"))
                 {
-                    string playlistFolder = reader.GetValueAsString("music", "playlist", "");
-                    
-                    if (!Path.IsPathRooted(playlistFolder))
+                    playlistPath = name;
+                }
+                // Playlist name supplied
+                else
+                {
+                    // Get playlist folder from mp config
+                    using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
                     {
-                        playlistFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), playlistFolder);
-                    }
+                        string playlistFolder = reader.GetValueAsString("music", "playlists", "");
 
-                    string playlistPath = Path.Combine(playlistFolder, name + ".m3u");
-                    if (File.Exists(playlistPath))
-                    {
-                        // Load playlist from file
-                        PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
-                        PlayList playList = playListPlayer.GetPlaylist(PlayListType.PLAYLIST_MUSIC);
-                        PlayListM3uIO m3uPlayList = new PlayListM3uIO();
-                        m3uPlayList.Load(playList, playlistPath);
-
-                        // Shuffle playlist
-                        if (shuffle)
+                        if (!Path.IsPathRooted(playlistFolder))
                         {
-                            Shuffle(type);
+                            playlistFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), playlistFolder);
                         }
+
+                        playlistPath = Path.Combine(playlistFolder, name + ".m3u");
+                    }
+                }
+
+                if (File.Exists(playlistPath))
+                {
+                    // Load playlist from file
+                    PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
+                    PlayList playList = playListPlayer.GetPlaylist(PlayListType.PLAYLIST_MUSIC);
+                    PlayListM3uIO m3uPlayList = new PlayListM3uIO();
+                    m3uPlayList.Load(playList, playlistPath);
+
+                    // Shuffle playlist
+                    if (shuffle)
+                    {
+                        Shuffle(type);
                     }
                 }
             }

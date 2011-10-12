@@ -734,10 +734,11 @@ namespace WifiRemote
                         else if (action.Equals("load"))
                         {
                             string playlistName = (string)message["PlayListName"];
+                            string playlistPath = (string)message["PlaylistPath"];
                             
-                            if (!string.IsNullOrEmpty(playlistName))
+                            if (!string.IsNullOrEmpty(playlistName) || !string.IsNullOrEmpty(playlistPath))
                             {
-                                PlaylistHelper.LoadPlaylist(playlistType, playlistName, shuffle);
+                                PlaylistHelper.LoadPlaylist(playlistType, (!string.IsNullOrEmpty(playlistName)) ? playlistName : playlistPath, shuffle);
                                 if (autoPlay)
                                 {
                                     PlaylistHelper.StartPlayingPlaylist(playlistType, 0, showPlaylist);
