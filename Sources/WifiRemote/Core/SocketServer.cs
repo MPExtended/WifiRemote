@@ -849,6 +849,7 @@ namespace WifiRemote
                                 // If this isn't successful we do nothing.
                                 int? seriesId = (int?)message["SeriesId"];
                                 string seriesName = (string)message["SeriesName"];
+                                bool resume = (message["AskToResume"] != null) ? (bool)message["AskToResume"] : true;
 
                                 // Get series id by show name if no id supplied
                                 if (seriesId == null && !string.IsNullOrEmpty(seriesName))
@@ -866,18 +867,18 @@ namespace WifiRemote
 
                                         if (season != null && episode != null)
                                         {
-                                            TVSeriesHelper.Play((int)seriesId, (int)season, (int)episode);
+                                            TVSeriesHelper.Play((int)seriesId, (int)season, (int)episode, resume);
                                         }
                                     }
                                     // Play first unwatched or last added episode of a series
                                     else if (action == "playunwatchedepisode")
                                     {
-                                        TVSeriesHelper.PlayFirstUnwatchedEpisode((int)seriesId);
+                                        TVSeriesHelper.PlayFirstUnwatchedEpisode((int)seriesId, resume);
                                     }
                                     // Play random episode of a series
                                     else if (action == "playrandomepisode")
                                     {
-                                        TVSeriesHelper.PlayRandomEpisode((int)seriesId);
+                                        TVSeriesHelper.PlayRandomEpisode((int)seriesId, resume);
                                     }
                                 }
                             }

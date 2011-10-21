@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WindowPlugins.GUITVSeries;
+using MediaPortal.GUI.Library;
+using System.Threading;
 
 namespace WifiRemote
 {
     class TVSeriesHelper
     {
         static VideoHandler player = null;
+
+        protected delegate void PlayEpisodeAsyncDelegate(DBEpisode episode, bool resume);
 
         /// <summary>
         /// Get a series id by show name
@@ -52,7 +56,8 @@ namespace WifiRemote
         /// https://github.com/Technicolour/Trakt-for-Mediaportal/blob/master/TraktPlugin/TraktHandlers/TVSeries.cs
         /// </summary>
         /// <param name="seriesid">series id of episode</param>
-        public static void PlayFirstUnwatchedEpisode(int seriesid)
+        /// <param name="resume">Resume from last stop?</param>
+        public static void PlayFirstUnwatchedEpisode(int seriesid, bool resume)
         {
             var episodes = DBEpisode.Get(seriesid);
             if (episodes == null || episodes.Count == 0) return;
@@ -75,7 +80,7 @@ namespace WifiRemote
 
             if (episode != null)
             {
-                PlayEpisode(episode);
+                PlayEpisode(episode, resume);
             }
         }
 
@@ -83,7 +88,8 @@ namespace WifiRemote
         /// Play a random episode of a series
         /// </summary>
         /// <param name="seriesId">ID of a series</param>
-        public static void PlayRandomEpisode(int seriesId)
+        /// <param name="resume">Resume from last stop?</param>
+        public static void PlayRandomEpisode(int seriesId, bool resume)
         {
             List<DBEpisode> episodes = DBEpisode.Get(seriesId);
             if (episodes == null || episodes.Count == 0) return;
@@ -96,7 +102,7 @@ namespace WifiRemote
             DBEpisode episode = episodes.GetRandomElement<DBEpisode>();
             if (episode != null)
             {
-                PlayEpisode(episode);
+                PlayEpisode(episode, resume);
             }
         }
 
@@ -109,13 +115,14 @@ namespace WifiRemote
         /// <param name="seriesId">ID of the series</param>
         /// <param name="seasonNumber">Number of the season</param>
         /// <param name="episodeNumber">Number of the episode</param>
-        public static void Play(int seriesId, int seasonNumer, int episodeNumber)
+        /// <paraparam name="resume">Resume from last stop?</paraparam>
+        public static void Play(int seriesId, int seasonNumer, int episodeNumber, bool resume)
         {
             var episodes = DBEpisode.Get(seriesId, seasonNumer);
             var episode = episodes.FirstOrDefault(e => (e[DBEpisode.cEpisodeIndex] == episodeNumber || e[DBEpisode.cEpisodeIndex2] == episodeNumber) && !string.IsNullOrEmpty(e[DBEpisode.cFilename]));
             if (episode == null) return;
 
-            PlayEpisode(episode);
+            PlayEpisode(episode, resume);
         }
 
         /// <summary>
@@ -125,11 +132,40 @@ namespace WifiRemote
         /// https://github.com/Technicolour/Trakt-for-Mediaportal/blob/master/TraktPlugin/TraktHandlers/TVSeries.cs
         /// </summary>
         /// <param name="episode">A valid tvseries episode</param>
+        /// <param name="resume">Resume from last stop?</param>
         /// <returns></returns>
-        private static void PlayEpisode(DBEpisode episode)
+        private static void PlayEpisode(DBEpisode episode, bool resume)
+        {
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                PlayEpisodeAsyncDelegate d = new PlayEpisodeAsyncDelegate(PlayEpisode);
+                GUIGraphicsContext.form.Invoke(d, new object[] { episode, resume });
+                return;
+            }
+            
+            // Play on a new thread
+            ThreadStart ts = delegate() { DoPlayEpisode(episode, resume); };
+            Thread playEpisodeAsync = new Thread(ts);
+            playEpisodeAsync.Start();
+
+        }
+
+        /// <summary>
+        /// Play episode async
+        /// </summary>
+        /// <param name="episode">Episode to play</param>
+        /// <param name="resume">Resume from last stop?</param>
+        private static void DoPlayEpisode(DBEpisode episode, bool resume)
         {
             if (player == null) player = new VideoHandler();
-            player.ResumeOrPlay(episode);
+
+            // Reset stopTime if resume is false
+            if (!resume)
+            {
+                episode[DBEpisode.cStopTime] = 0;
+            }
+
+            player.ResumeOrPlay((DBEpisode)episode);
         }
     }
 }
