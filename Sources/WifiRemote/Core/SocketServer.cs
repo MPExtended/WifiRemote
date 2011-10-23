@@ -814,16 +814,17 @@ namespace WifiRemote
                                 {
                                     int movieId = (message["MovieId"] != null) ? (int)message["MovieId"] : -1;
                                     string movieName = (string)message["MovieName"];
+                                    bool resume = (message["AskToResume"] != null) ? (bool)message["AskToResume"] : true;
 
                                     // Play by movie id
                                     if (movieId != -1)
                                     {
-                                        MovingPicturesHelper.PlayMovie(movieId);
+                                        MovingPicturesHelper.PlayMovie(movieId, resume);
                                     }
                                     else if (!string.IsNullOrEmpty(movieName))
                                     {
                                         // Play by name
-                                        MovingPicturesHelper.PlayMovie(movieName);
+                                        MovingPicturesHelper.PlayMovie(movieName, resume);
                                     }
                                 }
                             }

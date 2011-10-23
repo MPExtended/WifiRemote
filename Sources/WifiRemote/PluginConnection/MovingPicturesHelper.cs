@@ -3,12 +3,15 @@ using Cornerstone.Database;
 using MediaPortal.Plugins.MovingPictures.Database;
 using MediaPortal.Plugins.MovingPictures;
 using MediaPortal.Plugins.MovingPictures.MainUI;
+using MediaPortal.GUI.Library;
+using System.Threading;
 
 namespace WifiRemote
 {
     class MovingPicturesHelper
     {
         public static MoviePlayer player = null;
+        protected delegate void PlayMovieAsyncDelegate(DBMovieInfo movie, bool resume);
 
         /// <summary>
         /// Get a MovingPictures movie id that matches a movie
@@ -66,16 +69,18 @@ namespace WifiRemote
         /// Play a movie with MovingPictures by name.
         /// </summary>
         /// <param name="movieName">Name of the movie to play</param>
-        public static void PlayMovie(string movieName)
+        /// <param name="resume">Ask to resume movie?</param>
+        public static void PlayMovie(string movieName, bool resume)
         {
-            PlayMovie(GetMovieByName(movieName));
+            PlayMovie(GetMovieByName(movieName), resume);
         }
 
         /// <summary>
         /// Play a movie with MovingPictures by ID.
         /// </summary>
         /// <param name="movieId">A MovingPictures movie id.</param>
-        public static void PlayMovie(int movieId)
+        /// <param name="resume">Ask to resume movie?</param>
+        public static void PlayMovie(int movieId, bool resume)
         {
             DBMovieInfo movie = DBMovieInfo.Get(movieId);
             if (movie == null)
@@ -84,7 +89,7 @@ namespace WifiRemote
             }
             else
             {
-                PlayMovie(movie);
+                PlayMovie(movie, resume);
             }
         }
 
@@ -95,9 +100,40 @@ namespace WifiRemote
         /// https://github.com/Technicolour/Trakt-for-Mediaportal/blob/master/TraktPlugin/TraktHandlers/MovingPictures.cs
         /// </summary>
         /// <param name="movie">Movie to play</param>
-        public static void PlayMovie(DBMovieInfo movie)
+        /// <param name="resume">Ask to resume movie?</param>
+        public static void PlayMovie(DBMovieInfo movie, bool resume)
         {
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                PlayMovieAsyncDelegate d = new PlayMovieAsyncDelegate(PlayMovie);
+                GUIGraphicsContext.form.Invoke(d, new object[] { movie, resume });
+                return;
+            }
+
             if (movie == null) return;
+
+            // Play on a new thread
+            ThreadStart ts = delegate() { DoPlayMovie(movie, resume); };
+            Thread playMovieAsync = new Thread(ts);
+            playMovieAsync.Start();
+        }
+
+        /// <summary>
+        /// Start playing a movie on a seperate thread
+        /// </summary>
+        /// <param name="movie">Movie to play</param>
+        /// <param name="resume">Ask user to resume?</param>
+        private static void DoPlayMovie(DBMovieInfo movie, bool resume)
+        {
+            // Clear resume
+            if (!resume && movie.UserSettings != null && movie.UserSettings.Count > 0)
+            {
+                DBUserMovieSettings userSetting = movie.ActiveUserSettings;
+                userSetting.ResumePart = 0;
+                userSetting.ResumeTime = 0;
+                userSetting.ResumeData = null;
+                userSetting.Commit();
+            }
 
             if (player == null) player = new MoviePlayer(new MovingPicturesGUI());
             player.Play(movie);
