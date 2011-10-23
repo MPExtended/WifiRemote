@@ -881,6 +881,22 @@ namespace WifiRemote
                                     {
                                         TVSeriesHelper.PlayRandomEpisode((int)seriesId, resume);
                                     }
+                                    // Play all episodes of a season
+                                    else if (action == "playseason")
+                                    {
+                                        int? season = (int?)message["SeasonNumber"];
+                                        bool onlyUnwatched = (message["OnlyUnwatchedEpisodes"] != null) ? (bool)message["OnlyUnwatchedEpisodes"] : false;
+                                        if (season != null)
+                                        {
+                                            TVSeriesHelper.PlaySeason((int)seriesId, (int)season, onlyUnwatched);
+                                        }
+                                    }
+                                    // Play all episodes of a series
+                                    else if (action == "playseries")
+                                    {
+                                        bool onlyUnwatched = (message["OnlyUnwatchedEpisodes"] != null) ? (bool)message["OnlyUnwatchedEpisodes"] : false;
+                                        TVSeriesHelper.PlaySeries((int)seriesId, onlyUnwatched);
+                                    }
                                 }
                             }
                         }
