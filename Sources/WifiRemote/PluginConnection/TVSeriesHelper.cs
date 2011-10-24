@@ -13,6 +13,7 @@ namespace WifiRemote
         static VideoHandler player = null;
         static PlayListPlayer playlistPlayer;
         protected delegate void PlayEpisodeAsyncDelegate(DBEpisode episode, bool resume);
+        protected delegate void PlaySeasonAsyncDelegate(int seriesId, int seasonNumber, bool autostart, int offset, bool onlyUnwatched, bool switchToPlaylistView);
 
         /// <summary>
         /// Get a series id by show name
@@ -29,7 +30,7 @@ namespace WifiRemote
             if (seriesList.Count == 1)
             {
                 return seriesList[0][DBOnlineSeries.cID];
-            } 
+            }
             else if (seriesList.Count > 1)
             {
                 foreach (DBSeries series in seriesList)
@@ -112,8 +113,18 @@ namespace WifiRemote
         /// <param name="seriesId">ID of a series</param>
         /// <param name="seasonNumber">Number of the season</param>
         /// <param name="onlyUnwatched">Play only unwatched episodes</param>
-        public static void PlaySeason(int seriesId, int seasonNumber, bool onlyUnwatched)
+        /// <param name="autostart">If yes, automatically starts playback with the first episode</param>
+        /// <param name="startIndex">Index of the item with which playback should start</param>
+        /// <param name="switchToPlaylistView">If yes the playlistview will be shown</param>
+        public static void PlaySeason(int seriesId, int seasonNumber, bool autostart, int startIndex, bool onlyUnwatched, bool switchToPlaylistView)
         {
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                PlaySeasonAsyncDelegate d = new PlaySeasonAsyncDelegate(PlaySeason);
+                GUIGraphicsContext.form.Invoke(d, new object[] { seriesId, seasonNumber, autostart, startIndex, onlyUnwatched, switchToPlaylistView });
+                return;
+            }
+
             WifiRemote.LogMessage("In Play Season", WifiRemote.LogType.Debug);
 
             List<DBEpisode> episodes = DBEpisode.Get(seriesId, seasonNumber);
@@ -155,6 +166,21 @@ namespace WifiRemote
             {
                 PlayListItem playlistItem = new PlayListItem(episode);
                 playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Add(playlistItem);
+            }
+
+            //automatically start playing the playlist
+            if (autostart)
+            {
+                WifiRemote.LogMessage("Starting playlist playback with index " + startIndex, WifiRemote.LogType.Debug);
+                // and activate the playlist window if its not activated yet
+                if (switchToPlaylistView)
+                {
+                    GUIWindowManager.ActivateWindow(GUITVSeriesPlayList.GetWindowID);
+                }
+
+                playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_TVSERIES;
+                playlistPlayer.Reset();
+                playlistPlayer.Play(0);
             }
         }
 
