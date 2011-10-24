@@ -199,18 +199,10 @@ namespace WifiRemote
         /// <returns></returns>
         private static void PlayEpisode(DBEpisode episode, bool resume)
         {
-            if (GUIGraphicsContext.form.InvokeRequired)
-            {
-                PlayEpisodeAsyncDelegate d = new PlayEpisodeAsyncDelegate(PlayEpisode);
-                GUIGraphicsContext.form.Invoke(d, new object[] { episode, resume });
-                return;
-            }
-            
             // Play on a new thread
             ThreadStart ts = delegate() { DoPlayEpisode(episode, resume); };
             Thread playEpisodeAsync = new Thread(ts);
             playEpisodeAsync.Start();
-
         }
 
         /// <summary>
@@ -220,6 +212,13 @@ namespace WifiRemote
         /// <param name="resume">Resume from last stop?</param>
         private static void DoPlayEpisode(DBEpisode episode, bool resume)
         {
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                PlayEpisodeAsyncDelegate d = new PlayEpisodeAsyncDelegate(DoPlayEpisode);
+                GUIGraphicsContext.form.Invoke(d, new object[] { episode, resume });
+                return;
+            }
+
             if (player == null) player = new VideoHandler();
 
             // Reset stopTime if resume is false
