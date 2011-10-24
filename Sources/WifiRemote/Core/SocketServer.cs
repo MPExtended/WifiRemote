@@ -886,12 +886,12 @@ namespace WifiRemote
                                     {
                                         int? season = (int?)message["SeasonNumber"];
                                         bool onlyUnwatched = (message["OnlyUnwatchedEpisodes"] != null) ? (bool)message["OnlyUnwatchedEpisodes"] : false;
-                                        int? startIndex = (message["StartIndex"] != null) ? (int)message["StartIndex"] : 0;
+                                        int startIndex = (message["StartIndex"] != null) ? (int)message["StartIndex"] : 0;
                                         bool switchToPlaylistView = (message["SwitchToPlaylist"] != null) ? (bool)message["SwitchToPlaylist"] : true;
                                         bool startAutomatically = (message["AutoStart"] != null) ? (bool)message["AutoStart"] : true;
                                         if (season != null)
                                         {
-                                            TVSeriesHelper.PlaySeason((int)seriesId, (int)season, startAutomatically, (int)startIndex, onlyUnwatched, switchToPlaylistView);
+                                            TVSeriesHelper.PlaySeason((int)seriesId, (int)season, startAutomatically, startIndex, onlyUnwatched, switchToPlaylistView);
                                         }
                                     }
                                     // Play all episodes of a series
