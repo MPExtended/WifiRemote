@@ -14,6 +14,7 @@ namespace WifiRemote
         static PlayListPlayer playlistPlayer;
         protected delegate void PlayEpisodeAsyncDelegate(DBEpisode episode, bool resume);
         protected delegate void PlaySeasonAsyncDelegate(int seriesId, int seasonNumber, bool autostart, int offset, bool onlyUnwatched, bool switchToPlaylistView);
+        protected delegate void PlaySeriesAsyncDelegate(int seriesId, bool autostart, int offset, bool onlyUnwatched, bool switchToPlaylistView);
 
         /// <summary>
         /// Get a series id by show name
@@ -125,17 +126,11 @@ namespace WifiRemote
                 return;
             }
 
-            WifiRemote.LogMessage("In Play Season", WifiRemote.LogType.Debug);
-
             List<DBEpisode> episodes = DBEpisode.Get(seriesId, seasonNumber);
             if (episodes == null || episodes.Count == 0) return;
 
-            WifiRemote.LogMessage(episodes.Count.ToString() + " episodes fetched", WifiRemote.LogType.Debug);
-
             // filter out anything we can't play
             episodes.RemoveAll(e => string.IsNullOrEmpty(e[DBEpisode.cFilename]));
-
-            WifiRemote.LogMessage(episodes.Count.ToString() + " episodes after clean", WifiRemote.LogType.Debug);
 
             // filter out watched episodes
             if (onlyUnwatched)
@@ -143,8 +138,6 @@ namespace WifiRemote
                 episodes.RemoveAll(e => e[DBOnlineEpisode.cWatched] != 0);
             }
             if (episodes.Count == 0) return;
-
-            WifiRemote.LogMessage("Initing PlaylistPlayer", WifiRemote.LogType.Debug);
 
             // Sort episodes and add them to the MP-TVSeries playlist player
             // Setup playlist player
@@ -155,13 +148,9 @@ namespace WifiRemote
                 playlistPlayer.RepeatPlaylist = DBOption.GetOptions(DBOption.cRepeatPlaylist);
             }
 
-            WifiRemote.LogMessage("Cleaning Playlist", WifiRemote.LogType.Debug);
             playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Clear();
-
-            WifiRemote.LogMessage("Sorting episodes", WifiRemote.LogType.Debug);
             episodes.Sort();
 
-            WifiRemote.LogMessage("Adding episodes", WifiRemote.LogType.Debug);
             foreach (DBEpisode episode in episodes)
             {
                 PlayListItem playlistItem = new PlayListItem(episode);
@@ -171,7 +160,6 @@ namespace WifiRemote
             //automatically start playing the playlist
             if (autostart)
             {
-                WifiRemote.LogMessage("Starting playlist playback with index " + startIndex, WifiRemote.LogType.Debug);
                 // and activate the playlist window if its not activated yet
                 if (switchToPlaylistView)
                 {
@@ -189,9 +177,62 @@ namespace WifiRemote
         /// </summary>
         /// <param name="seriesId">ID of a series</param>
         /// <param name="onlyUnwatched">Play only unwatched episodes</param>
-        public static void PlaySeries(int seriesId, bool onlyUnwatched)
+        /// <param name="autostart">If yes, automatically starts playback with the first episode</param>
+        /// <param name="startIndex">Index of the item with which playback should start</param>
+        /// <param name="switchToPlaylistView">If yes the playlistview will be shown</param>
+        public static void PlaySeries(int seriesId, bool autostart, int startIndex, bool onlyUnwatched, bool switchToPlaylistView)
         {
-            throw new NotImplementedException();
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                PlaySeriesAsyncDelegate d = new PlaySeriesAsyncDelegate(PlaySeries);
+                GUIGraphicsContext.form.Invoke(d, new object[] { seriesId, autostart, startIndex, onlyUnwatched, switchToPlaylistView });
+                return;
+            }
+
+            List<DBEpisode> episodes = DBEpisode.Get(seriesId);
+            if (episodes == null || episodes.Count == 0) return;
+
+            // filter out anything we can't play
+            episodes.RemoveAll(e => string.IsNullOrEmpty(e[DBEpisode.cFilename]));
+
+            // filter out watched episodes
+            if (onlyUnwatched)
+            {
+                episodes.RemoveAll(e => e[DBOnlineEpisode.cWatched] != 0);
+            }
+            if (episodes.Count == 0) return;
+
+            // Sort episodes and add them to the MP-TVSeries playlist player
+            // Setup playlist player
+            if (playlistPlayer == null)
+            {
+                playlistPlayer = PlayListPlayer.SingletonPlayer;
+                playlistPlayer.PlaylistAutoPlay = true;
+                playlistPlayer.RepeatPlaylist = DBOption.GetOptions(DBOption.cRepeatPlaylist);
+            }
+
+            playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Clear();
+            episodes.Sort();
+
+            foreach (DBEpisode episode in episodes)
+            {
+                PlayListItem playlistItem = new PlayListItem(episode);
+                playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Add(playlistItem);
+            }
+
+            //automatically start playing the playlist
+            if (autostart)
+            {
+                // and activate the playlist window if its not activated yet
+                if (switchToPlaylistView)
+                {
+                    GUIWindowManager.ActivateWindow(GUITVSeriesPlayList.GetWindowID);
+                }
+
+                playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_TVSERIES;
+                playlistPlayer.Reset();
+                playlistPlayer.Play(0);
+            }
         }
 
 

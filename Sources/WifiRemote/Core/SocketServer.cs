@@ -898,7 +898,11 @@ namespace WifiRemote
                                     else if (action == "playseries")
                                     {
                                         bool onlyUnwatched = (message["OnlyUnwatchedEpisodes"] != null) ? (bool)message["OnlyUnwatchedEpisodes"] : false;
-                                        TVSeriesHelper.PlaySeries((int)seriesId, onlyUnwatched);
+                                        int startIndex = (message["StartIndex"] != null) ? (int)message["StartIndex"] : 0;
+                                        bool switchToPlaylistView = (message["SwitchToPlaylist"] != null) ? (bool)message["SwitchToPlaylist"] : true;
+                                        bool startAutomatically = (message["AutoStart"] != null) ? (bool)message["AutoStart"] : true;
+
+                                        TVSeriesHelper.PlaySeries((int)seriesId, startAutomatically, startIndex, onlyUnwatched, switchToPlaylistView);
                                     }
                                 }
                             }
