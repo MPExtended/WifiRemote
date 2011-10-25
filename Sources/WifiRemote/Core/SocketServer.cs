@@ -447,6 +447,8 @@ namespace WifiRemote
             {
                 msg = Encoding.UTF8.GetString(data);
 
+                WifiRemote.LogMessage(msg, WifiRemote.LogType.Debug);
+
                 // Get json object
                 JObject message = JObject.Parse(msg);
                 string type = (string)message["Type"];
@@ -815,16 +817,17 @@ namespace WifiRemote
                                     int movieId = (message["MovieId"] != null) ? (int)message["MovieId"] : -1;
                                     string movieName = (string)message["MovieName"];
                                     bool resume = (message["AskToResume"] != null) ? (bool)message["AskToResume"] : true;
+                                    int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
 
                                     // Play by movie id
                                     if (movieId != -1)
                                     {
-                                        MovingPicturesHelper.PlayMovie(movieId, resume);
+                                        MovingPicturesHelper.PlayMovie(movieId, resume, startPos);
                                     }
                                     else if (!string.IsNullOrEmpty(movieName))
                                     {
                                         // Play by name
-                                        MovingPicturesHelper.PlayMovie(movieName, resume);
+                                        MovingPicturesHelper.PlayMovie(movieName, resume, startPos);
                                     }
                                 }
                             }
@@ -865,10 +868,11 @@ namespace WifiRemote
                                     {
                                         int? season = (int?)message["SeasonNumber"];
                                         int? episode = (int?)message["EpisodeNumber"];
+                                        int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
 
                                         if (season != null && episode != null)
                                         {
-                                            TVSeriesHelper.Play((int)seriesId, (int)season, (int)episode, resume);
+                                            TVSeriesHelper.Play((int)seriesId, (int)season, (int)episode, resume, startPos);
                                         }
                                     }
                                     // Play first unwatched or last added episode of a series

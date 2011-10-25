@@ -5,13 +5,14 @@ using MediaPortal.Plugins.MovingPictures;
 using MediaPortal.Plugins.MovingPictures.MainUI;
 using MediaPortal.GUI.Library;
 using System.Threading;
+using MediaPortal.Player;
 
 namespace WifiRemote
 {
     class MovingPicturesHelper
     {
         public static MoviePlayer player = null;
-        protected delegate void PlayMovieAsyncDelegate(DBMovieInfo movie, bool resume);
+        protected delegate void PlayMovieAsyncDelegate(DBMovieInfo movie, bool resume, int startPosition);
 
         /// <summary>
         /// Get a MovingPictures movie id that matches a movie
@@ -70,9 +71,9 @@ namespace WifiRemote
         /// </summary>
         /// <param name="movieName">Name of the movie to play</param>
         /// <param name="resume">Ask to resume movie?</param>
-        public static void PlayMovie(string movieName, bool resume)
+        public static void PlayMovie(string movieName, bool resume, int startPosition = 0)
         {
-            PlayMovie(GetMovieByName(movieName), resume);
+            PlayMovie(GetMovieByName(movieName), resume, startPosition);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace WifiRemote
         /// </summary>
         /// <param name="movieId">A MovingPictures movie id.</param>
         /// <param name="resume">Ask to resume movie?</param>
-        public static void PlayMovie(int movieId, bool resume)
+        public static void PlayMovie(int movieId, bool resume, int startPosition = 0)
         {
             DBMovieInfo movie = DBMovieInfo.Get(movieId);
             if (movie == null)
@@ -89,7 +90,7 @@ namespace WifiRemote
             }
             else
             {
-                PlayMovie(movie, resume);
+                PlayMovie(movie, resume, startPosition);
             }
         }
 
@@ -101,19 +102,12 @@ namespace WifiRemote
         /// </summary>
         /// <param name="movie">Movie to play</param>
         /// <param name="resume">Ask to resume movie?</param>
-        public static void PlayMovie(DBMovieInfo movie, bool resume)
+        public static void PlayMovie(DBMovieInfo movie, bool resume, int startPosition = 0)
         {
-            if (GUIGraphicsContext.form.InvokeRequired)
-            {
-                PlayMovieAsyncDelegate d = new PlayMovieAsyncDelegate(PlayMovie);
-                GUIGraphicsContext.form.Invoke(d, new object[] { movie, resume });
-                return;
-            }
-
             if (movie == null) return;
 
             // Play on a new thread
-            ThreadStart ts = delegate() { DoPlayMovie(movie, resume); };
+            ThreadStart ts = delegate() { DoPlayMovie(movie, resume, startPosition); };
             Thread playMovieAsync = new Thread(ts);
             playMovieAsync.Start();
         }
@@ -123,8 +117,16 @@ namespace WifiRemote
         /// </summary>
         /// <param name="movie">Movie to play</param>
         /// <param name="resume">Ask user to resume?</param>
-        private static void DoPlayMovie(DBMovieInfo movie, bool resume)
+        private static void DoPlayMovie(DBMovieInfo movie, bool resume, int startPosition)
         {
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                PlayMovieAsyncDelegate d = new PlayMovieAsyncDelegate(DoPlayMovie);
+                GUIGraphicsContext.form.Invoke(d, new object[] { movie, resume, startPosition });
+                return;
+            }
+            WifiRemote.LogMessage("Play movie (resume: " + resume + ", pos: " + startPosition, WifiRemote.LogType.Debug);
+
             // Clear resume
             if (!resume && movie.UserSettings != null && movie.UserSettings.Count > 0)
             {
@@ -137,6 +139,11 @@ namespace WifiRemote
 
             if (player == null) player = new MoviePlayer(new MovingPicturesGUI());
             player.Play(movie);
+
+            if (!resume && startPosition > 0)
+            {
+                g_Player.SeekAbsolute(startPosition);
+            }
         }
     }
 }
