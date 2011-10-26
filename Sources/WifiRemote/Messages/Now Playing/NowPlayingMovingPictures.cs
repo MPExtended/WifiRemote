@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Collections;
-using System.IO;
-using System.Drawing;
+using MediaPortal.Plugins.MovingPictures.Database;
 
 namespace WifiRemote
 {
@@ -174,89 +168,26 @@ namespace WifiRemote
         {
             try
             {
-                // DBLocalMedia.Get("c:\my\video.avi").AttachedMovies[0];
-                Assembly MovingPictures = Assembly.Load("MovingPictures");
-                Type dbLocalMediaType = MovingPictures.GetType("MediaPortal.Plugins.MovingPictures.Database.DBLocalMedia");
-
-                // MethodInfo: MediaPortal.Plugins.MovingPictures.Database.DBLocalMedia Get(System.String)
-                object movie = dbLocalMediaType.InvokeMember("Get",
-                        BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static,
-                        null,
-                        null,
-                        new object[] { filename });
-
-                // PropertyInfo: Cornerstone.Database.CustomTypes.RelationList`2[MediaPortal.Plugins.MovingPictures.Database.DBLocalMedia,MediaPortal.Plugins.MovingPictures.Database.DBMovieInfo] AttachedMovies
-                PropertyInfo attachedMoviesProp = dbLocalMediaType.GetProperty("AttachedMovies");
-                IList attachedMovies = (IList)attachedMoviesProp.GetValue(movie, null);
-
-                if (attachedMovies.Count > 0)
+                DBLocalMedia possibleMatches = DBLocalMedia.Get(filename);
+                if (possibleMatches.AttachedMovies.Count > 0)
                 {
                     movieFound = true;
+                    DBMovieInfo match = possibleMatches.AttachedMovies[0];
 
-                    Type dbMovieInfoType = MovingPictures.GetType("MediaPortal.Plugins.MovingPictures.Database.DBMovieInfo");
-                    PropertyInfo[] movieProperties = dbMovieInfoType.GetProperties();
-                    foreach (PropertyInfo movieProp in movieProperties)
-                    {
-                        switch (movieProp.ToString())
-                        {
-                            case "System.Nullable`1[System.Int32] ID":
-                                ItemId = (int)movieProp.GetValue(attachedMovies[0], null);
-                                break;
-
-                            case "System.String Title":
-                                Title = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "Cornerstone.Database.CustomTypes.StringList AlternateTitles":
-                                AlternateTitles = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "Cornerstone.Database.CustomTypes.StringList Directors":
-                                Directors = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "Cornerstone.Database.CustomTypes.StringList Writers":
-                                Writers = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "Cornerstone.Database.CustomTypes.StringList Actors":
-                                Actors = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "Int32 Year":
-                                Year = (int)movieProp.GetValue(attachedMovies[0], null);
-                                break;
-
-                            case "Cornerstone.Database.CustomTypes.StringList Genres":
-                                Genres = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "System.String Certification":
-                                Certification = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "System.String Tagline":
-                                Tagline = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "System.String Summary":
-                                Summary = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "Single Score":
-                                Rating = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "System.String DetailsURL":
-                                DetailsUrl = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-
-                            case "System.String CoverFullPath":
-                                ImageName = movieProp.GetValue(attachedMovies[0], null).ToString();
-                                break;
-                        }
-                    }
-                
+                    ItemId = (int)match.ID;
+                    Title = match.Title;
+                    AlternateTitles = match.AlternateTitles.ToString();
+                    Directors = match.Directors.ToString();
+                    Writers = match.Writers.ToString();
+                    Actors = match.Actors.ToString();
+                    Year = match.Year;
+                    Genres = match.Genres.ToString();
+                    Certification = match.Certification;
+                    Tagline = match.Tagline;
+                    Summary = match.Summary;
+                    Rating = match.Score.ToString();
+                    DetailsUrl = match.DetailsURL;
+                    ImageName = match.CoverFullPath;
                 }
             }
             catch (Exception e)

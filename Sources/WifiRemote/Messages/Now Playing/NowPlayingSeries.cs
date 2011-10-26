@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Collections;
-using System.IO;
-using System.Drawing;
+using WindowPlugins.GUITVSeries;
 
 
 namespace WifiRemote
@@ -210,117 +205,43 @@ namespace WifiRemote
         {
             try
             {
-                // WindowPlugins.GUITVSeries
-                Assembly MPTVSeries = Assembly.Load("MP-TVSeries");
-                Type sqlConditionType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.SQLCondition");
-                Type sqlConditionTypeEnumType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.SQLConditionType");
-                Type dbEpisodeType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBEpisode");
-                Type dbValueType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBValue");
-                
-                // SQLCondition sql = new SQLCondition();
-                object sql = Activator.CreateInstance(sqlConditionType);
-
-                // sql.Add(new DBEpisode(), DBEpisode.cFilename, filename, SQLConditionType.Equal);
-                MethodInfo addCondition = sqlConditionType.GetMethod("Add");
-                addCondition.Invoke(sql, new object[] { 
-                    Activator.CreateInstance(dbEpisodeType),
-                    dbEpisodeType.GetField("cFilename").GetValue(null),
-                    Activator.CreateInstance(dbValueType, new object[] { filename }),
-                    sqlConditionTypeEnumType.GetField("Equal").GetValue(null)
-                });
-
-
-                // List<DBEpisode> episodes = DBEpisode.Get(sql);
-                MethodInfo getEpisode = dbEpisodeType.GetMethod("Get", new Type[] { sqlConditionType });
-                IList episodes = (IList)getEpisode.Invoke(null, new object[] { sql });
+                SQLCondition query = new SQLCondition(new DBEpisode(), DBEpisode.cFilename, filename, SQLConditionType.Equal);
+                List<DBEpisode> episodes = DBEpisode.Get(query);
 
                 if (episodes.Count > 0)
                 {
                     episodeFound = true;
-
-                    PropertyInfo onlineEpisodeProperty = dbEpisodeType.GetProperty("onlineEpisode");
-                    object onlineEpisode = onlineEpisodeProperty.GetValue(episodes[0], null);
-
-                    Type onlineEpisodeType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBOnlineEpisode");
-                    PropertyInfo item = onlineEpisodeType.GetProperty("Item");
-
-                    // TheTVDB IDs
-                    SeriesId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cSeriesID").GetValue(null) }).ToString());
-                    SeasonId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cSeasonID").GetValue(null) }).ToString());
-                    EpisodeId = Int32.Parse(item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cID").GetValue(null) }).ToString());
-
-                    // Episode = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
-                    Episode = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cEpisodeIndex").GetValue(null) }).ToString();
                     
-                    // Season = episodes[0].onlineEpisode[DBOnlineEpisode.cSeasonIndex];
-                    Season = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cSeasonIndex").GetValue(null) }).ToString();
+                    SeriesId = episodes[0].onlineEpisode[DBOnlineEpisode.cSeriesID];
+                    SeasonId = episodes[0].onlineEpisode[DBOnlineEpisode.cSeasonID];
+                    EpisodeId = episodes[0].onlineEpisode[DBOnlineEpisode.cID];
 
-                    // Plot = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeSummary];
-                    Plot = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cEpisodeSummary").GetValue(null) }).ToString();
+                    Episode = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
+                    Season = episodes[0].onlineEpisode[DBOnlineEpisode.cSeasonIndex];
+                    Plot = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeSummary];
+                    Title = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                    Director = episodes[0].onlineEpisode[DBOnlineEpisode.cDirector];
+                    Writer = episodes[0].onlineEpisode[DBOnlineEpisode.cWriter];
+                    Rating = episodes[0].onlineEpisode[DBOnlineEpisode.cRating];
+                    MyRating = episodes[0].onlineEpisode[DBOnlineEpisode.cMyRating];
+                    RatingCount = episodes[0].onlineEpisode[DBOnlineEpisode.cRatingCount];
+                    AirDate = episodes[0].onlineEpisode[DBOnlineEpisode.cFirstAired];
 
-                    // Title = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeName];
-                    Title = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cEpisodeName").GetValue(null) }).ToString();
+                    DBSeries s = Helper.getCorrespondingSeries(episodes[0].onlineEpisode[DBOnlineEpisode.cSeriesID]);
+                    Series = s[DBOnlineSeries.cPrettyName];
+                    Status = s[DBOnlineSeries.cStatus];
+                    Genre = s[DBOnlineSeries.cGenre];
 
-                    // Director = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeName];
-                    Director = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cDirector").GetValue(null) }).ToString();
+                    // Get season poster path
+                    DBSeason season = DBSeason.getRaw(SeriesId, episodes[0].onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
+                    ImageName = ImageAllocator.GetSeasonBannerAsFilename(season);
 
-                    // Writer = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeName];
-                    Writer = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cWriter").GetValue(null) }).ToString();
-
-                    // Rating = episodes[0].onlineEpisode[DBOnlineEpisode.cRating];
-                    Rating = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cRating").GetValue(null) }).ToString();
-
-                    // MyRating = episodes[0].onlineEpisode[DBOnlineEpisode.cMyRating];
-                    MyRating = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cMyRating").GetValue(null) }).ToString();
-
-                    // RatingCount = episodes[0].onlineEpisode[DBOnlineEpisode.cRatingCount];
-                    RatingCount = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cRatingCount").GetValue(null) }).ToString();
-
-                    // AirDate = episodes[0].onlineEpisode[DBOnlineEpisode.cFirstAired];
-                    AirDate = item.GetValue(onlineEpisode, new object[] { onlineEpisodeType.GetField("cFirstAired").GetValue(null) }).ToString();
-
-                    
-                    // Get series information
-                    // DBSeries s = Helper.getCorrespondingSeries(episodes[0].onlineEpisode[DBOnlineEpisode.cSeriesID]);
-                    // s[DBOnlineSeries.cPrettyName].ToString()
-                    Type dbSeriesType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBSeries");
-                    Type onlineSeriesType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBOnlineSeries");
-                    
-                    // Get series object
-                    Type helperType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.Helper");
-                    MethodInfo getCorrespondingSeries = helperType.GetMethod("getCorrespondingSeries");
-                    object dbSeries = getCorrespondingSeries.Invoke(null, new object[] { SeriesId });
-
-                    // Get pretty name
-                    PropertyInfo sItem = dbSeriesType.GetProperty("Item");
-                    Series = sItem.GetValue(dbSeries, new object[] { onlineSeriesType.GetField("cPrettyName").GetValue(null) }).ToString();
-                    
-                    // Status
-                    Status = sItem.GetValue(dbSeries, new object[] { onlineSeriesType.GetField("cStatus").GetValue(null) }).ToString();
-
-                    // Genre
-                    Genre = sItem.GetValue(dbSeries, new object[] { onlineSeriesType.GetField("cGenre").GetValue(null) }).ToString();
-
-                    // Get season poster as thumb image
-                    // DBSeason season = DBSeason.getRaw(seriesID, index);
-                    // string posterFileName = WindowPlugins.GUITVSeries.ImageAllocator.GetSeasonBannerAsFilename(season);
-                    Type dbSeasonType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.DBSeason");
-                    Type imageAllocatorType = MPTVSeries.GetType("WindowPlugins.GUITVSeries.ImageAllocator");
-
-                    int seasonId = Int32.Parse(Season);
-                    object season = dbSeasonType.InvokeMember("getRaw",
-                        BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static,
-                        null,
-                        null,
-                        new object[] { seriesId, seasonId });
-
-                    ImageName = imageAllocatorType.InvokeMember("GetSeasonBannerAsFilename",
-                        BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static,
-                        null,
-                        null,
-                        new object[] { season }).ToString();
-                }
-              
+                    // Fall back to series poster if no season poster is available
+                    if (String.IsNullOrEmpty(ImageName))
+                    {
+                        ImageName = ImageAllocator.GetSeriesPosterAsFilename(s);
+                    }
+                }            
             }
             catch (Exception e)
             {
