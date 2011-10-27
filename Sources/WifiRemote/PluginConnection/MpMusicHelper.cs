@@ -25,7 +25,7 @@ namespace WifiRemote.PluginConnection
         public static void PlayAlbum(String albumArtist, String album, int startPos)
         {
             List<Song> songs = new List<Song>();
-            string sql = "select * from tracks where strAlbumArtist like " + albumArtist + " AND strAlbum=" + album;
+            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%' AND strAlbum LIKE '%" + album + "%'";
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
 
             if (songs.Count > 0)
@@ -33,6 +33,31 @@ namespace WifiRemote.PluginConnection
                 PlaylistHelper.ClearPlaylist("music");
                 int index = 0;
                 foreach(Song s in songs)
+                {
+
+                    PlaylistEntry entry = new PlaylistEntry();
+                    entry.FileName = s.FileName;
+                    entry.Name = s.Title;
+                    entry.Duration = s.Duration;
+                    PlaylistHelper.AddSongToPlaylist("music", entry, index);
+                    index++;
+                }
+
+                PlaylistHelper.StartPlayingPlaylist("music", startPos, true);
+            }
+        }
+
+        internal static void PlayArtist(string albumArtist, int startPos)
+        {
+            List<Song> songs = new List<Song>();
+            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%'";
+            MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
+
+            if (songs.Count > 0)
+            {
+                PlaylistHelper.ClearPlaylist("music");
+                int index = 0;
+                foreach (Song s in songs)
                 {
 
                     PlaylistEntry entry = new PlaylistEntry();

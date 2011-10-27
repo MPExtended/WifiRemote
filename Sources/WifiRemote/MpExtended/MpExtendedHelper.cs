@@ -55,6 +55,10 @@ namespace WifiRemote.MpExtended
                             String[] ids = itemId.Split(new string[] { "_MPExtended_" }, StringSplitOptions.None);
                             MpMusicHelper.PlayAlbum(ids[0], ids[1], startPos);
                         }
+                        else if (type == MpExtMediaTypes.MusicArtist)
+                        {
+                            MpMusicHelper.PlayArtist(itemId, startPos);
+                        }
                         break;
                     default:
                         WifiRemote.LogMessage("Provider not implemented yet", WifiRemote.LogType.Warn);
