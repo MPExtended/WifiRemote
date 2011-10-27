@@ -447,7 +447,8 @@ namespace WifiRemote
             {
                 msg = Encoding.UTF8.GetString(data);
 
-                WifiRemote.LogMessage(msg, WifiRemote.LogType.Debug);
+                //comment this out to log all received commands
+                //WifiRemote.LogMessage(msg, WifiRemote.LogType.Debug);
 
                 // Get json object
                 JObject message = JObject.Parse(msg);

@@ -247,6 +247,7 @@ namespace WifiRemote
         /// <param name="seasonNumber">Number of the season</param>
         /// <param name="episodeNumber">Number of the episode</param>
         /// <paraparam name="resume">Resume from last stop?</paraparam>
+        /// <param name="startPosition">Position from which the video should start in seconds (e.g. StartPosition=180 will start the episode 3 minutes into the video). Will be ignored if AskToResume is true.</param>
         public static void Play(int seriesId, int seasonNumer, int episodeNumber, bool resume, int startPosition = 0)
         {
             var episodes = DBEpisode.Get(seriesId, seasonNumer);

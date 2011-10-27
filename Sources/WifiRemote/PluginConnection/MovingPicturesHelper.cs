@@ -81,6 +81,7 @@ namespace WifiRemote
         /// </summary>
         /// <param name="movieId">A MovingPictures movie id.</param>
         /// <param name="resume">Ask to resume movie?</param>
+        /// <param name="startPosition">Position from which the video should start in seconds (e.g. StartPosition=180 will start the episode 3 minutes into the video). Will be ignored if AskToResume is true.</param>
         public static void PlayMovie(int movieId, bool resume, int startPosition = 0)
         {
             DBMovieInfo movie = DBMovieInfo.Get(movieId);
