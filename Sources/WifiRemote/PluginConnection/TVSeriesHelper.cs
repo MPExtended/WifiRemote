@@ -256,6 +256,24 @@ namespace WifiRemote
 
             PlayEpisode(episode, resume, startPosition);
         }
+        
+        /// <summary>
+        /// Play an episode of a specific series and season
+        /// 
+        /// Thanks to Trakt-for-MediaPortal:
+        /// https://github.com/Technicolour/Trakt-for-Mediaportal/blob/master/TraktPlugin/TraktHandlers/TVSeries.cs
+        /// </summary>
+        /// <param name="episodeId">ID of the episode</param>
+        /// <paraparam name="resume">Resume from last stop?</paraparam>
+        /// <param name="startPosition">Position from which the video should start in seconds (e.g. StartPosition=180 will start the episode 3 minutes into the video). Will be ignored if AskToResume is true.</param>
+        public static void PlayEpisode(int episodeId, bool resume, int startPosition)
+        {
+            var episodes = DBEpisode.Get(new SQLCondition(new DBTable("online_episodes"), "EpisodeID", new DBValue(episodeId), SQLConditionType.Equal));
+            var episode = episodes.FirstOrDefault(e => !string.IsNullOrEmpty(e[DBEpisode.cFilename]));
+            if (episode == null) return;
+
+            PlayEpisode(episode, resume, startPosition);;
+        }
 
         /// <summary>
         /// Play an episode

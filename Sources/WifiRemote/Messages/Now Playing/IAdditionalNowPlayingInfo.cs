@@ -11,5 +11,20 @@ namespace WifiRemote
         {
             get;
         }
+
+        string MpExtId
+        {
+            get;
+        }
+
+        int MpExtMediaType
+        {
+            get;
+        }
+
+        int MpExtProviderId
+        {
+            get;
+        }
     }
 }

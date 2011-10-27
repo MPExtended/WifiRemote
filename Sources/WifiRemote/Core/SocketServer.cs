@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using MediaPortal.GUI.Library;
 using WifiRemote.Messages;
 using WifiRemote.MPPlayList;
+using WifiRemote.MpExtended;
 
 namespace WifiRemote
 {
@@ -628,6 +629,16 @@ namespace WifiRemote
                         bool startFullscreen = (message["StartFullscreen"] != null) ? (bool)message["StartFullscreen"] : false;
                         WifiRemote.LogMessage("playchannel: channelId: " + channelId + " fullscreen: " + startFullscreen, WifiRemote.LogType.Debug);
                         communication.PlayTvChannel(channelId, startFullscreen);
+                    }
+                    // play a tv channel on the client
+                    else if (type == "playmediaitem")
+                    {
+                        string itemId = (string)message["ItemId"];
+                        int itemType = (int)message["MediaType"];
+                        int providerId = (int)message["ProviderId"];
+                        int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
+                        WifiRemote.LogMessage("playmediaitem: ItemId: " + itemId + ", itemType: " + itemType + ", providerId: " + providerId, WifiRemote.LogType.Debug);
+                        MpExtendedHelper.PlayMediaItem(itemId, itemType, providerId, startPos);
                     }
                     // Reply with a list of installed and active window plugins
                     // with icon and windowId

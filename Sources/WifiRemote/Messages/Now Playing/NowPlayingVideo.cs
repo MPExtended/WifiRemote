@@ -5,15 +5,31 @@ using System.Text;
 using MediaPortal.Video.Database;
 using System.IO;
 using System.Drawing;
+using WifiRemote.MpExtended;
 
 namespace WifiRemote
 {
-    class NowPlayingVideo : IAdditionalNowPlayingInfo
+    public class NowPlayingVideo : IAdditionalNowPlayingInfo
     {
         string mediaType = "video";
         public string MediaType
         {
             get { return mediaType; }
+        }
+
+        public string MpExtId
+        {
+            get { return ItemId.ToString(); }
+        }
+
+        public int MpExtMediaType
+        {
+            get { return (int)MpExtMediaTypes.Movie; }
+        }
+
+        public int MpExtProviderId
+        {
+            get { return (int)MpExtProviders.MPVideo; }
         }
 
         int itemId;

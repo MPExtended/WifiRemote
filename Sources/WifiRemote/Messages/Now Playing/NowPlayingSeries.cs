@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WindowPlugins.GUITVSeries;
+using WifiRemote.MpExtended;
 
 
 namespace WifiRemote
@@ -13,6 +14,21 @@ namespace WifiRemote
         public string MediaType
         {
             get { return mediaType; }
+        }
+
+        public string MpExtId
+        {
+            get { return EpisodeId.ToString(); }
+        }
+
+        public int MpExtMediaType
+        {
+            get { return (int)MpExtMediaTypes.TVEpisode; }
+        }
+
+        public int MpExtProviderId
+        {
+            get { return (int)MpExtProviders.MPTvSeries; }
         }
 
         int seriesId;

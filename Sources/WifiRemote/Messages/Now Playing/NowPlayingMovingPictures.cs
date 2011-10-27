@@ -1,5 +1,7 @@
 ﻿using System;
 using MediaPortal.Plugins.MovingPictures.Database;
+using WifiRemote.MpExtended;
+using MediaPortal.GUI.Library;
 
 namespace WifiRemote
 {
@@ -11,6 +13,21 @@ namespace WifiRemote
         public string MediaType
         {
             get { return mediaType; }
+        }
+
+        public string MpExtId
+        {
+            get { return ItemId.ToString(); }
+        }
+
+        public int MpExtMediaType
+        {
+            get { return (int)MpExtMediaTypes.Movie; }
+        }
+
+        public int MpExtProviderId
+        {
+            get { return (int)MpExtProviders.MovingPictures; }
         }
 
         /// <summary>

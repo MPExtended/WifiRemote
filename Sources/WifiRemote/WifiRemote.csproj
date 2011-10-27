@@ -60,7 +60,7 @@
       <HintPath>..\..\Libs\Core.dll</HintPath>
     </Reference>
     <Reference Include="Cornerstone">
-      <HintPath>..\..\Libs\Cornerstone.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Cornerstone.dll</HintPath>
     </Reference>
     <Reference Include="Databases">
       <HintPath>..\..\Libs\Databases.dll</HintPath>
@@ -77,10 +77,10 @@
       <HintPath>..\..\Libs\Gentle.Framework.dll</HintPath>
     </Reference>
     <Reference Include="MovingPictures">
-      <HintPath>..\..\Libs\MovingPictures.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\MovingPictures.dll</HintPath>
     </Reference>
     <Reference Include="MP-TVSeries">
-      <HintPath>..\..\Libs\MP-TVSeries.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\MP-TVSeries.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Net35">
       <HintPath>..\..\Libs\Newtonsoft.Json.Net35.dll</HintPath>
@@ -143,9 +143,13 @@
     <Compile Include="Messages\MessageVolume.cs" />
     <Compile Include="Messages\MessageWelcome.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingMusic.cs" />
+    <Compile Include="MpExtended\MpExtendedHelper.cs" />
+    <Compile Include="MpExtended\MpExtProviders.cs" />
+    <Compile Include="MpExtended\MpExtMediaTypes.cs" />
     <Compile Include="MPPlayList\PlaylistHelper.cs" />
     <Compile Include="MPPlayList\PlaylistEntry.cs" />
     <Compile Include="PluginConnection\MovingPicturesHelper.cs" />
+    <Compile Include="PluginConnection\MpMusicHelper.cs" />
     <Compile Include="PluginConnection\TVSeriesHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
