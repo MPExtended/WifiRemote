@@ -636,9 +636,10 @@ namespace WifiRemote
                         string itemId = (string)message["ItemId"];
                         int itemType = (int)message["MediaType"];
                         int providerId = (int)message["ProviderId"];
+                        Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(message["PlayInfo"].ToString());
                         int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
                         WifiRemote.LogMessage("playmediaitem: ItemId: " + itemId + ", itemType: " + itemType + ", providerId: " + providerId, WifiRemote.LogType.Debug);
-                        MpExtendedHelper.PlayMediaItem(itemId, itemType, providerId, startPos);
+                        MpExtendedHelper.PlayMediaItem(itemId, itemType, providerId, values, startPos);
                     }
                     // Reply with a list of installed and active window plugins
                     // with icon and windowId
