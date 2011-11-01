@@ -69,8 +69,8 @@
         <UpdateUrl>http://wifiremote.googlecode.com/svn/trunk/Installer/update.xml</UpdateUrl>
         <Version>
           <Major>0</Major>
-          <Minor>4</Minor>
-          <Build>2</Build>
+          <Minor>5</Minor>
+          <Build>0</Build>
           <Revision>0</Revision>
         </Version>
         <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
@@ -78,15 +78,36 @@
 
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-        <VersionDescription>* Fixed keymap
-* Added addresses field to qr code
-* Fixed autoconnect issue
-* Close screensaver on connect</VersionDescription>
+        <VersionDescription>New commands:
+* MP-TVSeries:
+  * playepisode
+  * playunwatchedepisode
+  * playrandomepisode
+  * playseason
+  * playseries
+
+* MovingPictures
+  * moviedetails
+  * playmovie
+
+* Playlist
+  * fill music playlist with sql
+  * load playlist from playlist folder or path
+
+* ActivateWindow (with load parameters)
+
+* MPExtended:
+  * PlayMediaItem                       
+
+
+Fixes:
+* MovingPictures didn't appear in the plugin list
+* Screensaver now cancelled on each incoming command</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
-        <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.4.2.mpe1</OnlineLocation>
+        <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.5.0.mpe1</OnlineLocation>
         <ReleaseDate>2011-10-07T20:16:04</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
-        <Location>D:\Documents\WifiRemote_0.4.2.mpe1</Location>
+        <Location>D:\Documents\WifiRemote_0.5.0.mpe1</Location>
         <Params>
           <Items>
             <SectionParam Name="Online Icon">
