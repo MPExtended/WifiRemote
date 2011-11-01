@@ -169,11 +169,11 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <MaxVersion>
           <Major>1</Major>
           <Minor>1</Minor>
-          <Build>6</Build>
-          <Revision>27644</Revision>
+          <Build>2</Build>
+          <Revision>0</Revision>
         </MaxVersion>
         <WarnOnly>false</WarnOnly>
-        <Message>requires MediaPortal version 1.1.6.27644 to 1.1.6.27644.</Message>
+        <Message>requires MediaPortal version 1.1.2</Message>
         <Name>MediaPortal</Name>
       </DependencyItem>
     </Items>
@@ -190,22 +190,43 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <UpdateUrl />
     <Version>
       <Major>0</Major>
-      <Minor>4</Minor>
-      <Build>2</Build>
+      <Minor>5</Minor>
+      <Build>0</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-    <VersionDescription>* Fixed keymap
-* Added addresses field to qr code
-* Fixed autoconnect issue
-* Close screensaver on connect</VersionDescription>
+    <VersionDescription>New commands:
+* MP-TVSeries:
+  * playepisode
+  * playunwatchedepisode
+  * playrandomepisode
+  * playseason
+  * playseries
+
+* MovingPictures
+  * moviedetails
+  * playmovie
+
+* Playlist
+  * fill music playlist with sql
+  * load playlist from playlist folder or path
+
+* ActivateWindow (with load parameters)
+
+* MPExtended:
+  * PlayMediaItem                       
+
+
+Fixes:
+* MovingPictures didn't appear in the plugin list
+* Screensaver now cancelled on each incoming command</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation />
     <ReleaseDate>2011-10-07T14:15:56</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>C:\Users\fate\Documents\WifiRemote_0.4.2_legacy.mpe1</Location>
+    <Location>D:\Documents\WifiRemote_0.5.0_legacy.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -258,14 +279,14 @@ It publishes a Bonjour Service on your local network which allows clients (for e
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{41518340-457e-43a3-88fc-c884e2246549}-installer_logo.gif</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{1fcaf8df-60f5-4965-8017-cbe603a954dd}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{79617cd5-3cad-4dcb-9dd8-1c8996936d2f}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{c16fc599-966b-4f31-8a7e-6e147e81005c}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
