@@ -22,12 +22,12 @@ namespace WifiRemote
 
         public int MpExtMediaType
         {
-            get { return (int)MpExtMediaTypes.MusicTrack; }
+            get { return (int)MpExtendedMediaTypes.MusicTrack; }
         }
 
         public int MpExtProviderId
         {
-            get { return (int)MpExtProviders.MPMusic; }
+            get { return (int)MpExtendedProviders.MPMusic; }
         }
 
         public int ItemId { get; set; }

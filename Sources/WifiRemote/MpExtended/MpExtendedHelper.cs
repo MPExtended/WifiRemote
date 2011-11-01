@@ -24,37 +24,43 @@ namespace WifiRemote.MpExtended
         {
             try
             {
-                MpExtProviders provider = (MpExtProviders)providerId;
-                MpExtMediaTypes type = (MpExtMediaTypes)mediaType;
+                MpExtendedProviders provider = (MpExtendedProviders)providerId;
+                MpExtendedMediaTypes type = (MpExtendedMediaTypes)mediaType;
                 switch (provider)
                 {
-                    case MpExtProviders.MovingPictures:
-                        MovingPicturesHelper.PlayMovie(Int32.Parse(playInfo["Id"]), false, startPos);
-                        break;
-                    case MpExtProviders.MPTvSeries:
-                        if (type == MpExtMediaTypes.TVEpisode)
+                    case MpExtendedProviders.MovingPictures:
+                        if (WifiRemote.IsAvailableMovingPictures)
                         {
-                            TVSeriesHelper.PlayEpisode(Int32.Parse(playInfo["ShowId"]), false, startPos);
-                        }
-                        else if (type == MpExtMediaTypes.TVSeason)
-                        {
-                            TVSeriesHelper.PlaySeason(Int32.Parse(playInfo["ShowId"]), Int32.Parse(playInfo["SeasonIndex"]), true, startPos, false, true); 
-                        }
-                        else if (type == MpExtMediaTypes.TVShow)
-                        {
-                            TVSeriesHelper.PlaySeries(Int32.Parse(playInfo["ShowId"]), true, startPos, false, true);
+                            MovingPicturesHelper.PlayMovie(Int32.Parse(playInfo["Id"]), false, startPos);
                         }
                         break;
-                    case MpExtProviders.MPMusic:
-                        if (type == MpExtMediaTypes.MusicTrack)
+                    case MpExtendedProviders.MPTvSeries:
+                        if (WifiRemote.IsAvailableTVSeries)
+                        {
+                            if (type == MpExtendedMediaTypes.TVEpisode)
+                            {
+                                TVSeriesHelper.PlayEpisode(Int32.Parse(playInfo["ShowId"]), false, startPos);
+                            }
+                            else if (type == MpExtendedMediaTypes.TVSeason)
+                            {
+                                TVSeriesHelper.PlaySeason(Int32.Parse(playInfo["ShowId"]), Int32.Parse(playInfo["SeasonIndex"]), true, startPos, false, true);
+                            }
+                            else if (type == MpExtendedMediaTypes.TVShow)
+                            {
+                                TVSeriesHelper.PlaySeries(Int32.Parse(playInfo["ShowId"]), true, startPos, false, true);
+                            }
+                        }
+                        break;
+                    case MpExtendedProviders.MPMusic:
+                        if (type == MpExtendedMediaTypes.MusicTrack)
                         {
                             MpMusicHelper.PlayMusicTrack(Int32.Parse(playInfo["Id"]), startPos);
                         }
-                        else if (type == MpExtMediaTypes.MusicAlbum)
+                        else if (type == MpExtendedMediaTypes.MusicAlbum)
                         {
                             MpMusicHelper.PlayAlbum(playInfo["Artist"], playInfo["Album"], startPos);
                         }
-                        else if (type == MpExtMediaTypes.MusicArtist)
+                        else if (type == MpExtendedMediaTypes.MusicArtist)
                         {
                             MpMusicHelper.PlayArtist(playInfo["Artist"], startPos);
                         }

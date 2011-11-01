@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MediaPortal.Player;
 using MediaPortal.GUI.Library;
+using TvPlugin;
 
 namespace WifiRemote
 {
@@ -52,6 +53,21 @@ namespace WifiRemote
                 return isPaused; 
             }
         }
+
+        /*
+        private bool isRecording;
+        /// <summary>
+        /// <code>true</code> if TV Server is available and recording
+        /// </summary>
+        public bool IsRecording
+        {
+            get
+            {
+                isRecording = WifiRemote.IsAvailableTVPlugin && TvPlugin.TVHome.IsAnyCardRecording;
+                return isRecording;
+            }
+        }
+        */
 
         /// <summary>
         /// <code>true</code> if g_Play is in fullscreen and on top
@@ -157,6 +173,7 @@ namespace WifiRemote
         {
             return (isPlaying != IsPlaying
                 || isPaused != IsPaused
+//                || isRecording != IsRecording
                 || title != Title
                 || currentModule != CurrentModule
                 || selectedItem != SelectedItem);

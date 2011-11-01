@@ -23,12 +23,12 @@ namespace WifiRemote
 
         public int MpExtMediaType
         {
-            get { return (int)MpExtMediaTypes.TVEpisode; }
+            get { return (int)MpExtendedMediaTypes.TVEpisode; }
         }
 
         public int MpExtProviderId
         {
-            get { return (int)MpExtProviders.MPTvSeries; }
+            get { return (int)MpExtendedProviders.MPTvSeries; }
         }
 
         int seriesId;

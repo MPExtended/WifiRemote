@@ -24,12 +24,12 @@ namespace WifiRemote
 
         public int MpExtMediaType
         {
-            get { return (int)MpExtMediaTypes.Movie; }
+            get { return (int)MpExtendedMediaTypes.Movie; }
         }
 
         public int MpExtProviderId
         {
-            get { return (int)MpExtProviders.MPVideo; }
+            get { return (int)MpExtendedProviders.MPVideo; }
         }
 
         int itemId;

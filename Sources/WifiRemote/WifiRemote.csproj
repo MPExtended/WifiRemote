@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -77,10 +77,10 @@
       <HintPath>..\..\Libs\Gentle.Framework.dll</HintPath>
     </Reference>
     <Reference Include="MovingPictures">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\MovingPictures.dll</HintPath>
+      <HintPath>..\..\Libs\MovingPictures.dll</HintPath>
     </Reference>
     <Reference Include="MP-TVSeries">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\MP-TVSeries.dll</HintPath>
+      <HintPath>..\..\Libs\MP-TVSeries.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Net35">
       <HintPath>..\..\Libs\Newtonsoft.Json.Net35.dll</HintPath>
@@ -144,8 +144,8 @@
     <Compile Include="Messages\MessageWelcome.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingMusic.cs" />
     <Compile Include="MpExtended\MpExtendedHelper.cs" />
-    <Compile Include="MpExtended\MpExtProviders.cs" />
-    <Compile Include="MpExtended\MpExtMediaTypes.cs" />
+    <Compile Include="MpExtended\MpExtendedProviders.cs" />
+    <Compile Include="MpExtended\MpExtendedMediaTypes.cs" />
     <Compile Include="MPPlayList\PlaylistHelper.cs" />
     <Compile Include="MPPlayList\PlaylistEntry.cs" />
     <Compile Include="PluginConnection\MovingPicturesHelper.cs" />

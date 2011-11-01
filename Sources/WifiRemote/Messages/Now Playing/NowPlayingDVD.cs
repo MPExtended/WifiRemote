@@ -21,7 +21,7 @@ namespace WifiRemote
 
         public int MpExtMediaType
         {
-            get { return (int)MpExtMediaTypes.Movie; }
+            get { return (int)MpExtendedMediaTypes.Movie; }
         }
 
         public int MpExtProviderId
