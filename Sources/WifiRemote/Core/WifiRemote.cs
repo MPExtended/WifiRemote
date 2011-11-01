@@ -14,6 +14,8 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Collections.Generic;
+using System.ServiceProcess;
+using Microsoft.Win32;
 
 namespace WifiRemote
 {
@@ -59,6 +61,8 @@ namespace WifiRemote
         public const int DEFAULT_PORT = 8017;
         public const int SERVER_VERSION = 1;
         private const int UPDATE_INTERVAL = 1000;
+
+        private const string MP_EXTENDED_SERVICE = "MPExtended Service";
 
         /// <summary>
         /// The localised name of the virtual keyboard
@@ -169,6 +173,36 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// <code>true</code> if the MP-Extended service is installed, running
+        /// and supporting the MediaAccessService
+        /// </summary>
+        public static bool IsAvailableMPExtendedMAS
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// <code>true</code> if the MP-Extended service is installed, running
+        /// and supporting the TvAccessService
+        /// </summary>
+        public static bool IsAvailableMPExtendedTAS
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// <code>true</code> if the MP-Extended service is installed, running
+        /// and supporting the WebStreamingService
+        /// </summary>
+        public static bool IsAvailableMPExtendedWSS
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// List of plugins
         /// </summary>
         public static ArrayList savedAndSortedPlugins;
@@ -239,6 +273,21 @@ namespace WifiRemote
             WifiRemote.IsAvailableMovingPictures = IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
             WifiRemote.IsAvailableTVSeries = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
             WifiRemote.IsAvailableFanartHandler = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
+
+            // Check for MP-Extended
+            if (isMPExtendedRunning())
+            {
+                WifiRemote.IsAvailableMPExtendedMAS = isMPExtendedServiceInstalled("MediaAccessServiceInstalled");
+                WifiRemote.IsAvailableMPExtendedTAS = isMPExtendedServiceInstalled("TVAccessServiceInstalled");
+                WifiRemote.IsAvailableMPExtendedWSS = isMPExtendedServiceInstalled("StreamingServiceInstalled");
+            }
+            else
+            {
+                // Service not started, no MP-Extended functionality
+                WifiRemote.IsAvailableMPExtendedMAS = false;
+                WifiRemote.IsAvailableMPExtendedTAS = false;
+                WifiRemote.IsAvailableMPExtendedWSS = false;
+            }
            
 
             Log.Debug(String.Format("{0} Started!", LOG_PREFIX));
@@ -946,6 +995,43 @@ namespace WifiRemote
             }
 
             return encrypted;
+        }
+
+        /// <summary>
+        /// Returns <code>true</code> if the MP-Extended service is installed and running
+        /// </summary>
+        private bool isMPExtendedRunning()
+        {
+            try
+            {
+                ServiceController service = new ServiceController(MP_EXTENDED_SERVICE);
+                return (service.Status == ServiceControllerStatus.Running);
+            }
+            catch (Exception) { }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if the specified MP-Extended service is installed
+        /// </summary>
+        /// <param name="service">Name of the service registry key</param>
+        /// <returns><code>true</code> if the service is installed</returns>
+        private bool isMPExtendedServiceInstalled(string service)
+        {
+            RegistryKey regkey = Registry.LocalMachine.OpenSubKey(@"Software\MPExtended");
+            if (regkey == null)
+            {
+                return false;
+            }
+
+            object value = regkey.GetValue(service);
+            if (value == null)
+            {
+                return false;
+            }
+
+            return value.ToString() == "true";
         }
 
         #endregion

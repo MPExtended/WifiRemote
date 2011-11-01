@@ -10,7 +10,7 @@ namespace WifiRemote
     class MessageWelcome : IMessage
     {
         string type = "welcome";
-        int server_version = 9;
+        int server_version = 10;
         AuthMethod authMethod = AuthMethod.UserPassword;
 
         /// <summary>
@@ -37,6 +37,19 @@ namespace WifiRemote
         {
             get { return authMethod; }
             set { authMethod = value; }
+        }
+
+        public Dictionary<string, bool> MPExtendedServicesInstalled
+        {
+            get
+            {
+                return new Dictionary<string, bool>() 
+                {
+                    {"MAS", WifiRemote.IsAvailableMPExtendedMAS},
+                    {"TAS", WifiRemote.IsAvailableMPExtendedTAS},
+                    {"WSS", WifiRemote.IsAvailableMPExtendedWSS}
+                };
+            }
         }
 
         /// <summary>
