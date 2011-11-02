@@ -196,9 +196,11 @@ namespace WifiRemote.MPPlayList
 
             if (oldIndex >= 0 && newIndex >= 0 && playList.Count > oldIndex && playList.Count > newIndex)
             {
+                WifiRemote.LogMessage("Change playlist index " + oldIndex + " to " + newIndex, WifiRemote.LogType.Debug);
                 PlayListItem item = playList[oldIndex];
                 playList.Remove(item.FileName);
-                playList.Insert(item, newIndex);
+                //Note: we need -1 here, because Insert wants the item after which the song should be inserted, not the actual index
+                playList.Insert(item, newIndex - 1);
             }
             else
             {
