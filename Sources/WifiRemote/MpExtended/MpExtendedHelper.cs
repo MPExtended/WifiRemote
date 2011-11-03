@@ -39,7 +39,7 @@ namespace WifiRemote.MpExtended
                         {
                             if (type == MpExtendedMediaTypes.TVEpisode)
                             {
-                                TVSeriesHelper.PlayEpisode(Int32.Parse(playInfo["ShowId"]), false, startPos);
+                                TVSeriesHelper.PlayEpisode(Int32.Parse(playInfo["Id"]), false, startPos);
                             }
                             else if (type == MpExtendedMediaTypes.TVSeason)
                             {
@@ -64,6 +64,10 @@ namespace WifiRemote.MpExtended
                         {
                             MpMusicHelper.PlayArtist(playInfo["Artist"], startPos);
                         }
+                        break;
+                    case MpExtendedProviders.MPVideo:
+                        //TODO: fill myvideos db information instead of just playing the file
+                        MpVideosHelper.PlayVideo(Int32.Parse(playInfo["Id"]), startPos);
                         break;
                     default:
                         WifiRemote.LogMessage("Provider not implemented yet", WifiRemote.LogType.Warn);
