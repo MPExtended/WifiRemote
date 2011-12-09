@@ -510,7 +510,7 @@ namespace WifiRemote
         /// </summary>
         /// <param name="video">Path to the video</param>
         /// <param name="position">Start position</param>
-        internal void PlayVideoFile(string video, int position)
+        internal void PlayVideoFile(string video, int position, string fileHandler)
         {
             if (video != null && File.Exists(video))
             {
@@ -525,7 +525,25 @@ namespace WifiRemote
                 GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
 
                 // Play File
-                g_Player.Play(video, g_Player.MediaType.Video);
+                MediaPortal.Player.g_Player.MediaType handler;
+                switch (fileHandler)
+                {
+                    case "recording":
+                        handler = g_Player.MediaType.Recording;
+                        break;
+
+                    case "tv":
+                        handler = g_Player.MediaType.TV;
+                        break;
+
+                    case "video":
+                    default:
+                        handler = g_Player.MediaType.Video;
+                        break;
+                }
+
+
+                g_Player.Play(video, handler);
                 if (position != 0)
                 {
                     g_Player.SeekAbsolute(position);

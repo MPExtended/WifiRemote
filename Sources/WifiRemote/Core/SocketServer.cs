@@ -606,6 +606,7 @@ namespace WifiRemote
                     {
                         string fileType = (string)message["FileType"];
                         string filePath = (string)message["Filepath"];
+                        string fileHandler = (string)message["FileHandler"];
                         int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
 
                         if (fileType != null && filePath != null)
@@ -613,7 +614,7 @@ namespace WifiRemote
                             // Play a video file
                             if (fileType == "video")
                             {
-                                communication.PlayVideoFile(filePath, startPos);
+                                communication.PlayVideoFile(filePath, startPos, (!String.IsNullOrEmpty(fileHandler)) ? fileHandler : null);
                             }
                             // Play an audio file
                             else if (fileType == "audio")
