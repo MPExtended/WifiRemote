@@ -326,5 +326,29 @@ namespace WifiRemote
                 g_Player.SeekAbsolute(startPosition);
             }
         }
+
+        internal static bool IsTvSeriesRatingDialog(MediaPortal.Dialogs.GUIDialogWindow dialog)
+        {
+            if (dialog.GetType().Equals(typeof(WindowPlugins.GUITVSeries.GUIUserRating)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        internal static bool IsTvSeriesPinDialog(MediaPortal.Dialogs.GUIDialogWindow dialog)
+        {
+            if (dialog.GetType().Equals(typeof(WindowPlugins.GUITVSeries.GUIPinCode)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

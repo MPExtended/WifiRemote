@@ -333,9 +333,20 @@ namespace WifiRemote
                     return;
             }
 
-            remoteHandler.MapAction((int)button);
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                InvokeButtonDelegate d = new InvokeButtonDelegate(InvokeButton);
+                GUIGraphicsContext.form.Invoke(d, new object[] { button });
+                return;
+            }
         }
 
+        protected delegate void InvokeButtonDelegate(int button);
+
+        protected void InvokeButton(int button)
+        {
+            remoteHandler.MapAction((int)button);
+        }
 
         /// <summary>
         /// Sends a command repeatedly until it is stopped by a key-up command or the timeout is reached
@@ -555,7 +566,8 @@ namespace WifiRemote
         /// <summary>
         /// Plays the local audio file on the MediaPortal client
         /// </summary>
-        /// <param name="video">Path to the audio file</param>
+        /// <param name="audio">Path to the audio file</param>
+        /// <param name="position">Position with in the file (in ms)</param>
         internal void PlayAudioFile(string audio, double position)
         {
             if (audio != null && File.Exists(audio))

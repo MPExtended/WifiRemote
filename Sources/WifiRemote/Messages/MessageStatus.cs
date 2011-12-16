@@ -151,6 +151,23 @@ namespace WifiRemote
             }
         }
 
+        private int windowId;
+
+        public int WindowId
+        {
+            get
+            {
+                try
+                {
+                    windowId = GUIWindowManager.ActiveWindow;
+                }
+                catch (Exception ex) {
+                    WifiRemote.LogMessage("Error on retrieving current window id: " + ex.ToString(), WifiRemote.LogType.Error);
+                }
+                return windowId;
+            }
+        }
+
         
         /// <summary>
         /// Contructor.
@@ -176,7 +193,8 @@ namespace WifiRemote
 //                || isRecording != IsRecording
                 || title != Title
                 || currentModule != CurrentModule
-                || selectedItem != SelectedItem);
+                || selectedItem != SelectedItem
+                || windowId != WindowId);
         }
     }
 }

@@ -16,6 +16,9 @@ namespace WifiRemote.MpExtended
         MPMusic = 4,
         MPShares = 5,
         MPTvSeries = 6,
-        MPVideo = 7
+        MPVideo = 7,
+        MpMusicShare = 9,
+        MpVideosShare = 10,
+        MpPicturesShare = 11
     }
 }

@@ -19,6 +19,21 @@ namespace WifiRemote.MPPlayList
         private static int mPlaylistStartIndex = 0;
         private static PlayListType mPlaylistStartType;
 
+                /// <summary>
+        /// Adds a song to a playlist
+        /// </summary>
+        /// <param name="type">Type of the playlist</param>
+        /// <param name="file">File that gets added</param>
+        /// <param name="index">Index where the item should be added</param>
+        public static void AddSongToPlaylist(String type, String file, int index)
+        {
+            PlaylistEntry entry = new PlaylistEntry();
+            FileInfo fileInfo = new FileInfo(file);
+            entry.FileName = fileInfo.FullName;
+            entry.Name = fileInfo.Name;
+
+            AddSongToPlaylist(type, entry, index);
+        }
 
         /// <summary>
         /// Adds a song to a playlist
@@ -45,7 +60,17 @@ namespace WifiRemote.MPPlayList
                 {
                     item = ToPlayListItem(song);
                 }
-            }            
+            }
+            else if (plType == PlayListType.PLAYLIST_VIDEO)
+            {
+                IMDBMovie movie = new IMDBMovie();
+                int id = VideoDatabase.GetMovieInfo(entry.FileName, ref movie);
+
+                if (id > 0)
+                {
+                    item = ToPlayListItem(movie);
+                }
+            }
             
             if(item == null){
                 item = new PlayListItem(entry.Name, entry.FileName, entry.Duration);
@@ -179,6 +204,18 @@ namespace WifiRemote.MPPlayList
             pli.Duration = song.Duration;
             pli.MusicTag = song.ToMusicTag();
 
+            return pli;
+        }
+
+        private static PlayListItem ToPlayListItem(IMDBMovie movie)
+        {
+            PlayListItem pli = new PlayListItem();
+
+            pli.Type = PlayListItem.PlayListItemType.Video;
+            pli.FileName = movie.File;
+            pli.Description = movie.Title;
+            pli.Duration = movie.RunTime;
+   
             return pli;
         }
 

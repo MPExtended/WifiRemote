@@ -146,5 +146,29 @@ namespace WifiRemote
                 g_Player.SeekAbsolute(startPosition);
             }
         }
+
+        internal static bool IsMovingPictureRatingDialog(MediaPortal.Dialogs.GUIDialogWindow dialog)
+        {
+            if (dialog.GetType().Equals(typeof(Cornerstone.MP.GUIGeneralRating)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        internal static bool IsMovingPicturePinDialog(MediaPortal.Dialogs.GUIDialogWindow dialog)
+        {
+            if (dialog.GetType().Equals(typeof(Cornerstone.MP.GUIPinCodeDialog)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

@@ -10,6 +10,8 @@ using MediaPortal.GUI.Library;
 using WifiRemote.Messages;
 using WifiRemote.MPPlayList;
 using WifiRemote.MpExtended;
+using WifiRemote.MPFacade;
+using WifiRemote.MPDialogs;
 
 namespace WifiRemote
 {
@@ -44,6 +46,7 @@ namespace WifiRemote
         private MessageNowPlaying nowPlayingMessage;
         private MessageNowPlayingUpdate nowPlayingMessageUpdate;
         private MessagePropertyChanged nowPlayingPropertiesUpdate;
+        private MessageFacadeInfo currentFacadeInfoMessage;
 
         // Delegate to log messages from another thread
         private delegate void LogMessage(string message, WifiRemote.LogType type);
@@ -102,6 +105,7 @@ namespace WifiRemote
             this.nowPlayingMessage = new MessageNowPlaying();
             this.nowPlayingMessageUpdate = new MessageNowPlayingUpdate();
             this.nowPlayingPropertiesUpdate = new MessagePropertyChanged();
+            this.currentFacadeInfoMessage = new MessageFacadeInfo();
 
             this.port = port;
 
@@ -374,6 +378,22 @@ namespace WifiRemote
             SendMessageToAllClients(nowPlaying);
         }
 
+        internal void SendListViewStatusToAllClientsIfChanged()
+        {
+            if (currentFacadeInfoMessage != null && currentFacadeInfoMessage.HasChanged())
+            {
+                SendListViewStatusToAllClients();
+            }
+        }
+
+        internal void SendListViewStatusToAllClients()
+        {
+            if (currentFacadeInfoMessage != null)
+            {
+                SendMessageToAllClients(currentFacadeInfoMessage);
+            }
+        }
+
         /// <summary>
         /// A client connected.
         /// </summary>
@@ -554,6 +574,14 @@ namespace WifiRemote
 
                         communication.ActivateWindow(windowId, param);
                     }
+                    else if (type == "dialog")
+                    {
+                        MpDialogsHelper.HandleDialogAction(message, this, sender);
+                    }
+                    else if (type == "facade")
+                    {
+                        MpFacadeHelper.HandleFacadeMessage(message, this, sender);
+                    }
                     // Shutdown/hibernate/reboot system or exit mediaportal
                     else if (type == "powermode")
                     {
@@ -690,7 +718,7 @@ namespace WifiRemote
 
                         if (action.Equals("new") || action.Equals("append"))
                         {
-                            
+
                             int insertIndex = 0;
                             if (message["InsertIndex"] != null)
                             {
@@ -751,7 +779,7 @@ namespace WifiRemote
                         {
                             string playlistName = (string)message["PlayListName"];
                             string playlistPath = (string)message["PlaylistPath"];
-                            
+
                             if (!string.IsNullOrEmpty(playlistName) || !string.IsNullOrEmpty(playlistPath))
                             {
                                 PlaylistHelper.LoadPlaylist(playlistType, (!string.IsNullOrEmpty(playlistName)) ? playlistName : playlistPath, shuffle);
@@ -759,7 +787,7 @@ namespace WifiRemote
                                 {
                                     PlaylistHelper.StartPlayingPlaylist(playlistType, 0, showPlaylist);
                                 }
-                            }                          
+                            }
                         }
                         else if (action.Equals("get"))
                         {

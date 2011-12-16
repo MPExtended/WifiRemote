@@ -660,7 +660,9 @@ namespace DemoClient
 
         #endregion
 
-
-
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SendCommand("{Type:\"facade\" Action:\"get\"}", socket);
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace WifiRemote.MpExtended
         TVShow = 5,
         TVSeason = 6,
         MusicAlbum = 7,
-        MusicArtist = 8
+        MusicArtist = 8,
+        Folder = 9,
+        Drive = 10
     }
 }

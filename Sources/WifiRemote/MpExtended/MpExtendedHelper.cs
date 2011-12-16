@@ -47,7 +47,7 @@ namespace WifiRemote.MpExtended
                             }
                             else if (type == MpExtendedMediaTypes.TVShow)
                             {
-                                TVSeriesHelper.PlaySeries(Int32.Parse(playInfo["ShowId"]), true, startPos, false, true);
+                                TVSeriesHelper.PlaySeries(Int32.Parse(playInfo["Id"]), true, startPos, false, true);
                             }
                         }
                         break;
@@ -66,8 +66,31 @@ namespace WifiRemote.MpExtended
                         }
                         break;
                     case MpExtendedProviders.MPVideo:
-                        //TODO: fill myvideos db information instead of just playing the file
                         MpVideosHelper.PlayVideo(Int32.Parse(playInfo["Id"]), startPos);
+                        break;
+                    case MpExtendedProviders.MpVideosShare:
+                        if (type == MpExtendedMediaTypes.File)
+                        {
+                            //TODO: fill myvideos db information instead of just playing the file
+                            
+                            MpVideosHelper.PlayVideoFromFile(playInfo["Path"], startPos);
+                        }
+                        else if (type == MpExtendedMediaTypes.Folder)
+                        {
+                            string[] extensions = playInfo["Extensions"].Split('|');
+                            MpVideosHelper.PlayFolder(playInfo["Path"], extensions, startPos);
+                        }
+                        break;
+                    case MpExtendedProviders.MpMusicShare:
+                        if (type == MpExtendedMediaTypes.File)
+                        {
+                            MpMusicHelper.PlayFile(playInfo["Path"], startPos);
+                        }
+                        else if (type == MpExtendedMediaTypes.Folder)
+                        {
+                            string[] extensions = playInfo["Extensions"].Split('|');
+                            MpMusicHelper.PlayAllFilesInFolder(playInfo["Path"], extensions, startPos);
+                        }
                         break;
                     default:
                         WifiRemote.LogMessage("Provider not implemented yet", WifiRemote.LogType.Warn);

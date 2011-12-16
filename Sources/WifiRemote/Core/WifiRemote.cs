@@ -16,6 +16,9 @@ using System.Threading;
 using System.Collections.Generic;
 using System.ServiceProcess;
 using Microsoft.Win32;
+using MediaPortal.Dialogs;
+using WifiRemote.MPDialogs;
+using WifiRemote.Messages;
 
 namespace WifiRemote
 {
@@ -54,7 +57,7 @@ namespace WifiRemote
     /// 
     /// </summary>
     [PluginIcons("WifiRemote.Resources.logo_radio.png", "WifiRemote.Resources.logo_radio_disabled.png")]
-    public class WifiRemote: ISetupForm, IPlugin
+    public class WifiRemote : ISetupForm, IPlugin
     {
         public const string PLUGIN_NAME = "WifiRemote";
         public const string LOG_PREFIX = "[WIFI_REMOTE] ";
@@ -84,7 +87,7 @@ namespace WifiRemote
         /// The Bonjour service publish object
         /// </summary>
         NetService publishService = null;
-        
+
         /// <summary>
         /// Bonjour service name (your hostname)
         /// </summary>
@@ -128,7 +131,7 @@ namespace WifiRemote
         /// <summary>
         /// Mediaportal log type
         /// </summary>
-        public enum LogType 
+        public enum LogType
         {
             Debug,
             Info,
@@ -206,7 +209,6 @@ namespace WifiRemote
         /// List of plugins
         /// </summary>
         public static ArrayList savedAndSortedPlugins;
-       
 
         #region ISetupForm Member
 
@@ -288,7 +290,7 @@ namespace WifiRemote
                 WifiRemote.IsAvailableMPExtendedTAS = false;
                 WifiRemote.IsAvailableMPExtendedWSS = false;
             }
-           
+
 
             Log.Debug(String.Format("{0} Started!", LOG_PREFIX));
             // register event handlers
@@ -404,7 +406,7 @@ namespace WifiRemote
         /// <param name="tagValue"></param>
         void GUIPropertyManager_OnPropertyChanged(string tag, string tagValue)
         {
-            if(tag.Equals("#currentmodule"))
+            if (tag.Equals("#currentmodule"))
             {
                 if (tagValue != null && tagValue.Equals(localizedKeyboard))
                 {
@@ -420,7 +422,40 @@ namespace WifiRemote
                     socketServer.SendMessageToAllClients(keyboard);
                     keyboardIsActive = false;
                 }
+
+                IRenderLayer layer = GUILayerManager.GetLayer(GUILayerManager.LayerType.Dialog);
+                if (layer != null && layer.GetType().IsSubclassOf(typeof(GUIDialogWindow)))
+                {
+                    WifiRemote.LogMessage("Sending dialog open to clients", LogType.Debug);
+                    MpDialogsHelper.CurrentDialog = layer as GUIDialogWindow;
+
+                    MessageDialog msg = MpDialogsHelper.GetDialogMessage(MpDialogsHelper.CurrentDialog);
+
+                    if (msg != null && msg.Dialog != null && msg.Dialog.GetType() == typeof(MpDialogMenu))
+                    {
+                        //TODO: this is a hack to retrieve the list items of a dialog because they are
+                        //set after initialisation of the dialog and there is no event fired up after
+                        //that. We might run into situations where the list hasn't been updated when
+                        //we try to read it
+                        Thread t = new Thread(new ParameterizedThreadStart(SendDelayed));
+                        t.Start(msg);
+                    }
+                    else
+                    {
+                        socketServer.SendMessageToAllClients(msg);
+                    }
+                    MpDialogsHelper.IsDialogShown = true;
+                }
+                else if (MpDialogsHelper.IsDialogShown)
+                {
+                    WifiRemote.LogMessage("Sending dialog close to clients", LogType.Debug);
+                    MessageDialog message = new MessageDialog();
+                    message.DialogShown = false;
+                    socketServer.SendMessageToAllClients(message);
+                    MpDialogsHelper.IsDialogShown = false;
+                }
             }
+
             if (tag.Equals("#selecteditem") ||
                 tag.Equals("#selecteditem2") ||
                 tag.Equals("#highlightedbutton") ||
@@ -433,6 +468,27 @@ namespace WifiRemote
             {
                 socketServer.SendPropertyToClient(tag, tagValue);
             }
+            
+            if (tag.Equals("#selectedindex") || tag.Equals("#highlightedbutton"))
+            {
+                socketServer.SendListViewStatusToAllClientsIfChanged();
+            }
+        }
+
+        /// <summary>
+        /// Sends the dialog to all connected socket with a delay so we can
+        /// read the list items
+        /// </summary>
+        /// <param name="_control"></param>
+        private void SendDelayed(object _control)
+        {
+            MessageDialog msg = (MessageDialog)_control;
+            Thread.Sleep(400);
+            WifiRemote.LogMessage("Sending delayed list dialog", LogType.Debug);
+            MpDialogMenu dialog = msg.Dialog as MpDialogMenu;
+            dialog.RetrieveListItems();
+
+            socketServer.SendMessageToAllClients(msg);
         }
 
         // An action was executed on the GUI
@@ -443,6 +499,10 @@ namespace WifiRemote
                 case MediaPortal.GUI.Library.Action.ActionType.ACTION_PLAY:
                 case MediaPortal.GUI.Library.Action.ActionType.ACTION_PAUSE:
                     SendStatus();
+                    break;
+                case MediaPortal.GUI.Library.Action.ActionType.ACTION_HIGHLIGHT_ITEM:
+                case MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM:
+                    socketServer.SendListViewStatusToAllClientsIfChanged();
                     break;
             }
         }
@@ -456,6 +516,14 @@ namespace WifiRemote
             if (message.Message == GUIMessage.MessageType.GUI_MSG_AUDIOVOLUME_CHANGED)
             {
                 socketServer.SendVolumeToAllClients();
+            }
+            else if (message.Message == GUIMessage.MessageType.GUI_MSG_ITEM_SELECT)
+            {
+                socketServer.SendListViewStatusToAllClientsIfChanged();
+            }
+            else if (message.Message == GUIMessage.MessageType.GUI_MSG_WINDOW_INIT)
+            {
+                int i = 0;
             }
         }
 
@@ -779,7 +847,7 @@ namespace WifiRemote
             Dictionary<int, String> savedPlugins;
             List<int> ignoredPluginsList;
 
-            using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"))) 
+            using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
             {
                 // Read plugin ids and convert them to int
                 String[] savedPluginStrings = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "savedPlugins", "").Split('|');
@@ -904,7 +972,7 @@ namespace WifiRemote
                         return (ver == null || a.GetName().Version >= ver);
                     }
                 }
-                catch {}
+                catch { }
             }
 
             return false;
