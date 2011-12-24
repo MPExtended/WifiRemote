@@ -483,10 +483,21 @@ namespace WifiRemote
         private void SendDelayed(object _control)
         {
             MessageDialog msg = (MessageDialog)_control;
-            Thread.Sleep(400);
+            
             WifiRemote.LogMessage("Sending delayed list dialog", LogType.Debug);
             MpDialogMenu dialog = msg.Dialog as MpDialogMenu;
-            dialog.RetrieveListItems();
+
+            //try to retrieve the items (since they are loaded after the dialog is created)
+            //TODO: is it possible, that we retrieve the items when only a subset of the available
+            //items are loaded?  (which would result in not all items being shown)
+            for (int i = 0; i < 20; i++)
+            {
+                Thread.Sleep(100);
+                if (dialog.RetrieveListItems())
+                {
+                    break;
+                }
+            }
 
             socketServer.SendMessageToAllClients(msg);
         }
@@ -658,6 +669,10 @@ namespace WifiRemote
             publishService.Publish();
         }
 
+        /// <summary>
+        /// Get the hardware (MAC) addresses of all available network adapters
+        /// </summary>
+        /// <returns>Seperated MAC addresses</returns>
         public static String GetHardwareAddresses()
         {
             StringBuilder hardwareAddresses = new StringBuilder();
@@ -740,7 +755,7 @@ namespace WifiRemote
         /// <summary>
         /// Get the machine name or a fallback
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The name of the service</returns>
         public static string GetServiceName()
         {
             try

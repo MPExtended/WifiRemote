@@ -26,21 +26,29 @@ namespace WifiRemote.MPDialogs
             GetHeading(menu, 4);
         }
 
-        public void RetrieveListItems()
+        public bool RetrieveListItems()
         {
             GUIControlCollection coll = menu.controlList;
-            foreach (GUIControl c in coll)
+            if (coll != null && coll.Count > 0)
             {
-                if (c.GetType() == typeof(GUIListControl))
+                foreach (GUIControl c in coll)
                 {
-                    GUIListControl list = (GUIListControl)c;
-                    List<GUIListItem> items = list.ListItems;
-                    for (int i = 0; i < list.Count; i++)
+                    if (c.GetType() == typeof(GUIListControl))
                     {
-                        FacadeItem item = new FacadeItem(list[i]);
-                        ListItems.Add(item);
+                        GUIListControl list = (GUIListControl)c;
+                        List<GUIListItem> items = list.ListItems;
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            FacadeItem item = new FacadeItem(list[i]);
+                            ListItems.Add(item);
+                        }
                     }
                 }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
