@@ -71,9 +71,12 @@ namespace WifiRemote.MPFacade
                 else
                 {
                     GUIFacadeControl facade = (GUIFacadeControl)currentPlugin.GetControl(50);
-                    List<FacadeItem> items = MpFacadeHelper.GetFacadeItems(currentPlugin.GetID, 50);
-                    returnMessage.ViewType = facade.CurrentLayout.ToString();
-                    returnMessage.FacadeItems = items;
+                    if (facade != null)
+                    {
+                        List<FacadeItem> items = MpFacadeHelper.GetFacadeItems(currentPlugin.GetID, 50);
+                        returnMessage.ViewType = facade.CurrentLayout.ToString();
+                        returnMessage.FacadeItems = items;
+                    }
                 }
 
                 returnMessage.WindowId = currentPlugin.GetID;
@@ -152,7 +155,7 @@ namespace WifiRemote.MPFacade
                     //TODO: is there a better way to select a list item
 
                     facade.SelectedListItemIndex = selected;
-                    new Communication().SendCommand("ok");
+                    new Communication().SendCommand("info");
                 }
             }
         }

@@ -18,7 +18,7 @@ namespace WifiRemote.Messages
         }
 
         /// <summary>
-        /// Type of the playlist (currently supported: music, video)
+        /// Currently shown view of the facade (e.g. list, thumb, ...)
         /// </summary>
         public String ViewType { get; set; }
 

@@ -26,30 +26,88 @@ namespace WifiRemote.MPDialogs
             GetHeading(menu, 4);
         }
 
-        public bool RetrieveListItems()
+        /// <summary>
+        /// Retrieve items for this list and store it in the object
+        /// </summary>
+        public void RetrieveListItems()
         {
-            GUIControlCollection coll = menu.controlList;
-            if (coll != null && coll.Count > 0)
+            for (int i = 0; i < 10; i++)
             {
-                foreach (GUIControl c in coll)
+                Thread.Sleep(200);
+
+                GUIListControl list = GetListControl(menu.controlList);
+
+                if (list != null)
+                {
+                    //found the list control -> get list elements
+                    GetItemsFromListControl(list);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Try to locate the list element in a collection of gui controls
+        /// </summary>
+        /// <param name="collection">The collection where we browse in</param>
+        /// <returns>The list if found, null otherwise</returns>
+        private GUIListControl GetListControl(GUIControlCollection collection)
+        {
+            if (collection != null && collection.Count > 0)
+            {
+                //Get the control that holds all the list items
+                foreach (GUIControl c in collection)
                 {
                     if (c.GetType() == typeof(GUIListControl))
                     {
                         GUIListControl list = (GUIListControl)c;
-                        List<GUIListItem> items = list.ListItems;
-                        for (int i = 0; i < list.Count; i++)
+                        return list;
+                    }
+                    else if (c.GetType() == typeof(GUIGroup))
+                    {
+                        GUIGroup group = (GUIGroup)c;
+                        //Control type group, can have child elements
+                        GUIListControl list = GetListControl(group.Children);
+                        if (list != null)
                         {
-                            FacadeItem item = new FacadeItem(list[i]);
-                            ListItems.Add(item);
+                            //Found list in group type group, return it
+                            return list;
                         }
                     }
                 }
-                return true;
             }
-            else
+            return null;
+        }
+
+        /// <summary>
+        /// Get items from the list control
+        /// </summary>
+        /// <param name="list">list control</param>
+        private void GetItemsFromListControl(GUIListControl list)
+        {
+            //make sure the list isn't in the progress of being filled (list count growing)
+            int itemCount = 0;
+            for (int i = 0; i < 20; i++)
             {
-                return false;
+                Thread.Sleep(200);
+
+                if (list.Count > 0 && list.Count == itemCount)
+                {
+                    break;
+                }
+                itemCount = list.Count;
             }
+
+            WifiRemote.LogMessage("Retrieving " + itemCount + " dialog list items: " , WifiRemote.LogType.Debug);
+
+            List<GUIListItem> items = list.ListItems;
+            for (int i = 0; i < itemCount; i++)
+            {
+                FacadeItem item = new FacadeItem(list[i]);
+                //WifiRemote.LogMessage("Add dialog list items: " + item.Label, WifiRemote.LogType.Debug);
+                ListItems.Add(item);
+            }
+
         }
 
         /// <summary>

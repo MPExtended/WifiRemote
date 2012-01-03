@@ -487,17 +487,8 @@ namespace WifiRemote
             WifiRemote.LogMessage("Sending delayed list dialog", LogType.Debug);
             MpDialogMenu dialog = msg.Dialog as MpDialogMenu;
 
-            //try to retrieve the items (since they are loaded after the dialog is created)
-            //TODO: is it possible, that we retrieve the items when only a subset of the available
-            //items are loaded?  (which would result in not all items being shown)
-            for (int i = 0; i < 20; i++)
-            {
-                Thread.Sleep(100);
-                if (dialog.RetrieveListItems())
-                {
-                    break;
-                }
-            }
+            //get the items from the dialog
+            dialog.RetrieveListItems();
 
             socketServer.SendMessageToAllClients(msg);
         }

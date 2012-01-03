@@ -215,7 +215,6 @@ namespace WifiRemote.MPDialogs
         internal static void HandleDialogAction(Newtonsoft.Json.Linq.JObject message, SocketServer server, AsyncSocket client)
         {
             String action = (string)message["ActionType"];
-            String dialogType = (string)message["DialogType"];
             int dialogId = (int)message["DialogId"];
             int index = (int)message["Index"];
 
