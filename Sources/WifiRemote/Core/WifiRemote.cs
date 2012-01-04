@@ -440,6 +440,11 @@ namespace WifiRemote
                         Thread t = new Thread(new ParameterizedThreadStart(SendDelayed));
                         t.Start(msg);
                     }
+                    else if (msg != null && msg.Dialog != null && msg.Dialog.GetType() == typeof(MpDialogProgress))
+                    {
+                        Thread t = new Thread(new ParameterizedThreadStart(SendProgressUpdates));
+                        t.Start(msg);
+                    }
                     else
                     {
                         socketServer.SendMessageToAllClients(msg);
@@ -491,6 +496,32 @@ namespace WifiRemote
             dialog.RetrieveListItems();
 
             socketServer.SendMessageToAllClients(msg);
+        }
+
+        /// <summary>
+        /// Sends the dialog to all connected socket with a delay so we can
+        /// read the list items
+        /// </summary>
+        /// <param name="_control"></param>
+        private void SendProgressUpdates(object _control)
+        {
+            MessageDialog msg = (MessageDialog)_control;
+            socketServer.SendMessageToAllClients(msg);
+
+            MpDialogProgress dialog = msg.Dialog as MpDialogProgress;
+            Thread.Sleep(200);
+
+            //from now on the messages are updating the initial dialog
+            msg.DialogUpdate = true;
+            while (MpDialogsHelper.IsDialogShown)
+            {
+                if (dialog.UpdateValues())
+                {
+                    //dialog values have been changed -> send update
+                    socketServer.SendMessageToAllClients(msg);
+                }
+                Thread.Sleep(200);
+            }
         }
 
         // An action was executed on the GUI

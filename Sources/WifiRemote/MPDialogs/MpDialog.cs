@@ -119,6 +119,11 @@ namespace WifiRemote.MPDialogs
         public int DialogId { get; set; }
 
         /// <summary>
+        /// Value of Dialog
+        /// </summary>
+        public int DialogValue { get; set; }
+
+        /// <summary>
         /// Actions available for this dialog
         /// </summary>
         public List<String> AvailableActions { get; set; }

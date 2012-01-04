@@ -22,5 +22,10 @@ namespace WifiRemote.Messages
         /// Dialog state (shown, closed)
         /// </summary>
         public bool DialogShown { get; set; }
+
+        /// <summary>
+        /// True if the message contains updates to the already shown dialog, false if it's a new dialog
+        /// </summary>
+        public bool DialogUpdate { get; set; }
     }
 }

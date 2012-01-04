@@ -65,6 +65,10 @@ namespace WifiRemote.MPDialogs
             {
                 return GetDialogNotify();
             }
+            else if (dialog.GetType().Equals(typeof(GUIDialogProgress)))
+            {
+                return GetDialogProgress();
+            }
             else if (dialog.GetType().Equals(typeof(GUIDialogSetRating)))
             {
                 return GetDialogRating();
@@ -209,6 +213,17 @@ namespace WifiRemote.MPDialogs
         }
 
         /// <summary>
+        /// Get WifiRemote representation of the progress dialog
+        /// </summary>
+        /// <returns></returns>
+        public static MpDialogProgress GetDialogProgress()
+        {
+            GUIDialogProgress menu = (GUIDialogProgress)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_PROGRESS);
+            MpDialogProgress progressDialog = new MpDialogProgress(menu);
+            return progressDialog;
+        }
+
+        /// <summary>
         /// Handle the dialog action
         /// </summary>
         /// <param name="message">Message from Client</param>
@@ -254,6 +269,11 @@ namespace WifiRemote.MPDialogs
                     MpDialogNotify diag = GetDialogNotify();
                     diag.HandleAction(action, index);
                 }
+                else if (dialogId == (int)GUIWindow.Window.WINDOW_DIALOG_PROGRESS)
+                {
+                    MpDialogProgress diag = GetDialogProgress();
+                    diag.HandleAction(action, index);
+                }
                 else if (dialogId == (int)GUIWindow.Window.WINDOW_DIALOG_RATING)
                 {
                     MpDialogRating diag = GetDialogRating();
@@ -293,6 +313,8 @@ namespace WifiRemote.MPDialogs
                 }
             }
         }
+
+
 
         /// <summary>
         /// Get the WifiRemote message from the given dialog
