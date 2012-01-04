@@ -153,6 +153,7 @@
     <Compile Include="Messages\MessageVolume.cs" />
     <Compile Include="Messages\MessageWelcome.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingMusic.cs" />
+    <Compile Include="MPDialogs\MpDialogProgress.cs" />
     <Compile Include="MPDialogs\MpDialogTvSeriesPin.cs" />
     <Compile Include="MPDialogs\MpDialogMovingPicturesPin.cs" />
     <Compile Include="MPDialogs\MpDialogMovingPicturesRating.cs" />
