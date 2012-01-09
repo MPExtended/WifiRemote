@@ -394,7 +394,7 @@ namespace WifiRemote
         /// 
         /// TODO: What about umlauts?
         /// </summary>
-        public void SendKey(String keyChar)
+        public void SendKey(String modifier, String keyChar)
         {
             if (keyChar == "{DONE}")
              {
@@ -402,8 +402,15 @@ namespace WifiRemote
              }
              else
              {
-                //Sends a key to mediaportal
-                 SendKeys.SendWait(keyChar);
+                 if (modifier != null)
+                 {
+                     SendKeys.SendWait(modifier + keyChar);
+                 }
+                 else
+                 {
+                     //Sends a key to mediaportal
+                     SendKeys.SendWait(keyChar);
+                 }
              }
         }
 

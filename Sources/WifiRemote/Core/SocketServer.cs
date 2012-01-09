@@ -232,6 +232,7 @@ namespace WifiRemote
                 return;
             }
 
+            //WifiRemote.LogMessage("Send to " + client.LocalAddress + ": " + message, WifiRemote.LogType.Debug);
             byte[] data = Encoding.UTF8.GetBytes(message + "\r\n");
             if (client.GetRemoteClient().IsAuthenticated || ignoreAuth)
             {
@@ -540,9 +541,10 @@ namespace WifiRemote
                     else if (type == "key")
                     {
                         string key = (string)message["Key"];
+                        string modifier = (message["Modifier"] != null) ? (string)message["Modifier"] : null;
                         if (key != null)
                         {
-                            communication.SendKey(key);
+                            communication.SendKey(modifier, key);
                         }
                     }
                     // Send a key down
