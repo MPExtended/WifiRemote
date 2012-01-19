@@ -554,10 +554,6 @@ namespace WifiRemote
             {
                 socketServer.SendListViewStatusToAllClientsIfChanged();
             }
-            else if (message.Message == GUIMessage.MessageType.GUI_MSG_WINDOW_INIT)
-            {
-                int i = 0;
-            }
         }
 
         /// <summary>
