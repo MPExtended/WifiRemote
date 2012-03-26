@@ -9,11 +9,6 @@ namespace WifiRemote.Messages
     class MessageFacadeInfo : IMessage
     {
         /// <summary>
-        /// When was the facade info last updated
-        /// </summary>
-        private DateTime lastUpdated;
-
-        /// <summary>
         /// Creates a new facade info and fills it with the value of the currently active facade
         /// </summary>
         public MessageFacadeInfo()
