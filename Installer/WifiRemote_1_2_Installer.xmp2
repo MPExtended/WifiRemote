@@ -202,7 +202,7 @@ Various Improvements &amp; Bugfixes</VersionDescription>
     <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.6.1.mpe1</OnlineLocation>
     <ReleaseDate>2012-03-26T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>Versions\WifiRemote_0.6.1.mpe1</Location>
+    <Location>D:\Documents\WifiRemote_0.6.1.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -255,14 +255,14 @@ Various Improvements &amp; Bugfixes</VersionDescription>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{4a5e6e6e-6502-4d60-afbe-f55c392c9ba9}-installer_logo.gif</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{12488854-c99e-489f-8784-162ad76dba20}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{d96c3954-2aef-4fbf-8e72-47a7533f6a8f}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{c86da05a-2942-4c5d-800d-0df114bdc69b}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
