@@ -199,8 +199,8 @@ It publishes a Bonjour Service on your local network which allows clients (for e
 Better Playlist Support
 Various Improvements &amp; Bugfixes</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.5.0.mpe1</OnlineLocation>
-    <ReleaseDate>2011-10-07T20:16:04</ReleaseDate>
+    <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.6.1.mpe1</OnlineLocation>
+    <ReleaseDate>2012-03-26T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
     <Location>Versions\WifiRemote_0.6.1.mpe1</Location>
     <Params>
@@ -270,7 +270,7 @@ Various Improvements &amp; Bugfixes</VersionDescription>
   <ProjectSettings>
     <FolderGroups />
     <ProjectFilename>WifiRemote_1_2_Installer.xmp2</ProjectFilename>
-    <UpdatePath1>C:\Users\DieBagger\Documents\Projects\MediaPortal\WifiRemote\SVN\Installer\update.xml</UpdatePath1>
+    <UpdatePath1>D:\Documents\Visual Studio 2010\Projects\PluginDev\WifiRemote\WifiRemote\Installer\update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
   </ProjectSettings>
