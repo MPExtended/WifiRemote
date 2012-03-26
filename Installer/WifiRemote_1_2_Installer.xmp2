@@ -186,8 +186,8 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <UpdateUrl>http://wifiremote.googlecode.com/svn/trunk/Installer/update.xml</UpdateUrl>
     <Version>
       <Major>0</Major>
-      <Minor>5</Minor>
-      <Build>0</Build>
+      <Minor>6</Minor>
+      <Build>1</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
@@ -195,36 +195,14 @@ Click Next to continue or Cancel to exit Setup.</Value>
 
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-    <VersionDescription>New commands:
-* MP-TVSeries:
-  * playepisode
-  * playunwatchedepisode
-  * playrandomepisode
-  * playseason
-  * playseries
-
-* MovingPictures
-  * moviedetails
-  * playmovie
-
-* Playlist
-  * fill music playlist with sql
-  * load playlist from playlist folder or path
-
-* ActivateWindow (with load parameters)
-
-* MPExtended:
-  * PlayMediaItem                       
-
-
-Fixes:
-* MovingPictures didn't appear in the plugin list
-* Screensaver now cancelled on each incoming command</VersionDescription>
+    <VersionDescription>Better Dialog Handling
+Better Playlist Support
+Various Improvements &amp; Bugfixes</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.5.0.mpe1</OnlineLocation>
     <ReleaseDate>2011-10-07T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>D:\Documents\WifiRemote_0.5.0.mpe1</Location>
+    <Location>Versions\WifiRemote_0.6.1.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -250,7 +228,7 @@ Fixes:
           <Description>Online stored screenshot urls separated by ; </Description>
         </SectionParam>
         <SectionParam Name="Force to uninstall on update">
-          <Value>yes</Value>
+          <Value>YES</Value>
           <ValueType>Bool</ValueType>
           <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
         </SectionParam>
@@ -277,14 +255,14 @@ Fixes:
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{8eae6e71-e6af-43b5-a428-7464c095088a}-installer_logo.gif</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{4a5e6e6e-6502-4d60-afbe-f55c392c9ba9}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{bf2c4528-140e-42f8-8e67-4583ffa76dda}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{d96c3954-2aef-4fbf-8e72-47a7533f6a8f}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -292,7 +270,7 @@ Fixes:
   <ProjectSettings>
     <FolderGroups />
     <ProjectFilename>WifiRemote_1_2_Installer.xmp2</ProjectFilename>
-    <UpdatePath1>D:\Documents\Visual Studio 2010\Projects\PluginDev\WifiRemote\WifiRemote\Installer\update.xml</UpdatePath1>
+    <UpdatePath1>C:\Users\DieBagger\Documents\Projects\MediaPortal\WifiRemote\SVN\Installer\update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
   </ProjectSettings>
