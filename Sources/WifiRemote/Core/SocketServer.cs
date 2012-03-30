@@ -12,6 +12,7 @@ using WifiRemote.MPPlayList;
 using WifiRemote.MpExtended;
 using WifiRemote.MPFacade;
 using WifiRemote.MPDialogs;
+using WifiRemote.PluginConnection;
 
 namespace WifiRemote
 {
@@ -659,9 +660,35 @@ namespace WifiRemote
                         int channelId = (int)message["ChannelId"];
                         bool startFullscreen = (message["StartFullscreen"] != null) ? (bool)message["StartFullscreen"] : false;
                         WifiRemote.LogMessage("playchannel: channelId: " + channelId + " fullscreen: " + startFullscreen, WifiRemote.LogType.Debug);
-                        communication.PlayTvChannel(channelId, startFullscreen);
+
+                        if (!WifiRemote.IsAvailableTVPlugin)
+                        {
+                            WifiRemote.LogMessage("No TVPlugin installed: Aborting playchannel", WifiRemote.LogType.Error);
+                            return;
+                        }
+                        else
+                        {
+                            MpTvServerHelper.PlayTvChannel(channelId, startFullscreen);
+                        }
                     }
-                    // play a tv channel on the client
+                    else if (type == "playrecording")
+                    {
+                        int recordingId = (int)message["RecordingId"];
+                        bool startFullscreen = (message["StartFullscreen"] != null) ? (bool)message["StartFullscreen"] : false;
+                        int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
+                        WifiRemote.LogMessage("playrecording: recordingId: " + recordingId + " fullscreen: " + startFullscreen + " startpos: " + startPos, WifiRemote.LogType.Debug);
+
+                        if (!WifiRemote.IsAvailableTVPlugin)
+                        {
+                            WifiRemote.LogMessage("No TVPlugin installed: Aborting playchannel", WifiRemote.LogType.Error);
+                            return;
+                        }
+                        else
+                        {
+                            MpTvServerHelper.PlayRecording(recordingId, startPos, startFullscreen);
+                        }
+                    }
+                    // play a media item on the client
                     else if (type == "playmediaitem")
                     {
                         string itemId = (string)message["ItemId"];

@@ -10,6 +10,8 @@ namespace WifiRemote.MpExtended
     /// </summary>
     public enum MpExtendedMediaTypes
     {
+        Tv = -2,
+        Recording = -1,
         Movie = 0,
         MusicTrack = 1,
         Picture = 2,

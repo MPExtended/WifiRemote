@@ -10,6 +10,7 @@ using MediaPortal.Player;
 using System.Threading;
 using System.IO;
 using TvPlugin;
+using WifiRemote.PluginConnection;
 
 namespace WifiRemote
 {
@@ -588,43 +589,7 @@ namespace WifiRemote
             }
         }
 
-        protected delegate void PlayTvChannelDelegate(int channelId, bool startFullscreen);
-
-        /// <summary>
-        /// Start a tv channel on the client
-        /// </summary>
-        /// <param name="channelId">Id of the cannel</param>
-        /// <param name="startFullscreen">If true, will switch to fullscreen after playback is started</param>
-        internal void PlayTvChannel(int channelId, bool startFullscreen)
-        {
-            if (!WifiRemote.IsAvailableTVPlugin)
-            {
-                WifiRemote.LogMessage("No TVPlugin installed: Aborting playchannel", WifiRemote.LogType.Error);
-                return;
-            }
-
-            if (GUIGraphicsContext.form.InvokeRequired)
-            {
-                PlayTvChannelDelegate d = PlayTvChannel;
-                GUIGraphicsContext.form.Invoke(d, channelId, startFullscreen);
-            }
-            MediaPortal.GUI.Library.GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_TV);
-            WifiRemote.LogMessage("Start channel " + channelId, WifiRemote.LogType.Debug);
-            TvDatabase.Channel channel = TvDatabase.Channel.Retrieve(channelId);
-            if (channel != null)
-            {
-                bool success = TvPlugin.TVHome.ViewChannelAndCheck(channel);
-                WifiRemote.LogMessage("Started channel " + channelId + " Success: " + success, WifiRemote.LogType.Info);
-                if (startFullscreen && success)
-                {
-                    g_Player.ShowFullScreenWindow();
-                }
-            }
-            else
-            {
-                Log.Warn("Couldn't retrieve channel for id: " + channelId);
-            }
-        }
+        
 
         /// <summary>
         /// Set the player position to the given absolute percentage 

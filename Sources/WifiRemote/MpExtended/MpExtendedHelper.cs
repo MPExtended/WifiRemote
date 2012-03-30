@@ -93,7 +93,31 @@ namespace WifiRemote.MpExtended
                         }
                         break;
                     default:
-                        WifiRemote.LogMessage("Provider not implemented yet", WifiRemote.LogType.Warn);
+                        //we have no providers (yet) for tv
+                        if (type == MpExtendedMediaTypes.Recording)
+                        {
+                            if (!WifiRemote.IsAvailableTVPlugin)
+                            {
+                                WifiRemote.LogMessage("No TVPlugin installed: Aborting playrecording", WifiRemote.LogType.Error);
+                                return;
+                            }
+
+                            MpTvServerHelper.PlayRecording(Int32.Parse(playInfo["Id"]), startPos, true);
+                        }
+                        else if (type == MpExtendedMediaTypes.Tv)
+                        {
+                            if (!WifiRemote.IsAvailableTVPlugin)
+                            {
+                                WifiRemote.LogMessage("No TVPlugin installed: Aborting playchannel", WifiRemote.LogType.Error);
+                                return;
+                            }
+
+                            MpTvServerHelper.PlayTvChannel(Int32.Parse(playInfo["Id"]), true);
+                        }
+                        else
+                        {
+                            WifiRemote.LogMessage("Provider not implemented yet", WifiRemote.LogType.Warn);
+                        }
                         break;
                 }
             }

@@ -175,6 +175,7 @@
     <Compile Include="MPPlayList\PlaylistEntry.cs" />
     <Compile Include="PluginConnection\MovingPicturesHelper.cs" />
     <Compile Include="PluginConnection\MpMusicHelper.cs" />
+    <Compile Include="PluginConnection\MpTvServerHelper.cs" />
     <Compile Include="PluginConnection\MpVideosHelper.cs" />
     <Compile Include="PluginConnection\TVSeriesHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
