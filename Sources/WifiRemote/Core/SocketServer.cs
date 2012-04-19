@@ -1023,7 +1023,7 @@ namespace WifiRemote
                         }
 
                         // Authentication
-                        if (AllowedAuth == AuthMethod.None || (message["Authenticate"] != null &&
+                        if (AllowedAuth == AuthMethod.None || (!String.IsNullOrEmpty((string)message["Authenticate"]) &&
                             CheckAuthenticationRequest(client, (JObject)message["Authenticate"])))
                         {
                             // User successfully authenticated
