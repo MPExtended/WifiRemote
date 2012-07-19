@@ -15,22 +15,22 @@ namespace WifiRemote.MPDialogs
         /// <summary>
         /// Id of TvSeries rating dialog
         /// </summary>
-        private const int TVSERIES_RATING_ID = 9814;
+        public const int TVSERIES_RATING_ID = 9814;
 
         /// <summary>
         /// Id of TvSeries pin dialog
         /// </summary>
-        private const int TVSERIES_PIN_ID = 9815;
+        public const int TVSERIES_PIN_ID = 9815;
 
         /// <summary>
         /// Id of MovingPictures rating dialog
         /// </summary>
-        private const int MOPI_RATING_ID = 28380;
+        public const int MOPI_RATING_ID = 28380;
 
         /// <summary>
         /// Id of MovingPictures pin dialog
         /// </summary>
-        private const int MOPI_PIN_ID = 9915;
+        public const int MOPI_PIN_ID = 9915;
 
         /// <summary>
         /// Is a dialog currently shown
@@ -222,99 +222,6 @@ namespace WifiRemote.MPDialogs
             MpDialogProgress progressDialog = new MpDialogProgress(menu);
             return progressDialog;
         }
-
-        /// <summary>
-        /// Handle the dialog action
-        /// </summary>
-        /// <param name="message">Message from Client</param>
-        internal static void HandleDialogAction(Newtonsoft.Json.Linq.JObject message, SocketServer server, AsyncSocket client)
-        {
-            String action = (string)message["ActionType"];
-            int dialogId = (int)message["DialogId"];
-            int index = (int)message["Index"];
-
-            if (action.Equals("get"))
-            {
-                if (MpDialogsHelper.IsDialogShown)
-                {
-                    MessageDialog msg = MpDialogsHelper.GetDialogMessage(MpDialogsHelper.CurrentDialog);
-                    server.SendMessageToClient(msg, client);
-                }
-                else
-                {
-                    MessageDialog msg = new MessageDialog();
-                    msg.DialogShown = false;
-                    server.SendMessageToClient(msg, client);
-                }
-            }
-            else
-            {
-                if (dialogId == (int)GUIWindow.Window.WINDOW_DIALOG_MENU)
-                {
-                    MpDialogMenu diag = GetDialogMenu();
-                    diag.HandleAction(action, index);
-                }
-                else if (dialogId == (int)GUIWindow.Window.WINDOW_DIALOG_OK)
-                {
-                    MpDialogOk diag = GetDialogOk();
-                    diag.HandleAction(action, index);
-                }
-                else if (dialogId == (int)GUIWindow.Window.WINDOW_DIALOG_YES_NO)
-                {
-                    MpDialogYesNo diag = GetDialogYesNo();
-                    diag.HandleAction(action, index);
-                }
-                else if (dialogId == (int)GUIWindow.Window.WINDOW_DIALOG_NOTIFY)
-                {
-                    MpDialogNotify diag = GetDialogNotify();
-                    diag.HandleAction(action, index);
-                }
-                else if (dialogId == (int)GUIWindow.Window.WINDOW_DIALOG_PROGRESS)
-                {
-                    MpDialogProgress diag = GetDialogProgress();
-                    diag.HandleAction(action, index);
-                }
-                else if (dialogId == (int)GUIWindow.Window.WINDOW_DIALOG_RATING)
-                {
-                    MpDialogRating diag = GetDialogRating();
-                    diag.HandleAction(action, index);
-                }
-                else if (dialogId == TVSERIES_RATING_ID)
-                {
-                    if (WifiRemote.IsAvailableTVSeries)
-                    {
-                        MpDialogTvSeriesRating diag = GetDialogMpTvSeriesRating();
-                        diag.HandleAction(action, index);
-                    }
-                }
-                else if (dialogId == TVSERIES_PIN_ID)
-                {
-                    if (WifiRemote.IsAvailableTVSeries)
-                    {
-                        MpDialogTvSeriesPin diag = GetDialogMpTvSeriesPin();
-                        diag.HandleAction(action, index);
-                    }
-                }
-                else if (dialogId == MOPI_RATING_ID)
-                {
-                    if (WifiRemote.IsAvailableMovingPictures)
-                    {
-                        MpDialogMovingPicturesRating diag = GetDialogMovingPicturesRating();
-                        diag.HandleAction(action, index);
-                    }
-                }
-                else if (dialogId == MOPI_PIN_ID)
-                {
-                    if (WifiRemote.IsAvailableMovingPictures)
-                    {
-                        MpDialogMovingPicturesPin diag = GetDialogMovingPicturesPin();
-                        diag.HandleAction(action, index);
-                    }
-                }
-            }
-        }
-
-
 
         /// <summary>
         /// Get the WifiRemote message from the given dialog

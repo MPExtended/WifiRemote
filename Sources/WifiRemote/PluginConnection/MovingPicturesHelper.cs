@@ -6,6 +6,9 @@ using MediaPortal.Plugins.MovingPictures.MainUI;
 using MediaPortal.GUI.Library;
 using System.Threading;
 using MediaPortal.Player;
+using WifiRemote.PluginConnection;
+using WifiRemote.MPPlayList;
+using MediaPortal.Playlists;
 
 namespace WifiRemote
 {
@@ -147,6 +150,11 @@ namespace WifiRemote
             }
         }
 
+        /// <summary>
+        /// Check if a dialog is a mopi rating dialog
+        /// </summary>
+        /// <param name="dialog">Dialog</param>
+        /// <returns>true/false ;)</returns>
         internal static bool IsMovingPictureRatingDialog(MediaPortal.Dialogs.GUIDialogWindow dialog)
         {
             if (dialog.GetType().Equals(typeof(Cornerstone.MP.GUIGeneralRating)))
@@ -159,6 +167,11 @@ namespace WifiRemote
             }
         }
 
+        /// <summary>
+        /// Check if a dialog is a mopi pin dialog
+        /// </summary>
+        /// <param name="dialog">Dialog</param>
+        /// <returns>true/false ;)</returns>
         internal static bool IsMovingPicturePinDialog(MediaPortal.Dialogs.GUIDialogWindow dialog)
         {
             if (dialog.GetType().Equals(typeof(Cornerstone.MP.GUIPinCodeDialog)))
@@ -169,6 +182,41 @@ namespace WifiRemote
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Show the details page of a movingpictures movie
+        /// </summary>
+        /// <param name="_movieId">id of movie</param>
+        internal static void ShowMovieDetails(int _movieId)
+        {
+            if (_movieId > 0)
+            {
+                WindowPluginHelper.ActivateWindow(96742, "movieid:" + _movieId.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Create a PlayListItem from a given movie id
+        /// </summary>
+        /// <param name="movieId">id of movie</param>
+        /// <returns>PlayListItem object from movie id</returns>
+        internal static MediaPortal.Playlists.PlayListItem CreatePlaylistItem(int movieId)
+        {
+            DBMovieInfo movie = DBMovieInfo.Get(movieId);
+            if (movie == null)
+            {
+                WifiRemote.LogMessage("Could not find MovingPictures movie with id " + movieId.ToString(), WifiRemote.LogType.Info);
+            }
+            else
+            {
+                PlayListItem item = new PlayListItem();
+                item.FileName = movie.LocalMedia[0].FullPath;
+                item.Description = movie.Title;
+                item.Duration = movie.LocalMedia[0].Duration / 1000;
+                return item;
+            }
+            return null;
         }
     }
 }

@@ -9,11 +9,11 @@ namespace WifiRemote.Messages
     /// <summary>
     /// Represents a MP playlist
     /// </summary>
-    public class MessagePlaylist : IMessage
+    public class MessagePlaylistDetails : IMessage
     {
         public string Type
         {
-            get { return "playlist"; }
+            get { return "playlistdetails"; }
         }
 
         /// <summary>

@@ -16,6 +16,11 @@ namespace WifiRemote.MPPlayList
         public String Name { get; set; }
 
         /// <summary>
+        /// Second Name of the file that will get displayed in the playlist (e.g. album)
+        /// </summary>
+        public String Name2 { get; set; }
+
+        /// <summary>
         /// Full path to the file
         /// </summary>
         public String FileName { get; set; }
@@ -29,5 +34,20 @@ namespace WifiRemote.MPPlayList
         /// Indicates if the item has been played already
         /// </summary>
         public bool Played { get; set; }
+
+        /// <summary>
+        /// MpExtended Id (optional)
+        /// </summary>
+        public string MpExtId{ get; set; }
+
+        /// <summary>
+        /// MpExtended Media Type (optional)
+        /// </summary>
+        public int MpExtMediaType{ get; set; }
+
+        /// <summary>
+        /// MpExtended Provider (optional)
+        /// </summary>
+        public int MpExtProviderId{ get; set; }
     }
 }

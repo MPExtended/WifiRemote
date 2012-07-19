@@ -137,7 +137,7 @@
     <Compile Include="Messages\MessageFacadeInfo.cs" />
     <Compile Include="Messages\MessageNowPlayingUpdate.cs" />
     <Compile Include="Messages\MessageOnscreenKeyboard.cs" />
-    <Compile Include="Messages\MessagePlaylist.cs" />
+    <Compile Include="Messages\MessagePlaylistDetails.cs" />
     <Compile Include="Messages\MessagePlugins.cs" />
     <Compile Include="Messages\MessageProperties.cs" />
     <Compile Include="Messages\MessagePropertyChanged.cs" />
@@ -153,6 +153,7 @@
     <Compile Include="Messages\MessageVolume.cs" />
     <Compile Include="Messages\MessageWelcome.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingMusic.cs" />
+    <Compile Include="MPDialogs\MpDialogsMessageHandler.cs" />
     <Compile Include="MPDialogs\MpDialogProgress.cs" />
     <Compile Include="MPDialogs\MpDialogTvSeriesPin.cs" />
     <Compile Include="MPDialogs\MpDialogMovingPicturesPin.cs" />
@@ -167,17 +168,23 @@
     <Compile Include="MPDialogs\MpDialogTvSeriesRating.cs" />
     <Compile Include="MPDialogs\MpDialogYesNo.cs" />
     <Compile Include="MpExtended\MpExtendedHelper.cs" />
+    <Compile Include="MpExtended\MpExtendedMessageHandler.cs" />
     <Compile Include="MpExtended\MpExtendedProviders.cs" />
     <Compile Include="MpExtended\MpExtendedMediaTypes.cs" />
     <Compile Include="MPFacade\FacadeItem.cs" />
     <Compile Include="MPFacade\MpFacadeHelper.cs" />
+    <Compile Include="MPFacade\MpFacadeMessageHandler.cs" />
     <Compile Include="MPPlayList\PlaylistHelper.cs" />
     <Compile Include="MPPlayList\PlaylistEntry.cs" />
+    <Compile Include="MPPlayList\PlaylistMessageHandler.cs" />
     <Compile Include="PluginConnection\MovingPicturesHelper.cs" />
+    <Compile Include="PluginConnection\MovingPicturesMessageHandler.cs" />
     <Compile Include="PluginConnection\MpMusicHelper.cs" />
     <Compile Include="PluginConnection\MpTvServerHelper.cs" />
     <Compile Include="PluginConnection\MpVideosHelper.cs" />
     <Compile Include="PluginConnection\TVSeriesHelper.cs" />
+    <Compile Include="PluginConnection\TvSeriesMessageHandler.cs" />
+    <Compile Include="PluginConnection\WindowPluginHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -231,6 +238,7 @@
     <None Include="merge.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="Messages\MessagePlaylists.cs" />
     <None Include="Resources\NoPluginImage.png" />
   </ItemGroup>
   <ItemGroup>

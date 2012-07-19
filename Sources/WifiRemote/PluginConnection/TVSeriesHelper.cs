@@ -6,9 +6,13 @@ using WindowPlugins.GUITVSeries;
 using MediaPortal.GUI.Library;
 using System.Threading;
 using MediaPortal.Player;
+using WifiRemote.PluginConnection;
 
 namespace WifiRemote
 {
+    /// <summary>
+    /// Helper class for MpTvSeries actions
+    /// </summary>
     class TVSeriesHelper
     {
         static VideoHandler player = null;
@@ -276,6 +280,24 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// Play an episode of a specific series and season
+        /// 
+        /// Thanks to Trakt-for-MediaPortal:
+        /// https://github.com/Technicolour/Trakt-for-Mediaportal/blob/master/TraktPlugin/TraktHandlers/TVSeries.cs
+        /// </summary>
+        /// <param name="compositeId">Composite id of the episode</param>
+        /// <paraparam name="resume">Resume from last stop?</paraparam>
+        /// <param name="startPosition">Position from which the video should start in seconds (e.g. StartPosition=180 will start the episode 3 minutes into the video). Will be ignored if AskToResume is true.</param>
+        public static void PlayEpisode(String compositeId, bool resume, int startPosition)
+        {
+            var episodes = DBEpisode.Get(new SQLCondition(new DBTable("online_episodes"), "CompositeID", new DBValue(compositeId), SQLConditionType.Equal));
+            var episode = episodes.FirstOrDefault(e => !string.IsNullOrEmpty(e[DBEpisode.cFilename]));
+            if (episode == null) return;
+
+            PlayEpisode(episode, resume, startPosition); ;
+        }
+
+        /// <summary>
         /// Play an episode
         /// 
         /// Thanks to Trakt-for-MediaPortal:
@@ -327,6 +349,11 @@ namespace WifiRemote
             }
         }
 
+        /// <summary>
+        /// Is the dialog a series rating dialog
+        /// </summary>
+        /// <param name="dialog">Dialog</param>
+        /// <returns>true if dialog is a pin dialog, false otherwise</returns>
         internal static bool IsTvSeriesRatingDialog(MediaPortal.Dialogs.GUIDialogWindow dialog)
         {
             if (dialog.GetType().Equals(typeof(WindowPlugins.GUITVSeries.GUIUserRating)))
@@ -339,6 +366,11 @@ namespace WifiRemote
             }
         }
 
+        /// <summary>
+        /// Is the dialog a series pin dialog
+        /// </summary>
+        /// <param name="dialog">Dialog</param>
+        /// <returns>true if dialog is a pin dialog, false otherwise</returns>
         internal static bool IsTvSeriesPinDialog(MediaPortal.Dialogs.GUIDialogWindow dialog)
         {
             if (dialog.GetType().Equals(typeof(WindowPlugins.GUITVSeries.GUIPinCode)))
@@ -349,6 +381,114 @@ namespace WifiRemote
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Show episode details
+        /// </summary>
+        /// <param name="seriesId">Id of series</param>
+        /// <param name="seasonId">Id of season</param>
+        /// <param name="episodeId">Id of episode</param>
+        internal static void ShowEpisodeDetails(int seriesId, int seasonId, int episodeId)
+        {
+            if (seriesId > 0)
+            {
+                WindowPluginHelper.ActivateWindow(9811, "seriesid:" + seriesId + "|seasonidx:" + seasonId + "|episodeidx:" + episodeId);
+            }
+        }
+
+        /// <summary>
+        /// Show season details
+        /// </summary>
+        /// <param name="seriesId">Id of series</param>
+        /// <param name="seasonId">Id of season</param>
+        internal static void ShowSeasonDetails(int seriesId, int seasonId)
+        {
+            if (seriesId > 0)
+            {
+                WindowPluginHelper.ActivateWindow(9811, "seriesid:" + seriesId + "|seasonidx:" + seasonId);
+            }
+        }
+
+        /// <summary>
+        /// Show series details
+        /// </summary>
+        /// <param name="seriesId">Id of series</param>
+        internal static void ShowSeriesDetails(int seriesId)
+        {
+            if (seriesId > 0)
+            {
+                WindowPluginHelper.ActivateWindow(9811, "seriesid:" + seriesId.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// Create PlayListItem from TvSeries episode id
+        /// </summary>
+        /// <param name="compositeId">Composite id of episode</param>
+        /// <returns>PlayListItem item</returns>
+        internal static MediaPortal.Playlists.PlayListItem CreatePlaylistItemFromEpisode(String compositeId)
+        {
+            var episodes = DBEpisode.Get(new SQLCondition(new DBTable("online_episodes"), "CompositeID", new DBValue(compositeId), SQLConditionType.Equal));
+            var episode = episodes.FirstOrDefault(e => !string.IsNullOrEmpty(e[DBEpisode.cFilename]));
+        
+            return CreatePlaylistItemFromEpisode(episode);
+        }
+
+        /// <summary>
+        /// Create PlayListItem from TvSeries DBEpisode
+        /// </summary>
+        /// <param name="episode">DBEpisode</param>
+        /// <returns>PlayListItem item</returns>
+        private static MediaPortal.Playlists.PlayListItem CreatePlaylistItemFromEpisode(DBEpisode episode)
+        {
+            if (episode != null)
+            {
+                MediaPortal.Playlists.PlayListItem item = new MediaPortal.Playlists.PlayListItem();
+                item.FileName = episode[DBEpisode.cFilename];
+                item.Duration = episode[DBEpisode.cLocalPlaytime] / 1000;
+                item.Description = episode[DBOnlineEpisode.cEpisodeName];
+                return item;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Create PlayListItem from TvSeries show and season number
+        /// </summary>
+        /// <param name="seriesId">Id of show</param>
+        /// <param name="seasonNumber">Season number</param>
+        /// <returns>PlayListItem item</returns>
+        internal static List<MediaPortal.Playlists.PlayListItem> CreatePlaylistItemsFromSeason(int seriesId, int seasonNumber)
+        {
+            List<MediaPortal.Playlists.PlayListItem> returnList = new List<MediaPortal.Playlists.PlayListItem>();
+            var episodes = DBEpisode.Get(seriesId, seasonNumber);
+
+            foreach (DBEpisode e in episodes)
+            {
+                returnList.Add(CreatePlaylistItemFromEpisode(e));
+            }
+
+            return returnList;
+        }
+
+        /// <summary>
+        /// Create PlayListItem from TvSeries show
+        /// </summary>
+        /// <param name="seriesId">Id of show</param>
+        /// <returns>PlayListItem item</returns>
+        internal static List<MediaPortal.Playlists.PlayListItem> CreatePlaylistItemsFromShow(int seriesId)
+        {
+            List<MediaPortal.Playlists.PlayListItem> returnList = new List<MediaPortal.Playlists.PlayListItem>();
+            var episodes = DBEpisode.Get(seriesId);
+
+            foreach (DBEpisode e in episodes)
+            {
+                returnList.Add(CreatePlaylistItemFromEpisode(e));
+            }
+
+            return returnList;
         }
     }
 }

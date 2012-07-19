@@ -8,6 +8,9 @@ using TvPlugin;
 
 namespace WifiRemote.PluginConnection
 {
+    /// <summary>
+    /// Helper class for MP TvServer actions
+    /// </summary>
     public class MpTvServerHelper
     {
         protected delegate void PlayRecordingDelegate(int recordingId, int startPos, bool startFullscreen);
@@ -84,6 +87,38 @@ namespace WifiRemote.PluginConnection
             {
                 Log.Warn("Couldn't retrieve channel for id: " + channelId);
             }
+        }
+
+        /// <summary>
+        /// Show the details of a tv recording in MediaPortal
+        /// </summary>
+        /// <param name="recordingId">Id of recording</param>
+        internal static void ShowRecordingDetails(int recordingId)
+        {
+            
+            WifiRemote.LogMessage("Not implemented yet for mp recording", WifiRemote.LogType.Info);
+        }
+
+
+        /// <summary>
+        /// Show the details page of a tv channel
+        /// </summary>
+        /// <param name="tvChannelId">Id of channel</param>
+        internal static void ShowTvChannelDetails(int tvChannelId)
+        {
+            WifiRemote.LogMessage("Not implemented yet for mp tv channels", WifiRemote.LogType.Info);
+        }
+
+        /// <summary>
+        /// Create a playlist item from a MP recording
+        /// </summary>
+        /// <param name="recordingId">Id of recording</param>
+        /// <returns>Playlist item</returns>
+        internal static MediaPortal.Playlists.PlayListItem CreatePlaylistItemFromRecording(int recordingId)
+        {
+            WifiRemote.LogMessage("Not implemented yet for mp tv recordings", WifiRemote.LogType.Info);
+
+            return null;
         }
     }
 }

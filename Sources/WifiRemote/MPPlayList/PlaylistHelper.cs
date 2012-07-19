@@ -10,29 +10,33 @@ using MediaPortal.Video.Database;
 using MediaPortal.Util;
 using MediaPortal.Configuration;
 using System.IO;
+using WifiRemote.PluginConnection;
+using WifiRemote.Messages;
+using Newtonsoft.Json.Linq;
 
 namespace WifiRemote.MPPlayList
 {
     class PlaylistHelper
     {
         protected delegate void StartPlayingPlaylistDelegate(bool switchToPlaylistView);
+        
         private static int mPlaylistStartIndex = 0;
         private static PlayListType mPlaylistStartType;
 
-                /// <summary>
+        /// <summary>
         /// Adds a song to a playlist
         /// </summary>
         /// <param name="type">Type of the playlist</param>
         /// <param name="file">File that gets added</param>
         /// <param name="index">Index where the item should be added</param>
-        public static void AddSongToPlaylist(String type, String file, int index)
+        public static void AddItemToPlaylist(String type, String file, int index)
         {
             PlaylistEntry entry = new PlaylistEntry();
             FileInfo fileInfo = new FileInfo(file);
             entry.FileName = fileInfo.FullName;
             entry.Name = fileInfo.Name;
 
-            AddSongToPlaylist(type, entry, index);
+            AddItemToPlaylist(type, entry, index);
         }
 
         /// <summary>
@@ -41,7 +45,7 @@ namespace WifiRemote.MPPlayList
         /// <param name="type">Type of the playlist</param>
         /// <param name="entry">Item that gets added</param>
         /// <param name="index">Index where the item should be added</param>
-        public static void AddSongToPlaylist(String type, PlaylistEntry entry, int index)
+        public static void AddItemToPlaylist(String type, PlaylistEntry entry, int index)
         {
             PlayListType plType = GetTypeFromString(type);
             PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
@@ -71,12 +75,15 @@ namespace WifiRemote.MPPlayList
                     item = ToPlayListItem(movie);
                 }
             }
-            
-            if(item == null){
+
+            if (item == null)
+            {
                 item = new PlayListItem(entry.Name, entry.FileName, entry.Duration);
             }
 
             playList.Insert(item, index);
+
+            RefreshPlaylistIfVisible();
         }
 
         /// <summary>
@@ -129,7 +136,7 @@ namespace WifiRemote.MPPlayList
         {
             // Only working for music atm
             PlayListType plType = GetTypeFromString(type);
-            
+
             if (plType == PlayListType.PLAYLIST_MUSIC)
             {
                 string playlistPath = String.Empty;
@@ -174,6 +181,39 @@ namespace WifiRemote.MPPlayList
         }
 
         /// <summary>
+        /// Save the current playlist to file
+        /// </summary>
+        /// <param name="name">Name of new playlist</param>
+        internal static void SaveCurrentPlaylist(string name)
+        {
+            try
+            {
+                using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
+                {
+                    string playlistFolder = reader.GetValueAsString("music", "playlists", "");
+
+                    if (!Path.IsPathRooted(playlistFolder))
+                    {
+                        playlistFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), playlistFolder);
+                    }
+
+                    PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
+                    PlayList playList = playListPlayer.GetPlaylist(playListPlayer.CurrentPlaylistType);
+
+                    String fileName = Path.Combine(playlistFolder, name + ".m3u");
+
+                    PlayListM3uIO m3uPlayList = new PlayListM3uIO();
+                    m3uPlayList.Save(playList, fileName);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                WifiRemote.LogMessage("Error saving playlist: " + ex.ToString(), WifiRemote.LogType.Warn);
+            }
+        }
+
+        /// <summary>
         /// Shuffle a playlist
         /// </summary>
         /// <param name="type">Type of the playlist</param>
@@ -182,7 +222,7 @@ namespace WifiRemote.MPPlayList
             PlayListType plType = GetTypeFromString(type);
             PlayListPlayer.SingletonPlayer.GetPlaylist(plType).Shuffle();
         }
-       
+
         /// <summary>
         /// Returns a playlistitem from a song
         /// 
@@ -194,7 +234,7 @@ namespace WifiRemote.MPPlayList
         /// </summary>
         /// <param name="song">Song</param>
         /// <returns>Playlistitem from a song</returns>
-        private static PlayListItem ToPlayListItem(Song song)
+        internal static PlayListItem ToPlayListItem(Song song)
         {
             PlayListItem pli = new PlayListItem();
 
@@ -215,7 +255,7 @@ namespace WifiRemote.MPPlayList
             pli.FileName = movie.File;
             pli.Description = movie.Title;
             pli.Duration = movie.RunTime;
-   
+
             return pli;
         }
 
@@ -238,6 +278,8 @@ namespace WifiRemote.MPPlayList
                 playList.Remove(item.FileName);
                 //Note: we need -1 here, because Insert wants the item after which the song should be inserted, not the actual index
                 playList.Insert(item, newIndex - 1);
+
+                RefreshPlaylistIfVisible();
             }
             else
             {
@@ -255,6 +297,8 @@ namespace WifiRemote.MPPlayList
             PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
             PlayList playList = playListPlayer.GetPlaylist(plType);
             playList.Clear();
+
+            RefreshPlaylistIfVisible();
         }
 
         /// <summary>
@@ -262,7 +306,7 @@ namespace WifiRemote.MPPlayList
         /// </summary>
         /// <param name="type">Type of the playlist</param>
         /// <param name="index">Index that should be removed</param>
-        public static void RemoveSongFromPlaylist(String type, int index)
+        public static void RemoveItemFromPlaylist(String type, int index)
         {
             PlayListType plType = GetTypeFromString(type);
             PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
@@ -273,6 +317,8 @@ namespace WifiRemote.MPPlayList
                 PlayListItem item = playList[index];
                 playList.Remove(item.FileName);
             }
+
+            RefreshPlaylistIfVisible();
         }
 
         /// <summary>
@@ -294,6 +340,12 @@ namespace WifiRemote.MPPlayList
                 entry.Name = item.Description;
                 entry.Duration = item.Duration;
                 entry.Played = item.Played;
+
+                if (item.Type == PlayListItem.PlayListItemType.Audio)
+                {
+                    MpMusicHelper.AddMpExtendedInfo(item, entry);
+                }
+
                 retList.Add(entry);
             }
 
@@ -336,6 +388,31 @@ namespace WifiRemote.MPPlayList
         }
 
         /// <summary>
+        /// Get all available playlists (playlists in the mp playlist folder)
+        /// </summary>
+        /// <returns>List of playlist names</returns>
+        public static List<String> GetPlaylists()
+        {
+            List<String> playlists = new List<String>();
+            // Get playlist folder from mp config
+            using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
+            {
+                string playlistFolder = reader.GetValueAsString("music", "playlists", "");
+
+                if (!Path.IsPathRooted(playlistFolder))
+                {
+                    playlistFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), playlistFolder);
+                }
+
+                foreach (String f in Directory.GetFiles(playlistFolder))
+                {
+                    playlists.Add(new FileInfo(f).Name);
+                }
+            }
+            return playlists;
+        }
+
+        /// <summary>
         /// Private method to start playlist (needed for the invoke callback)
         /// </summary>
         private static void StartPlayingPlaylist(bool switchToPlaylistView)
@@ -357,11 +434,11 @@ namespace WifiRemote.MPPlayList
                     {
                         if (mPlaylistStartType == PlayListType.PLAYLIST_MUSIC)
                         {
-                            GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_MUSIC_PLAYLIST);
+                            WindowPluginHelper.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_MUSIC_PLAYLIST);
                         }
                         else if (mPlaylistStartType == PlayListType.PLAYLIST_VIDEO)
                         {
-                            GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_VIDEO_PLAYLIST);
+                            WindowPluginHelper.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_VIDEO_PLAYLIST);
                         }
                     }
 
@@ -370,6 +447,50 @@ namespace WifiRemote.MPPlayList
                     playlistPlayer.Reset();
                     playlistPlayer.Play(mPlaylistStartIndex);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Add a list of playlist items to the current playlist
+        /// </summary>
+        /// <param name="type">Type of playlist (e.g. video/music)</param>
+        /// <param name="items">Items that we want to add</param>
+        /// <param name="startIndex">Where should the items be added (-1 will append them at the end)</param>
+        internal static void AddPlaylistItems(PlayListType type, List<PlayListItem> items, int startIndex)
+        {
+            PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
+            PlayList playList = playListPlayer.GetPlaylist(type);
+
+            if (startIndex == -1 || startIndex >= playList.Count)
+            {
+                startIndex = playList.Count;
+            }
+            else if (startIndex < 0)
+            {
+                startIndex = 0;
+            }
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                //Note: we need -1 here, because Insert wants the item after which the song should be inserted, not the actual index
+                playList.Insert(items[i], i + startIndex - 1);
+            }
+
+            RefreshPlaylistIfVisible();
+        }
+
+        /// <summary>
+        /// refresh the playlist window if it's currently active, so the newly added items will show
+        /// </summary>
+        private static void RefreshPlaylistIfVisible()
+        {
+            if (GUIWindowManager.ActiveWindow == (int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_VIDEO_PLAYLIST)
+            {
+                WindowPluginHelper.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_VIDEO_PLAYLIST);
+            }
+            else if (GUIWindowManager.ActiveWindow == (int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_MUSIC_PLAYLIST)
+            {
+                WindowPluginHelper.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_MUSIC_PLAYLIST);
             }
         }
     }

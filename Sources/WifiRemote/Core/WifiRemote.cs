@@ -631,7 +631,10 @@ namespace WifiRemote
         /// </summary>
         public void SendStatus()
         {
-            socketServer.SendStatusToAllClientsIfChanged();
+            if (socketServer != null)
+            {
+                socketServer.SendStatusToAllClientsIfChanged();
+            }
         }
 
         /// <summary>

@@ -5,9 +5,13 @@ using System.Text;
 using MediaPortal.Music.Database;
 using WifiRemote.MPPlayList;
 using System.IO;
+using MediaPortal.Playlists;
 
 namespace WifiRemote.PluginConnection
 {
+    /// <summary>
+    /// Helper class for MpMusic actions
+    /// </summary>
     public class MpMusicHelper
     {
         /// <summary>
@@ -43,14 +47,14 @@ namespace WifiRemote.PluginConnection
             {
                 PlaylistHelper.ClearPlaylist("music");
                 int index = 0;
-                foreach(Song s in songs)
+                foreach (Song s in songs)
                 {
 
                     PlaylistEntry entry = new PlaylistEntry();
                     entry.FileName = s.FileName;
                     entry.Name = s.Title;
                     entry.Duration = s.Duration;
-                    PlaylistHelper.AddSongToPlaylist("music", entry, index);
+                    PlaylistHelper.AddItemToPlaylist("music", entry, index);
                     index++;
                 }
 
@@ -80,7 +84,7 @@ namespace WifiRemote.PluginConnection
                     entry.FileName = s.FileName;
                     entry.Name = s.Title;
                     entry.Duration = s.Duration;
-                    PlaylistHelper.AddSongToPlaylist("music", entry, index);
+                    PlaylistHelper.AddItemToPlaylist("music", entry, index);
                     index++;
                 }
 
@@ -106,7 +110,7 @@ namespace WifiRemote.PluginConnection
                 {
                     if (isValidExtension(f, extensions))
                     {
-                        PlaylistHelper.AddSongToPlaylist("music", f, index);
+                        PlaylistHelper.AddItemToPlaylist("music", f, index);
                         index++;
                     }
                 }
@@ -147,7 +151,7 @@ namespace WifiRemote.PluginConnection
             MusicDatabase mpMusicDb = MusicDatabase.Instance;
             Song song = new Song();
             bool inDb = mpMusicDb.GetSongByFileName(file, ref song);
-            
+
             if (inDb)
             {
                 //TODO: fill OSD information
@@ -157,6 +161,118 @@ namespace WifiRemote.PluginConnection
             {
                 new Communication().PlayAudioFile(file, startPos);
             }
+        }
+
+        internal static void ShowMusicTrackDetails(int _trackId)
+        {
+            WifiRemote.LogMessage("Not implemented yet for mp music", WifiRemote.LogType.Info);
+        }
+
+        internal static void ShowAlbumDetails(string p, string p_2)
+        {
+            WifiRemote.LogMessage("Not implemented yet for mp music", WifiRemote.LogType.Info);
+        }
+
+        internal static void ShowArtistDetails(string p)
+        {
+            WifiRemote.LogMessage("Not implemented yet for mp music", WifiRemote.LogType.Info);
+        }
+
+        internal static void ShowFileDetails(string p)
+        {
+            WifiRemote.LogMessage("Not implemented yet for mp music", WifiRemote.LogType.Info);
+        }
+
+        internal static void ShowFolderDetails(string p)
+        {
+            WifiRemote.LogMessage("Not implemented yet for mp music", WifiRemote.LogType.Info);
+        }
+
+
+        /// <summary>
+        /// Add MpExtended information to playlist item
+        /// </summary>
+        /// <param name="item">MediaPortal playlist item</param>
+        /// <param name="message">Playlist message item that is sent to client</param>
+        internal static void AddMpExtendedInfo(MediaPortal.Playlists.PlayListItem item, PlaylistEntry message)
+        {
+            MusicDatabase mpMusicDb = MusicDatabase.Instance;
+            Song song = new Song();
+            bool inDb = mpMusicDb.GetSongByFileName(item.FileName, ref song);
+
+            if (inDb)
+            {
+                message.Name2 = song.Album;
+                message.MpExtId = song.Id.ToString();
+                message.MpExtMediaType = (int)MpExtended.MpExtendedMediaTypes.MusicTrack;
+                message.MpExtProviderId = (int)MpExtended.MpExtendedProviders.MPMusic;
+            }
+        }
+
+        /// <summary>
+        /// Create a playlist item given a track id
+        /// </summary>
+        /// <param name="trackId">track id</param>
+        /// <returns>Playlist item</returns>
+        internal static MediaPortal.Playlists.PlayListItem CreatePlaylistItemFromMusicTrack(int trackId)
+        {
+            PlayListItem item = null;
+
+            List<Song> songs = new List<Song>();
+            string sql = "select * from tracks where idTrack=" + trackId;
+            MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
+
+            if (songs.Count > 0)
+            {
+                item = PlaylistHelper.ToPlayListItem(songs[0]);
+            }
+
+            return item;
+        }
+
+        /// <summary>
+        /// Create a playlist item given an album and artist
+        /// </summary>
+        /// <param param name="album">Album</param>
+        /// <param name="albumArtist">Album Artist</param>
+        /// <returns>Playlist items</returns>
+        internal static List<PlayListItem> CreatePlaylistItemsFromMusicAlbum(string albumArtist, string album)
+        {
+            List<PlayListItem> returnList = new List<PlayListItem>();
+            List<Song> songs = new List<Song>();
+            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%' AND strAlbum LIKE '%" + album + "%'";
+            MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
+
+            if (songs.Count > 0)
+            {
+                foreach (Song s in songs)
+                {
+                    returnList.Add(PlaylistHelper.ToPlayListItem(songs[0]));
+                }
+            }
+            return returnList;
+        }
+
+        /// <summary>
+        /// Create a playlist item given a artist id
+        /// </summary>
+        /// <param name="albumArtist">Album Artist</param>
+        /// <returns>Playlist items</returns>
+        internal static List<PlayListItem> CreatePlaylistItemsFromMusicArtist(string albumArtist)
+        {
+            List<PlayListItem> returnList = new List<PlayListItem>();
+            List<Song> songs = new List<Song>();
+            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%'"; 
+            MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
+
+            if (songs.Count > 0)
+            {
+                foreach (Song s in songs)
+                {
+                    returnList.Add(PlaylistHelper.ToPlayListItem(songs[0]));
+                }
+            }
+            return returnList;
         }
     }
 }

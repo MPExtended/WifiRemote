@@ -13,6 +13,7 @@ using WifiRemote.MpExtended;
 using WifiRemote.MPFacade;
 using WifiRemote.MPDialogs;
 using WifiRemote.PluginConnection;
+using MediaPortal.Playlists;
 
 namespace WifiRemote
 {
@@ -567,7 +568,7 @@ namespace WifiRemote
                     else if (type == "window")
                     {
                         int windowId = (int)message["Window"];
-                        communication.OpenWindow(windowId);
+                        WindowPluginHelper.OpenWindow(windowId);
                     }
                     // Activate a window without resetting last activity
                     else if (type == "activatewindow")
@@ -575,15 +576,15 @@ namespace WifiRemote
                         int windowId = (int)message["Window"];
                         string param = (string)message["Parameter"];
 
-                        communication.ActivateWindow(windowId, param);
+                        WindowPluginHelper.ActivateWindow(windowId, param);
                     }
                     else if (type == "dialog")
                     {
-                        MpDialogsHelper.HandleDialogAction(message, this, sender);
+                        MpDialogsMessageHandler.HandleDialogAction(message, this, sender);
                     }
                     else if (type == "facade")
                     {
-                        MpFacadeHelper.HandleFacadeMessage(message, this, sender);
+                        MpFacadeMessageHandler.HandleFacadeMessage(message, this, sender);
                     }
                     // Shutdown/hibernate/reboot system or exit mediaportal
                     else if (type == "powermode")
@@ -688,16 +689,10 @@ namespace WifiRemote
                             MpTvServerHelper.PlayRecording(recordingId, startPos, startFullscreen);
                         }
                     }
-                    // play a media item on the client
-                    else if (type == "playmediaitem")
+                    // invoke an action on a MpExtended item
+                    else if (type == "mpext")
                     {
-                        string itemId = (string)message["ItemId"];
-                        int itemType = (int)message["MediaType"];
-                        int providerId = (int)message["ProviderId"];
-                        Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(message["PlayInfo"].ToString());
-                        int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
-                        WifiRemote.LogMessage("playmediaitem: ItemId: " + itemId + ", itemType: " + itemType + ", providerId: " + providerId, WifiRemote.LogType.Debug);
-                        MpExtendedHelper.PlayMediaItem(itemId, itemType, providerId, values, startPos);
+                        MpExtendedMessageHandler.HandleMpExtendedMessage(message, this, sender);
                     }
                     // Reply with a list of installed and active window plugins
                     // with icon and windowId
@@ -739,116 +734,7 @@ namespace WifiRemote
                     //playlist actions
                     else if (type == "playlist")
                     {
-                        String action = (string)message["PlaylistAction"];
-                        String playlistType = (message["PlaylistType"] != null) ? (string)message["PlaylistType"] : "music";
-                        bool shuffle = (message["Shuffle"] != null) ? (bool)message["Shuffle"] : false;
-                        bool autoPlay = (message["AutoPlay"] != null) ? (bool)message["AutoPlay"] : false;
-                        bool showPlaylist = (message["ShowPlaylist"] != null) ? (bool)message["ShowPlaylist"] : true;
-
-                        if (action.Equals("new") || action.Equals("append"))
-                        {
-
-                            int insertIndex = 0;
-                            if (message["InsertIndex"] != null)
-                            {
-                                insertIndex = (int)message["InsertIndex"];
-                            }
-
-                            // Add items from JSON or SQL
-                            JArray array = (message["PlaylistItems"] != null) ? (JArray)message["PlaylistItems"] : null;
-                            JObject sql = (message["PlayListSQL"] != null) ? (JObject)message["PlayListSQL"] : null;
-                            if (array != null || sql != null)
-                            {
-                                if (action.Equals("new"))
-                                {
-                                    PlaylistHelper.ClearPlaylist(playlistType);
-                                }
-
-                                int index = insertIndex;
-
-                                if (array != null)
-                                {
-                                    // Add items from JSON
-                                    foreach (JObject o in array)
-                                    {
-                                        PlaylistEntry entry = new PlaylistEntry();
-                                        entry.FileName = (o["FileName"] != null) ? (string)o["FileName"] : null;
-                                        entry.Name = (o["Name"] != null) ? (string)o["Name"] : null;
-                                        entry.Duration = (o["Duration"] != null) ? (int)o["Duration"] : 0;
-                                        PlaylistHelper.AddSongToPlaylist(playlistType, entry, index);
-                                        index++;
-                                    }
-
-                                    if (shuffle)
-                                    {
-                                        PlaylistHelper.Shuffle(playlistType);
-                                    }
-                                }
-                                else
-                                {
-                                    // Add items with SQL
-                                    string where = (sql["Where"] != null) ? (string)sql["Where"] : String.Empty;
-                                    int limit = (sql["Limit"] != null) ? (int)sql["Limit"] : 0;
-
-                                    PlaylistHelper.AddSongsToPlaylistWithSQL(playlistType, where, limit, shuffle, insertIndex);
-                                }
-
-                                if (autoPlay)
-                                {
-                                    if (message["StartPosition"] != null)
-                                    {
-                                        int startPos = (int)message["StartPosition"];
-                                        insertIndex += startPos;
-                                    }
-                                    PlaylistHelper.StartPlayingPlaylist(playlistType, insertIndex, showPlaylist);
-                                }
-                            }
-                        }
-                        else if (action.Equals("load"))
-                        {
-                            string playlistName = (string)message["PlayListName"];
-                            string playlistPath = (string)message["PlaylistPath"];
-
-                            if (!string.IsNullOrEmpty(playlistName) || !string.IsNullOrEmpty(playlistPath))
-                            {
-                                PlaylistHelper.LoadPlaylist(playlistType, (!string.IsNullOrEmpty(playlistName)) ? playlistName : playlistPath, shuffle);
-                                if (autoPlay)
-                                {
-                                    PlaylistHelper.StartPlayingPlaylist(playlistType, 0, showPlaylist);
-                                }
-                            }
-                        }
-                        else if (action.Equals("get"))
-                        {
-                            List<PlaylistEntry> items = PlaylistHelper.GetPlaylistItems(playlistType);
-
-                            MessagePlaylist returnPlaylist = new MessagePlaylist();
-                            returnPlaylist.PlaylistType = type;
-                            returnPlaylist.PlaylistItems = items;
-
-                            SendMessageToClient(returnPlaylist, sender);
-                        }
-                        else if (action.Equals("remove"))
-                        {
-                            int indexToRemove = (message["Index"] != null) ? (int)message["Index"] : 0;
-
-                            PlaylistHelper.RemoveSongFromPlaylist(playlistType, indexToRemove);
-                        }
-                        else if (action.Equals("move"))
-                        {
-                            int oldIndex = (message["OldIndex"] != null) ? (int)message["OldIndex"] : 0;
-                            int newIndex = (message["NewIndex"] != null) ? (int)message["NewIndex"] : 0;
-                            PlaylistHelper.ChangePlaylistItemPosition(playlistType, oldIndex, newIndex);
-                        }
-                        else if (action.Equals("play"))
-                        {
-                            int index = (message["Index"] != null) ? (int)message["Index"] : 0;
-                            PlaylistHelper.StartPlayingPlaylist(playlistType, index, showPlaylist);
-                        }
-                        else if (action.Equals("clear"))
-                        {
-                            PlaylistHelper.ClearPlaylist(playlistType);
-                        }
+                        PlaylistMessageHandler.HandlePlaylistMessage(message, this, sender);
                     }
                     // Send the current status to the client
                     else if (type == "requeststatus")
@@ -865,43 +751,7 @@ namespace WifiRemote
                     {
                         if (WifiRemote.IsAvailableMovingPictures)
                         {
-                            string action = (string)message["Action"];
-
-                            if (!string.IsNullOrEmpty(action))
-                            {
-                                // Show movie details for this movie
-                                if (action == "moviedetails")
-                                {
-                                    string movieName = (string)message["MovieName"];
-                                    if (!string.IsNullOrEmpty(movieName))
-                                    {
-                                        int movieId = MovingPicturesHelper.GetMovieIdByName(movieName);
-                                        if (movieId > 0)
-                                        {
-                                            communication.ActivateWindow(96742, "movieid:" + movieId.ToString());
-                                        }
-                                    }
-                                }
-                                // Play a movie with MovingPictures
-                                else if (action == "playmovie")
-                                {
-                                    int movieId = (message["MovieId"] != null) ? (int)message["MovieId"] : -1;
-                                    string movieName = (string)message["MovieName"];
-                                    bool resume = (message["AskToResume"] != null) ? (bool)message["AskToResume"] : true;
-                                    int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
-
-                                    // Play by movie id
-                                    if (movieId != -1)
-                                    {
-                                        MovingPicturesHelper.PlayMovie(movieId, resume, startPos);
-                                    }
-                                    else if (!string.IsNullOrEmpty(movieName))
-                                    {
-                                        // Play by name
-                                        MovingPicturesHelper.PlayMovie(movieName, resume, startPos);
-                                    }
-                                }
-                            }
+                            MovingPicturesMessageHandler.HandleMovingPicturesMessage(message, this, sender);
                         }
                         else
                         {
@@ -913,74 +763,7 @@ namespace WifiRemote
                     {
                         if (WifiRemote.IsAvailableTVSeries)
                         {
-                            string action = (string)message["Action"];
-
-                            if (!string.IsNullOrEmpty(action))
-                            {
-                                // A series id is needed for the following actions. 
-                                // If a series id was supplied we use this, otherwise we
-                                // try to get an id by the series name.
-                                //
-                                // If this isn't successful we do nothing.
-                                int? seriesId = (int?)message["SeriesId"];
-                                string seriesName = (string)message["SeriesName"];
-                                bool resume = (message["AskToResume"] != null) ? (bool)message["AskToResume"] : true;
-
-                                // Get series id by show name if no id supplied
-                                if (seriesId == null && !string.IsNullOrEmpty(seriesName))
-                                {
-                                    seriesId = TVSeriesHelper.GetSeriesIdByName(seriesName);
-                                }
-
-                                if (seriesId != null)
-                                {
-                                    // Play specific episode of series
-                                    if (action == "playepisode")
-                                    {
-                                        int? season = (int?)message["SeasonNumber"];
-                                        int? episode = (int?)message["EpisodeNumber"];
-                                        int startPos = (message["StartPosition"] != null) ? (int)message["StartPosition"] : 0;
-
-                                        if (season != null && episode != null)
-                                        {
-                                            TVSeriesHelper.Play((int)seriesId, (int)season, (int)episode, resume, startPos);
-                                        }
-                                    }
-                                    // Play first unwatched or last added episode of a series
-                                    else if (action == "playunwatchedepisode")
-                                    {
-                                        TVSeriesHelper.PlayFirstUnwatchedEpisode((int)seriesId, resume);
-                                    }
-                                    // Play random episode of a series
-                                    else if (action == "playrandomepisode")
-                                    {
-                                        TVSeriesHelper.PlayRandomEpisode((int)seriesId, resume);
-                                    }
-                                    // Play all episodes of a season
-                                    else if (action == "playseason")
-                                    {
-                                        int? season = (int?)message["SeasonNumber"];
-                                        bool onlyUnwatched = (message["OnlyUnwatchedEpisodes"] != null) ? (bool)message["OnlyUnwatchedEpisodes"] : false;
-                                        int startIndex = (message["StartIndex"] != null) ? (int)message["StartIndex"] : 0;
-                                        bool switchToPlaylistView = (message["SwitchToPlaylist"] != null) ? (bool)message["SwitchToPlaylist"] : true;
-                                        bool startAutomatically = (message["AutoStart"] != null) ? (bool)message["AutoStart"] : true;
-                                        if (season != null)
-                                        {
-                                            TVSeriesHelper.PlaySeason((int)seriesId, (int)season, startAutomatically, startIndex, onlyUnwatched, switchToPlaylistView);
-                                        }
-                                    }
-                                    // Play all episodes of a series
-                                    else if (action == "playseries")
-                                    {
-                                        bool onlyUnwatched = (message["OnlyUnwatchedEpisodes"] != null) ? (bool)message["OnlyUnwatchedEpisodes"] : false;
-                                        int startIndex = (message["StartIndex"] != null) ? (int)message["StartIndex"] : 0;
-                                        bool switchToPlaylistView = (message["SwitchToPlaylist"] != null) ? (bool)message["SwitchToPlaylist"] : true;
-                                        bool startAutomatically = (message["AutoStart"] != null) ? (bool)message["AutoStart"] : true;
-
-                                        TVSeriesHelper.PlaySeries((int)seriesId, startAutomatically, startIndex, onlyUnwatched, switchToPlaylistView);
-                                    }
-                                }
-                            }
+                            TvSeriesMessageHandler.HandleTvSeriesMessage(message, this, sender);
                         }
                         else
                         {
