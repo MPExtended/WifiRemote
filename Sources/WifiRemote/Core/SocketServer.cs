@@ -94,6 +94,11 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// Display Notifications when clients connect/disconnect (needs MpNotifications plugin)
+        /// </summary>
+        internal bool ShowNotifications { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// Initialise and setup the socket server.
         /// </summary>
@@ -429,6 +434,11 @@ namespace WifiRemote
         /// <param name="sender"></param>
         void newSocket_DidClose(AsyncSocket sender)
         {
+            if (WifiRemote.IsAvailableNotificationBar && ShowNotifications)
+            {
+                MpNotificationHelper.SendNotification("Client disconnected: " + sender.GetRemoteClient().ClientName);
+            }
+
             // Remove the client from the client list.
             lock (connectedSockets)
             {
@@ -534,10 +544,6 @@ namespace WifiRemote
                     if (type == "command")
                     {
                         string command = (string)message["Command"];
-                        if (command != null)
-                        {
-                            communication.SendCommand(command);
-                        }
                     }
                     // Send a key press
                     else if (type == "key")
@@ -770,6 +776,17 @@ namespace WifiRemote
                             WifiRemote.LogMessage("MP-TVSeries not installed but required!", WifiRemote.LogType.Error);
                         }
                     }
+                    // Show a text in MediaPortal
+                    else if (type == "message")
+                    {
+                        String text = (String)message["Text"];
+                        int timeout = (message["Timeout"] != null) ? (int)message["Timeout"] : 2;
+                        if (WifiRemote.IsAvailableNotificationBar && ShowNotifications)
+                        {
+                            MpNotificationHelper.SendNotification(text, timeout);
+                        }
+
+                    }
                     else
                     {
                         // Unknown command. Log or inform user ...
@@ -816,9 +833,18 @@ namespace WifiRemote
 
                             // Turn on display
                             keybd_event(VK_LSHIFT, 0x45, KEYEVENTF_KEYUP, 0);
+
+                            if (WifiRemote.IsAvailableNotificationBar && ShowNotifications)
+                            {
+                                MpNotificationHelper.SendNotification("Client connected: " + client.ClientName);
+                            }
                         }
                         else
                         {
+                            if (WifiRemote.IsAvailableNotificationBar && ShowNotifications)
+                            {
+                                MpNotificationHelper.SendNotification("Client authentication failed: " + client.ClientName);
+                            }
                             // Client sends a message other then authenticate when not yet
                             // authenticated or authenticate failed
                             SendAuthenticationResponse(sender, false);

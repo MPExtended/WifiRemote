@@ -71,6 +71,7 @@ namespace WifiRemote
                 originalPort = reader.GetValue(WifiRemote.PLUGIN_NAME, "port");
                 checkBoxDisableBonjour.Checked = reader.GetValueAsBool(WifiRemote.PLUGIN_NAME, "disableBonjour", false);
                 textBoxName.Text = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "serviceName", WifiRemote.GetServiceName());
+                checkBoxShowConnectionMessage.Checked = reader.GetValueAsBool(WifiRemote.PLUGIN_NAME, "showNotifications", false);
 
                 txtUsername.Text = WifiRemote.DecryptString(reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", ""));
                 txtPassword.Text = WifiRemote.DecryptString(reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", ""));
@@ -78,6 +79,8 @@ namespace WifiRemote
 
                 cbAuthMethod.SelectedIndex = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
                 numericUpDownAutologin.Value = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "autologinTimeout", 0);
+
+
 
                 resetPort();
 
@@ -273,7 +276,7 @@ namespace WifiRemote
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "passcode", WifiRemote.EncryptString(txtPasscode.Text));
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "auth", cbAuthMethod.SelectedIndex);
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "autologinTimeout", numericUpDownAutologin.Value);
-
+                xmlwriter.SetValueAsBool(WifiRemote.PLUGIN_NAME, "showNotifications", checkBoxShowConnectionMessage.Checked);
                 // Save plugins order, custom names and if they should be displayed
                 List<string> pluginIdsToSave = new List<String>();
 

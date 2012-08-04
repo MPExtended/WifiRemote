@@ -85,6 +85,9 @@
     <Reference Include="MP-TVSeries">
       <HintPath>..\..\Libs\MP-TVSeries.dll</HintPath>
     </Reference>
+    <Reference Include="MPNotificationBar">
+      <HintPath>..\..\Libs\MPNotificationBar.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json.Net35">
       <HintPath>..\..\Libs\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
@@ -180,6 +183,7 @@
     <Compile Include="PluginConnection\MovingPicturesHelper.cs" />
     <Compile Include="PluginConnection\MovingPicturesMessageHandler.cs" />
     <Compile Include="PluginConnection\MpMusicHelper.cs" />
+    <Compile Include="PluginConnection\MpNotificationHelper.cs" />
     <Compile Include="PluginConnection\MpTvServerHelper.cs" />
     <Compile Include="PluginConnection\MpVideosHelper.cs" />
     <Compile Include="PluginConnection\TVSeriesHelper.cs" />

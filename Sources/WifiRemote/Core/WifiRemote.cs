@@ -206,6 +206,16 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// <code>true</code> if the MPNotificationBar plugin is installed
+        /// </summary>
+        public static bool IsAvailableNotificationBar
+        {
+            get;
+            set;
+        }
+
+
+        /// <summary>
         /// List of plugins
         /// </summary>
         public static ArrayList savedAndSortedPlugins;
@@ -275,6 +285,7 @@ namespace WifiRemote
             WifiRemote.IsAvailableMovingPictures = IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
             WifiRemote.IsAvailableTVSeries = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
             WifiRemote.IsAvailableFanartHandler = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
+            WifiRemote.IsAvailableNotificationBar = IsAssemblyAvailable("MPNotificationBar", new Version(0, 8, 2, 1));
 
             // Check for MP-Extended
             if (isMPExtendedRunning())
@@ -473,7 +484,7 @@ namespace WifiRemote
             {
                 socketServer.SendPropertyToClient(tag, tagValue);
             }
-            
+
             if (tag.Equals("#selectedindex") || tag.Equals("#highlightedbutton"))
             {
                 socketServer.SendListViewStatusToAllClientsIfChanged();
@@ -488,7 +499,7 @@ namespace WifiRemote
         private void SendDelayed(object _control)
         {
             MessageDialog msg = (MessageDialog)_control;
-            
+
             WifiRemote.LogMessage("Sending delayed list dialog", LogType.Debug);
             MpDialogMenu dialog = msg.Dialog as MpDialogMenu;
 
@@ -827,6 +838,7 @@ namespace WifiRemote
                 String passcode = null;
                 AuthMethod auth = AuthMethod.None;
                 int autologinTimeout = 0;
+                bool showNotification = false;
 
                 // Load port from config
                 using (MediaPortal.Profile.Settings reader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml")))
@@ -834,15 +846,17 @@ namespace WifiRemote
                     port = (UInt16)reader.GetValueAsInt(PLUGIN_NAME, "port", DEFAULT_PORT);
                     disableBonjour = reader.GetValueAsBool(PLUGIN_NAME, "disableBonjour", false);
                     serviceName = reader.GetValueAsString(PLUGIN_NAME, "serviceName", "");
-                    userName = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "username", "");
+                    userName = reader.GetValueAsString(PLUGIN_NAME, "username", "");
                     userName = WifiRemote.DecryptString(userName);
-                    password = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "password", "");
+                    password = reader.GetValueAsString(PLUGIN_NAME, "password", "");
                     password = WifiRemote.DecryptString(password);
-                    passcode = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "passcode", "");
+                    passcode = reader.GetValueAsString(PLUGIN_NAME, "passcode", "");
                     passcode = WifiRemote.DecryptString(passcode);
 
-                    auth = (AuthMethod)reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "auth", 0);
-                    autologinTimeout = reader.GetValueAsInt(WifiRemote.PLUGIN_NAME, "autologinTimeout", 0);
+                    auth = (AuthMethod)reader.GetValueAsInt(PLUGIN_NAME, "auth", 0);
+                    autologinTimeout = reader.GetValueAsInt(PLUGIN_NAME, "autologinTimeout", 0);
+
+                    showNotification = reader.GetValueAsBool(PLUGIN_NAME, "showNotifications", false);
 
                 }
 
@@ -853,6 +867,7 @@ namespace WifiRemote
                 socketServer.PassCode = passcode;
                 socketServer.AllowedAuth = auth;
                 socketServer.AutologinTimeout = autologinTimeout;
+                socketServer.ShowNotifications = showNotification;
             }
 
             socketServer.Start();

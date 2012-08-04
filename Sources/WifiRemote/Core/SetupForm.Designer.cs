@@ -69,6 +69,7 @@
             this.pbQrCode = new System.Windows.Forms.PictureBox();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.checkBoxShowConnectionMessage = new System.Windows.Forms.CheckBox();
             this.tabControlNavigation.SuspendLayout();
             this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -147,12 +148,13 @@
             this.tabControlNavigation.Location = new System.Drawing.Point(1, 1);
             this.tabControlNavigation.Name = "tabControlNavigation";
             this.tabControlNavigation.SelectedIndex = 0;
-            this.tabControlNavigation.Size = new System.Drawing.Size(263, 361);
+            this.tabControlNavigation.Size = new System.Drawing.Size(263, 390);
             this.tabControlNavigation.TabIndex = 8;
             this.tabControlNavigation.SelectedIndexChanged += new System.EventHandler(this.tabControlNavigation_SelectedIndexChanged);
             // 
             // tabPageNetwork
             // 
+            this.tabPageNetwork.Controls.Add(this.checkBoxShowConnectionMessage);
             this.tabPageNetwork.Controls.Add(this.labelDefaultPort);
             this.tabPageNetwork.Controls.Add(this.labelPortInUse);
             this.tabPageNetwork.Controls.Add(this.textBoxName);
@@ -163,7 +165,7 @@
             this.tabPageNetwork.Location = new System.Drawing.Point(4, 22);
             this.tabPageNetwork.Name = "tabPageNetwork";
             this.tabPageNetwork.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageNetwork.Size = new System.Drawing.Size(255, 335);
+            this.tabPageNetwork.Size = new System.Drawing.Size(255, 364);
             this.tabPageNetwork.TabIndex = 0;
             this.tabPageNetwork.Text = "Network";
             this.tabPageNetwork.UseVisualStyleBackColor = true;
@@ -217,7 +219,7 @@
             this.groupBox1.Controls.Add(this.progressBarBonjourDownload);
             this.groupBox1.Controls.Add(this.buttonDownloadBonjour);
             this.groupBox1.Controls.Add(this.checkBoxDisableBonjour);
-            this.groupBox1.Location = new System.Drawing.Point(3, 81);
+            this.groupBox1.Location = new System.Drawing.Point(3, 115);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(249, 246);
             this.groupBox1.TabIndex = 8;
@@ -245,7 +247,7 @@
             this.tabPageAuthentication.Location = new System.Drawing.Point(4, 22);
             this.tabPageAuthentication.Name = "tabPageAuthentication";
             this.tabPageAuthentication.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAuthentication.Size = new System.Drawing.Size(255, 335);
+            this.tabPageAuthentication.Size = new System.Drawing.Size(255, 374);
             this.tabPageAuthentication.TabIndex = 2;
             this.tabPageAuthentication.Text = "Authentication";
             this.tabPageAuthentication.UseVisualStyleBackColor = true;
@@ -399,7 +401,7 @@
             this.tabPagePlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPagePlugins.Name = "tabPagePlugins";
             this.tabPagePlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePlugins.Size = new System.Drawing.Size(255, 335);
+            this.tabPagePlugins.Size = new System.Drawing.Size(255, 374);
             this.tabPagePlugins.TabIndex = 1;
             this.tabPagePlugins.Text = "Plugins";
             this.tabPagePlugins.UseVisualStyleBackColor = true;
@@ -418,7 +420,7 @@
             this.dataGridViewPluginList.Name = "dataGridViewPluginList";
             this.dataGridViewPluginList.RowHeadersVisible = false;
             this.dataGridViewPluginList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 329);
+            this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 368);
             this.dataGridViewPluginList.TabIndex = 0;
             this.dataGridViewPluginList.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridViewPluginList_DragDrop);
             this.dataGridViewPluginList.DragOver += new System.Windows.Forms.DragEventHandler(this.dataGridViewPluginList_DragOver);
@@ -434,7 +436,7 @@
             this.tabPageQRCode.Location = new System.Drawing.Point(4, 22);
             this.tabPageQRCode.Name = "tabPageQRCode";
             this.tabPageQRCode.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageQRCode.Size = new System.Drawing.Size(255, 335);
+            this.tabPageQRCode.Size = new System.Drawing.Size(255, 374);
             this.tabPageQRCode.TabIndex = 3;
             this.tabPageQRCode.Text = "QR Code";
             this.tabPageQRCode.UseVisualStyleBackColor = true;
@@ -447,7 +449,7 @@
             this.labelQRDescription.Size = new System.Drawing.Size(239, 53);
             this.labelQRDescription.TabIndex = 3;
             this.labelQRDescription.Text = "You can scan the QR code with supported clients to add this MediaPortal automatic" +
-                "ally.";
+    "ally.";
             this.labelQRDescription.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // checkBoxIncludeAuth
@@ -480,15 +482,25 @@
             this.pbQrCode.TabIndex = 0;
             this.pbQrCode.TabStop = false;
             // 
+            // checkBoxShowConnectionMessage
+            // 
+            this.checkBoxShowConnectionMessage.AutoSize = true;
+            this.checkBoxShowConnectionMessage.Location = new System.Drawing.Point(24, 89);
+            this.checkBoxShowConnectionMessage.Name = "checkBoxShowConnectionMessage";
+            this.checkBoxShowConnectionMessage.Size = new System.Drawing.Size(217, 17);
+            this.checkBoxShowConnectionMessage.TabIndex = 13;
+            this.checkBoxShowConnectionMessage.Text = "Show Notifications for connected Clients";
+            this.checkBoxShowConnectionMessage.UseVisualStyleBackColor = true;
+            // 
             // SetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(264, 362);
+            this.ClientSize = new System.Drawing.Size(264, 392);
             this.Controls.Add(this.tabControlNavigation);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(280, 400);
-            this.MinimumSize = new System.Drawing.Size(280, 400);
+            this.MaximumSize = new System.Drawing.Size(280, 430);
+            this.MinimumSize = new System.Drawing.Size(280, 430);
             this.Name = "SetupForm";
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
@@ -560,5 +572,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericUpDownAutologin;
+        private System.Windows.Forms.CheckBox checkBoxShowConnectionMessage;
     }
 }
