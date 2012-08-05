@@ -14,6 +14,7 @@ using WifiRemote.MPFacade;
 using WifiRemote.MPDialogs;
 using WifiRemote.PluginConnection;
 using MediaPortal.Playlists;
+using MediaPortal.Dialogs;
 
 namespace WifiRemote
 {
@@ -785,7 +786,42 @@ namespace WifiRemote
                         {
                             MpNotificationHelper.SendNotification(text, timeout);
                         }
+                    }
+                    else if (type == "showdialog")
+                    {
+                        String dialogType = (String)message["DialogType"];
+                        String dialogId = (String)message["DialogId"];
 
+                        if (dialogType != null)
+                        {
+                            if (dialogType.Equals("yesno"))
+                            {
+                                String title = (String)message["Title"];
+                                String text = (String)message["Text"];
+                                GUIDialogYesNo dlg = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
+                                if (dlg != null)
+                                {
+                                    dlg.Reset();
+                                    dlg.SetHeading(title);
+                                    dlg.SetLine(1, text);
+                                    dlg.DoModal(GUIWindowManager.ActiveWindow);
+
+                                    MessageDialogResult result = new MessageDialogResult();
+                                    result.YesNoResult = dlg.IsConfirmed;
+                                    result.DialogId = dialogId;
+
+                                    SendMessageToClient(result, sender);
+                                }
+                            }
+                            else
+                            {
+                                WifiRemote.LogMessage("Dialog type " + dialogType + " not supported yet", WifiRemote.LogType.Warn);
+                            }
+                        }
+                        else
+                        {
+                            WifiRemote.LogMessage("No dialog type specified", WifiRemote.LogType.Warn);
+                        }
                     }
                     else
                     {
@@ -823,8 +859,8 @@ namespace WifiRemote
                         }
 
                         // Authentication
-                        if (AllowedAuth == AuthMethod.None || (!String.IsNullOrEmpty((string)message["Authenticate"]) &&
-                            CheckAuthenticationRequest(client, (JObject)message["Authenticate"])))
+                        if (AllowedAuth == AuthMethod.None || 
+                            CheckAuthenticationRequest(client, message["Authenticate"]))
                         {
                             // User successfully authenticated
                             sender.GetRemoteClient().IsAuthenticated = true;
@@ -875,10 +911,23 @@ namespace WifiRemote
             sender.Read(AsyncSocket.CRLFData, -1, 0);
         }
 
-        private bool CheckAuthenticationRequest(RemoteClient client, JObject message)
+        private bool CheckAuthenticationRequest(RemoteClient client, JToken msg)
         {
+            if (msg == null || !msg.HasValues)
+            {
+                WifiRemote.LogMessage("Client sent empty authentication String", WifiRemote.LogType.Warn);
+                return false;
+            }
+
             AuthMethod auth = AllowedAuth;
 
+            if (auth == AuthMethod.None)
+            {
+                // Every auth request is valid for AuthMethod.None
+                return true;
+            }
+
+            JObject message = (JObject)msg;
             // For AuthMethod.Both we have to check which method was choosen.
             if (AllowedAuth == AuthMethod.Both)
             {
@@ -941,12 +990,7 @@ namespace WifiRemote
                         return true;
                     }
                 }
-            }
-            else if (auth == AuthMethod.None)
-            {
-                // Every auth request is valid for AuthMethod.None
-                return true;
-            }
+            } 
 
             WifiRemote.LogMessage("User " + client.ToString() + " authentification failed", WifiRemote.LogType.Info);
             return false;
