@@ -26,5 +26,10 @@ namespace WifiRemote.Messages
         /// Id of dialog (random id sent by client)
         /// </summary>
         public String DialogId { get; set; }
+
+        /// <summary>
+        /// Selected item
+        /// </summary>
+        public String SelectedOption { get; set; }
     }
 }

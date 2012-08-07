@@ -789,39 +789,8 @@ namespace WifiRemote
                     }
                     else if (type == "showdialog")
                     {
-                        String dialogType = (String)message["DialogType"];
-                        String dialogId = (String)message["DialogId"];
-
-                        if (dialogType != null)
-                        {
-                            if (dialogType.Equals("yesno"))
-                            {
-                                String title = (String)message["Title"];
-                                String text = (String)message["Text"];
-                                GUIDialogYesNo dlg = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                                if (dlg != null)
-                                {
-                                    dlg.Reset();
-                                    dlg.SetHeading(title);
-                                    dlg.SetLine(1, text);
-                                    dlg.DoModal(GUIWindowManager.ActiveWindow);
-
-                                    MessageDialogResult result = new MessageDialogResult();
-                                    result.YesNoResult = dlg.IsConfirmed;
-                                    result.DialogId = dialogId;
-
-                                    SendMessageToClient(result, sender);
-                                }
-                            }
-                            else
-                            {
-                                WifiRemote.LogMessage("Dialog type " + dialogType + " not supported yet", WifiRemote.LogType.Warn);
-                            }
-                        }
-                        else
-                        {
-                            WifiRemote.LogMessage("No dialog type specified", WifiRemote.LogType.Warn);
-                        }
+                        ShowDialogMessageHandler.HandleShowDialogMessage(message, this, sender);
+                        
                     }
                     else
                     {
