@@ -27,7 +27,7 @@ namespace WifiRemote.PluginConnection
             if (GUIGraphicsContext.form.InvokeRequired)
             {
                 PlayRecordingDelegate d = PlayRecording;
-                GUIGraphicsContext.form.Invoke(d, recordingId, startPos);
+                GUIGraphicsContext.form.Invoke(d, recordingId, startPos, startFullscreen);
                 return;
             }
 
