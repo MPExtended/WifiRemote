@@ -18,7 +18,7 @@ namespace WifiRemote
 
         public string MpExtId
         {
-            get { return EpisodeId.ToString(); }
+            get { return CompositeId.ToString(); }
         }
 
         public int MpExtMediaType
@@ -59,6 +59,16 @@ namespace WifiRemote
         {
             get { return episodeId; }
             set { episodeId = value; }
+        }
+
+        string compositeId;
+        /// <summary>
+        /// Composite ID of the episode in TVSeries' DB
+        /// </summary>
+        public string CompositeId
+        {
+            get { return compositeId; }
+            set { compositeId = value; }
         }
 
         string series;
@@ -231,6 +241,7 @@ namespace WifiRemote
                     SeriesId = episodes[0].onlineEpisode[DBOnlineEpisode.cSeriesID];
                     SeasonId = episodes[0].onlineEpisode[DBOnlineEpisode.cSeasonID];
                     EpisodeId = episodes[0].onlineEpisode[DBOnlineEpisode.cID];
+                    CompositeId = episodes[0].fullItem[DBEpisode.cCompositeID];
 
                     Episode = episodes[0].onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
                     Season = episodes[0].onlineEpisode[DBOnlineEpisode.cSeasonIndex];

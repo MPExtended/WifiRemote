@@ -545,6 +545,8 @@ namespace WifiRemote
                     if (type == "command")
                     {
                         string command = (string)message["Command"];
+
+                        communication.SendCommand(command);
                     }
                     // Send a key press
                     else if (type == "key")

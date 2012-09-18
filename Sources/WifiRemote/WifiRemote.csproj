@@ -134,6 +134,7 @@
     <Compile Include="Core\AutoLoginToken.cs" />
     <Compile Include="Core\Communication.cs" />
     <Compile Include="Messages\MessageDialog.cs" />
+    <Compile Include="Messages\MessageDialogResult.cs" />
     <Compile Include="Messages\MessageFacade.cs" />
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Messages\MessageAuthenticationResponse.cs" />
@@ -170,6 +171,8 @@
     <Compile Include="MPDialogs\MpDialogsHelper.cs" />
     <Compile Include="MPDialogs\MpDialogTvSeriesRating.cs" />
     <Compile Include="MPDialogs\MpDialogYesNo.cs" />
+    <Compile Include="MPDialogs\ShowDialogHelper.cs" />
+    <Compile Include="MPDialogs\ShowDialogMessageHandler.cs" />
     <Compile Include="MpExtended\MpExtendedHelper.cs" />
     <Compile Include="MpExtended\MpExtendedMessageHandler.cs" />
     <Compile Include="MpExtended\MpExtendedProviders.cs" />
