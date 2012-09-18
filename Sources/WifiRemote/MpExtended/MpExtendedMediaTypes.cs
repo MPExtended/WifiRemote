@@ -10,8 +10,6 @@ namespace WifiRemote.MpExtended
     /// </summary>
     public enum MpExtendedMediaTypes
     {
-        Tv = -2,
-        Recording = -1,
         Movie = 0,
         MusicTrack = 1,
         Picture = 2,
@@ -22,6 +20,8 @@ namespace WifiRemote.MpExtended
         MusicAlbum = 7,
         MusicArtist = 8,
         Folder = 9,
-        Drive = 10
+        Drive = 10,
+        Tv = 12,
+        Recording = 13
     }
 }
