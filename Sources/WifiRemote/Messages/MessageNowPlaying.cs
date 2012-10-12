@@ -3,6 +3,7 @@ using MediaPortal.Player;
 using MediaPortal.Video.Database;
 using MediaPortal.GUI.Library;
 using MediaPortal.Music.Database;
+using WifiRemote.PluginConnection;
 
 namespace WifiRemote
 {
@@ -179,9 +180,15 @@ namespace WifiRemote
                     }
                     else if (g_Player.IsTV)
                     {
-                        //g_Player.
+                        if (!WifiRemote.IsAvailableTVPlugin)
+                        {
+                            WifiRemote.LogMessage("No TVPlugin installed: can't add now playing", WifiRemote.LogType.Error);
+                        }
+                        else
+                        {
+                            return MpTvServerHelper.GetNowPlayingTv(); 
+                        }
                     }
-
                 }
 
                 return null;

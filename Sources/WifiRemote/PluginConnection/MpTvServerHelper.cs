@@ -120,5 +120,11 @@ namespace WifiRemote.PluginConnection
 
             return null;
         }
+
+        internal static NowPlayingTv GetNowPlayingTv()
+        {
+            NowPlayingTv tv = new NowPlayingTv();
+            return tv;
+        }
     }
 }
