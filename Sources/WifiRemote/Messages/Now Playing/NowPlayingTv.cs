@@ -143,7 +143,6 @@ namespace WifiRemote
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="aMovie">The currently playing movie</param>
         public NowPlayingTv()
         {
             TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;

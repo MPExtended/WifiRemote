@@ -145,6 +145,7 @@
     <Compile Include="Messages\MessagePlugins.cs" />
     <Compile Include="Messages\MessageProperties.cs" />
     <Compile Include="Messages\MessagePropertyChanged.cs" />
+    <Compile Include="Messages\Now Playing\NowPlayingRecording.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingTv.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingSeries.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingMovingPictures.cs" />

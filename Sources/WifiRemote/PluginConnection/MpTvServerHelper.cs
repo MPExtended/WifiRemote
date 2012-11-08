@@ -57,7 +57,7 @@ namespace WifiRemote.PluginConnection
                 return;
             }
 
-            if (g_Player.Playing && !g_Player.IsTV)
+            if (g_Player.Playing && !g_Player.IsTimeShifting)
             {
                 WifiRemote.LogMessage("Stopping current media so we can start playing tv", WifiRemote.LogType.Debug);
                 g_Player.Stop();
@@ -126,5 +126,12 @@ namespace WifiRemote.PluginConnection
             NowPlayingTv tv = new NowPlayingTv();
             return tv;
         }
+
+        internal static NowPlayingRecording GetNowPlayingRecording()
+        {
+            NowPlayingRecording recording = new NowPlayingRecording(g_Player.Player.CurrentFile);
+            return recording;
+        }
+        
     }
 }
