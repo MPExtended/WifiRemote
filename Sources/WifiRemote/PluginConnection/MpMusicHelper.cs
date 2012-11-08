@@ -247,7 +247,7 @@ namespace WifiRemote.PluginConnection
             {
                 foreach (Song s in songs)
                 {
-                    returnList.Add(PlaylistHelper.ToPlayListItem(songs[0]));
+                    returnList.Add(PlaylistHelper.ToPlayListItem(s));
                 }
             }
             return returnList;
@@ -269,7 +269,7 @@ namespace WifiRemote.PluginConnection
             {
                 foreach (Song s in songs)
                 {
-                    returnList.Add(PlaylistHelper.ToPlayListItem(songs[0]));
+                    returnList.Add(PlaylistHelper.ToPlayListItem(s));
                 }
             }
             return returnList;
