@@ -21,6 +21,16 @@ namespace WifiRemote.MPPlayList
         public String Name2 { get; set; }
 
         /// <summary>
+        /// Album Artist of the file that will get displayed in the playlist
+        /// </summary>
+        public String AlbumArtist { get; set; }
+
+        /// <summary>
+        /// Title of the file that will get displayed in the playlist
+        /// </summary>
+        public String Title { get; set; }
+
+        /// <summary>
         /// Full path to the file
         /// </summary>
         public String FileName { get; set; }

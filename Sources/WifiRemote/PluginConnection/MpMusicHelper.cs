@@ -203,6 +203,8 @@ namespace WifiRemote.PluginConnection
             if (inDb)
             {
                 message.Name2 = song.Album;
+                message.AlbumArtist = song.AlbumArtist;
+                message.Title = song.Title;
                 message.MpExtId = song.Id.ToString();
                 message.MpExtMediaType = (int)MpExtended.MpExtendedMediaTypes.MusicTrack;
                 message.MpExtProviderId = (int)MpExtended.MpExtendedProviders.MPMusic;
