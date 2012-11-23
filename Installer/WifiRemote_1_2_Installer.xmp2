@@ -168,8 +168,8 @@ Click Next to continue or Cancel to exit Setup.</Value>
           <Build>6</Build>
           <Revision>27644</Revision>
         </MaxVersion>
-        <WarnOnly>false</WarnOnly>
-        <Message>requires MediaPortal version 1.1.6.27644 to 1.1.6.27644.</Message>
+        <WarnOnly>true</WarnOnly>
+        <Message>This version of WifiRemote requires MediaPortal 1.2.0 Beta or higher!</Message>
         <Name>MediaPortal</Name>
       </DependencyItem>
     </Items>
@@ -187,22 +187,20 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>0</Major>
       <Minor>6</Minor>
-      <Build>1</Build>
-      <Revision>0</Revision>
+      <Build>9</Build>
+      <Revision>1</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
 
 
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-    <VersionDescription>Better Dialog Handling
-Better Playlist Support
-Various Improvements &amp; Bugfixes</VersionDescription>
+    <VersionDescription>BETA VERSION</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.6.1.mpe1</OnlineLocation>
-    <ReleaseDate>2012-03-26T20:16:04</ReleaseDate>
+    <ReleaseDate>2012-09-19T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>D:\Documents\WifiRemote_0.6.1.mpe1</Location>
+    <Location>WifiRemote_0.6.9.1.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -255,14 +253,14 @@ Various Improvements &amp; Bugfixes</VersionDescription>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{12488854-c99e-489f-8784-162ad76dba20}-installer_logo.gif</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{66c80027-e728-4157-8139-d3061bbaa781}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{c86da05a-2942-4c5d-800d-0df114bdc69b}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{29bc105e-62a0-4c65-881b-e77bea809b07}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
