@@ -278,5 +278,9 @@
     <button name="Print" code="78">
       <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="19" sound="click.wav" />
     </button>
+	
+	<button name="EjectCD" code="99">
+      <action layer="0" condition="*" conproperty="-1" command="ACTION" cmdproperty="100" sound="click.wav" />
+    </button>
   </remote>
 </mappings>

@@ -76,6 +76,7 @@ namespace WifiRemote
             Subtitles = 44,
             AudioTrack = 45,
             Screenshot = 46,
+            EjectCD = 99,
             // End of Wifi Remote stuff
 
             RecordedTV = 72,
@@ -328,6 +329,10 @@ namespace WifiRemote
 
                 case "aspectratio":
                     button = RemoteButton.AspectRatio;
+                    break;
+
+                case "ejectcd":
+                    button = RemoteButton.EjectCD;
                     break;
 
                 default:
