@@ -82,7 +82,7 @@ It publishes a Bonjour Service on your local network which allows clients (for e
 * Support notification plugin
 * Improved TV support</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
-        <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.6.1.mpe1</OnlineLocation>
+        <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.7.0.mpe1</OnlineLocation>
         <ReleaseDate>2012-11-25T14:00:00</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
         <Location>Versions\WifiRemote_0.7.0.mpe1</Location>
