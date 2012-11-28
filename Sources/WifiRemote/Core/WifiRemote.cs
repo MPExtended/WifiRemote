@@ -280,8 +280,11 @@ namespace WifiRemote
         /// </summary>
         public void Start()
         {
-            // Check if TV plugin is installed
-            WifiRemote.IsAvailableTVPlugin = IsAssemblyAvailable("TVPlugin", new Version(1, 0, 0, 0));
+            // Check if TV plugin is installed. We need to explicitely check for ArgusTV and ForTheRecord here, as those overwrite the
+            // TV Plugin with a placeholder assembly that doesn't have any functions.
+            WifiRemote.IsAvailableTVPlugin = IsAssemblyAvailable("TVPlugin", new Version(1, 0, 0, 0)) &&
+                !IsAssemblyAvailable("ArgusTV.UI.MediaPortal", null) &&
+                !IsAssemblyAvailable("ForTheRecord.UI.MediaPortal", null);
             WifiRemote.IsAvailableMovingPictures = IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
             WifiRemote.IsAvailableTVSeries = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
             WifiRemote.IsAvailableFanartHandler = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));

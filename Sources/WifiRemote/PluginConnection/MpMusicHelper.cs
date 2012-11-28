@@ -40,7 +40,7 @@ namespace WifiRemote.PluginConnection
         public static void PlayAlbum(String albumArtist, String album, int startPos)
         {
             List<Song> songs = new List<Song>();
-            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%' AND strAlbum LIKE '%" + album + "%'";
+            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%' AND strAlbum LIKE '%" + album + "%' order by iTrack ASC";
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
 
             if (songs.Count > 0)

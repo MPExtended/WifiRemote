@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO;
 using TvPlugin;
 using WifiRemote.PluginConnection;
+using MediaPortal.Playlists;
 
 namespace WifiRemote
 {
@@ -547,6 +548,10 @@ namespace WifiRemote
             if (audio != null && File.Exists(audio))
             {
                 WifiRemote.LogMessage("Play audio file: " + audio + ", pos: " + position, WifiRemote.LogType.Debug);
+                if (PlayListPlayer.SingletonPlayer.g_Player != null)
+                {
+                    PlayListPlayer.SingletonPlayer.g_Player.Stop();
+                }
                 g_Player.Play(audio, g_Player.MediaType.Music);
                 if (position != 0)
                 {
