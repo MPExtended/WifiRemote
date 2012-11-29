@@ -70,7 +70,7 @@
         <Version>
           <Major>0</Major>
           <Minor>7</Minor>
-          <Build>0</Build>
+          <Build>1</Build>
           <Revision>0</Revision>
         </Version>
         <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
@@ -78,14 +78,13 @@
 
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-        <VersionDescription>* Better Integration of MpExtended
-* Support notification plugin
-* Improved TV support</VersionDescription>
+        <VersionDescription>* fixes problems with installed 4tr/argus tv plugins (oxan)
+* Improve playback of playlist items (albums, artists, folders), reduce ui refreshing (DieBagger)</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
-        <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.7.0.mpe1</OnlineLocation>
+        <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.7.1.mpe1</OnlineLocation>
         <ReleaseDate>2012-11-25T14:00:00</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
-        <Location>Versions\WifiRemote_0.7.0.mpe1</Location>
+        <Location>Versions\WifiRemote_0.7.1.mpe1</Location>
         <Params>
           <Items>
             <SectionParam Name="Online Icon">
