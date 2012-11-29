@@ -29,14 +29,15 @@ namespace WifiRemote.MPPlayList
         /// <param name="type">Type of the playlist</param>
         /// <param name="file">File that gets added</param>
         /// <param name="index">Index where the item should be added</param>
-        public static void AddItemToPlaylist(String type, String file, int index)
+        /// <param name="refresh">Should the playlist be refreshed after the item is added</param>
+        public static void AddItemToPlaylist(String type, String file, int index, bool refresh)
         {
             PlaylistEntry entry = new PlaylistEntry();
             FileInfo fileInfo = new FileInfo(file);
             entry.FileName = fileInfo.FullName;
             entry.Name = fileInfo.Name;
 
-            AddItemToPlaylist(type, entry, index);
+            AddItemToPlaylist(type, entry, index, refresh);
         }
 
         /// <summary>
@@ -45,7 +46,8 @@ namespace WifiRemote.MPPlayList
         /// <param name="type">Type of the playlist</param>
         /// <param name="entry">Item that gets added</param>
         /// <param name="index">Index where the item should be added</param>
-        public static void AddItemToPlaylist(String type, PlaylistEntry entry, int index)
+        /// <param name="refresh">Should the playlist be refreshed after the item is added</param>
+        public static void AddItemToPlaylist(String type, PlaylistEntry entry, int index, bool refresh)
         {
             PlayListType plType = GetTypeFromString(type);
             PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
@@ -83,7 +85,10 @@ namespace WifiRemote.MPPlayList
 
             playList.Insert(item, index);
 
-            RefreshPlaylistIfVisible();
+            if (refresh)
+            {
+                RefreshPlaylistIfVisible();
+            }
         }
 
         /// <summary>
@@ -291,14 +296,17 @@ namespace WifiRemote.MPPlayList
         /// Clears the playlist (removes all entries)
         /// </summary>
         /// <param name="type">Type of the playlist</param>
-        public static void ClearPlaylist(String type)
+        public static void ClearPlaylist(String type, bool refresh)
         {
             PlayListType plType = GetTypeFromString(type);
             PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
             PlayList playList = playListPlayer.GetPlaylist(plType);
             playList.Clear();
 
-            RefreshPlaylistIfVisible();
+            if (refresh)
+            {
+                RefreshPlaylistIfVisible();
+            }
         }
 
         /// <summary>
@@ -475,14 +483,12 @@ namespace WifiRemote.MPPlayList
                 //Note: we need -1 here, because Insert wants the item after which the song should be inserted, not the actual index
                 playList.Insert(items[i], i + startIndex - 1);
             }
-
-            RefreshPlaylistIfVisible();
         }
 
         /// <summary>
         /// refresh the playlist window if it's currently active, so the newly added items will show
         /// </summary>
-        private static void RefreshPlaylistIfVisible()
+        public static void RefreshPlaylistIfVisible()
         {
             if (GUIWindowManager.ActiveWindow == (int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_VIDEO_PLAYLIST)
             {

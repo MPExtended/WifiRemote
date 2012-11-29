@@ -54,17 +54,18 @@ namespace WifiRemote.PluginConnection
             WifiRemote.LogMessage("Adding all files in " + folder + " to current playlist", WifiRemote.LogType.Debug);
             if (Directory.Exists(folder))
             {
-                PlaylistHelper.ClearPlaylist("video");
+                PlaylistHelper.ClearPlaylist("video", false);
 
                 int index = 0;
                 foreach (String f in Directory.GetFiles(folder))
                 {
                     if (IsValidExtension(f, extensions))
                     {
-                        PlaylistHelper.AddItemToPlaylist("video", f, index);
+                        PlaylistHelper.AddItemToPlaylist("video", f, index, false);
                         index++;
                     }
                 }
+                PlaylistHelper.RefreshPlaylistIfVisible();
 
                 PlaylistHelper.StartPlayingPlaylist("video", startPos, true);
             }

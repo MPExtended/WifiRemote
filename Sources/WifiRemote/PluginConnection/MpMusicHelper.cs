@@ -45,19 +45,13 @@ namespace WifiRemote.PluginConnection
 
             if (songs.Count > 0)
             {
-                PlaylistHelper.ClearPlaylist("music");
-                int index = 0;
+                PlaylistHelper.ClearPlaylist("music", false);
+                List<PlayListItem> items = new List<PlayListItem>();
                 foreach (Song s in songs)
                 {
-
-                    PlaylistEntry entry = new PlaylistEntry();
-                    entry.FileName = s.FileName;
-                    entry.Name = s.Title;
-                    entry.Duration = s.Duration;
-                    PlaylistHelper.AddItemToPlaylist("music", entry, index);
-                    index++;
+                    items.Add(PlaylistHelper.ToPlayListItem(s));
                 }
-
+                PlaylistHelper.AddPlaylistItems(PlayListType.PLAYLIST_MUSIC, items, 0);
                 PlaylistHelper.StartPlayingPlaylist("music", startPos, true);
             }
         }
@@ -75,18 +69,13 @@ namespace WifiRemote.PluginConnection
 
             if (songs.Count > 0)
             {
-                PlaylistHelper.ClearPlaylist("music");
-                int index = 0;
+                PlaylistHelper.ClearPlaylist("music", false);
+                List<PlayListItem> items = new List<PlayListItem>();
                 foreach (Song s in songs)
                 {
-
-                    PlaylistEntry entry = new PlaylistEntry();
-                    entry.FileName = s.FileName;
-                    entry.Name = s.Title;
-                    entry.Duration = s.Duration;
-                    PlaylistHelper.AddItemToPlaylist("music", entry, index);
-                    index++;
+                    items.Add(PlaylistHelper.ToPlayListItem(s));
                 }
+                PlaylistHelper.AddPlaylistItems(PlayListType.PLAYLIST_MUSIC, items, 0);
 
                 PlaylistHelper.StartPlayingPlaylist("music", startPos, true);
             }
@@ -103,17 +92,18 @@ namespace WifiRemote.PluginConnection
             WifiRemote.LogMessage("Adding all files in " + folder + " to current playlist", WifiRemote.LogType.Debug);
             if (Directory.Exists(folder))
             {
-                PlaylistHelper.ClearPlaylist("music");
+                PlaylistHelper.ClearPlaylist("music", false);
 
-                int index = 0;
+                List<PlayListItem> items = new List<PlayListItem>();
                 foreach (String f in Directory.GetFiles(folder))
                 {
                     if (isValidExtension(f, extensions))
                     {
-                        PlaylistHelper.AddItemToPlaylist("music", f, index);
-                        index++;
+                        FileInfo fileInfo = new FileInfo(f);
+                        items.Add(new PlayListItem(fileInfo.Name, fileInfo.FullName, 0));
                     }
                 }
+                PlaylistHelper.AddPlaylistItems(PlayListType.PLAYLIST_MUSIC, items, 0);
 
                 PlaylistHelper.StartPlayingPlaylist("music", startPos, true);
             }

@@ -42,7 +42,7 @@ namespace WifiRemote.MPPlayList
                 {
                     if (action.Equals("new"))
                     {
-                        PlaylistHelper.ClearPlaylist(playlistType);
+                        PlaylistHelper.ClearPlaylist(playlistType, false);
                     }
 
                     int index = insertIndex;
@@ -56,9 +56,10 @@ namespace WifiRemote.MPPlayList
                             entry.FileName = (o["FileName"] != null) ? (string)o["FileName"] : null;
                             entry.Name = (o["Name"] != null) ? (string)o["Name"] : null;
                             entry.Duration = (o["Duration"] != null) ? (int)o["Duration"] : 0;
-                            PlaylistHelper.AddItemToPlaylist(playlistType, entry, index);
+                            PlaylistHelper.AddItemToPlaylist(playlistType, entry, index, false);
                             index++;
                         }
+                        PlaylistHelper.RefreshPlaylistIfVisible();
 
                         if (shuffle)
                         {
@@ -134,7 +135,7 @@ namespace WifiRemote.MPPlayList
             else if (action.Equals("clear"))
             {
                 //clear the playlist
-                PlaylistHelper.ClearPlaylist(playlistType);
+                PlaylistHelper.ClearPlaylist(playlistType, true);
             }
             else if (action.Equals("list"))
             {
