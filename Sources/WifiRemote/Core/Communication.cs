@@ -12,6 +12,7 @@ using System.IO;
 using TvPlugin;
 using WifiRemote.PluginConnection;
 using MediaPortal.Playlists;
+using WifiRemote.HardwareController.AudioController;
 
 namespace WifiRemote
 {
@@ -24,6 +25,7 @@ namespace WifiRemote
         private int commandDownPauses;
         private bool isCommandDown;
         private StopWatch m_keyDownTimer;
+        private IAudioController audioController;
 
         private enum RemoteButton
         {
@@ -105,6 +107,7 @@ namespace WifiRemote
         {
             remoteHandler = new InputHandler("WifiRemote");
             m_keyDownTimer = new StopWatch();
+            audioController = HardwareController.HardwareControllerFactory.AudioController();
         }
 
         /// <summary>
@@ -186,14 +189,20 @@ namespace WifiRemote
 
                 case "volup":
                     button = RemoteButton.VolumeUp;
+                    audioController.VolumeUp();
+                    return;
                     break;
 
                 case "voldown":
                     button = RemoteButton.VolumeDown;
+                    audioController.VolumeDown();
+                    return;
                     break;
 
                 case "volmute":
                     button = RemoteButton.Mute;
+                    audioController.ToggleMute();
+                    return;
                     break;
 
                 case "chup":
@@ -595,7 +604,5 @@ namespace WifiRemote
                 g_Player.SeekRelative(position);
             }
         }
-
-
     }
 }

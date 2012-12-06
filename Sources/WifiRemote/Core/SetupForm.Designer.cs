@@ -38,6 +38,7 @@
             this.checkBoxDisableBonjour = new System.Windows.Forms.CheckBox();
             this.tabControlNavigation = new System.Windows.Forms.TabControl();
             this.tabPageNetwork = new System.Windows.Forms.TabPage();
+            this.checkBoxShowConnectionMessage = new System.Windows.Forms.CheckBox();
             this.labelDefaultPort = new System.Windows.Forms.LinkLabel();
             this.labelPortInUse = new System.Windows.Forms.LinkLabel();
             this.textBoxName = new System.Windows.Forms.TextBox();
@@ -69,7 +70,13 @@
             this.pbQrCode = new System.Windows.Forms.PictureBox();
             this.setupFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.setupFormBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.checkBoxShowConnectionMessage = new System.Windows.Forms.CheckBox();
+            this.tabPageHardware = new System.Windows.Forms.TabPage();
+            this.labelHardwareFAQ = new System.Windows.Forms.Label();
+            this.comboBoxHardwareType = new System.Windows.Forms.ComboBox();
+            this.comboBoxHardwareDevice = new System.Windows.Forms.ComboBox();
+            this.groupBoxHardwareOptions = new System.Windows.Forms.GroupBox();
+            this.textBoxHardwareIp = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.tabControlNavigation.SuspendLayout();
             this.tabPageNetwork.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -84,6 +91,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbQrCode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).BeginInit();
+            this.tabPageHardware.SuspendLayout();
+            this.groupBoxHardwareOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -145,6 +154,7 @@
             this.tabControlNavigation.Controls.Add(this.tabPageAuthentication);
             this.tabControlNavigation.Controls.Add(this.tabPagePlugins);
             this.tabControlNavigation.Controls.Add(this.tabPageQRCode);
+            this.tabControlNavigation.Controls.Add(this.tabPageHardware);
             this.tabControlNavigation.Location = new System.Drawing.Point(1, 1);
             this.tabControlNavigation.Name = "tabControlNavigation";
             this.tabControlNavigation.SelectedIndex = 0;
@@ -169,6 +179,16 @@
             this.tabPageNetwork.TabIndex = 0;
             this.tabPageNetwork.Text = "Network";
             this.tabPageNetwork.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxShowConnectionMessage
+            // 
+            this.checkBoxShowConnectionMessage.AutoSize = true;
+            this.checkBoxShowConnectionMessage.Location = new System.Drawing.Point(24, 89);
+            this.checkBoxShowConnectionMessage.Name = "checkBoxShowConnectionMessage";
+            this.checkBoxShowConnectionMessage.Size = new System.Drawing.Size(217, 17);
+            this.checkBoxShowConnectionMessage.TabIndex = 13;
+            this.checkBoxShowConnectionMessage.Text = "Show Notifications for connected Clients";
+            this.checkBoxShowConnectionMessage.UseVisualStyleBackColor = true;
             // 
             // labelDefaultPort
             // 
@@ -247,7 +267,7 @@
             this.tabPageAuthentication.Location = new System.Drawing.Point(4, 22);
             this.tabPageAuthentication.Name = "tabPageAuthentication";
             this.tabPageAuthentication.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAuthentication.Size = new System.Drawing.Size(255, 374);
+            this.tabPageAuthentication.Size = new System.Drawing.Size(255, 364);
             this.tabPageAuthentication.TabIndex = 2;
             this.tabPageAuthentication.Text = "Authentication";
             this.tabPageAuthentication.UseVisualStyleBackColor = true;
@@ -401,7 +421,7 @@
             this.tabPagePlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPagePlugins.Name = "tabPagePlugins";
             this.tabPagePlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePlugins.Size = new System.Drawing.Size(255, 374);
+            this.tabPagePlugins.Size = new System.Drawing.Size(255, 364);
             this.tabPagePlugins.TabIndex = 1;
             this.tabPagePlugins.Text = "Plugins";
             this.tabPagePlugins.UseVisualStyleBackColor = true;
@@ -420,7 +440,7 @@
             this.dataGridViewPluginList.Name = "dataGridViewPluginList";
             this.dataGridViewPluginList.RowHeadersVisible = false;
             this.dataGridViewPluginList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 368);
+            this.dataGridViewPluginList.Size = new System.Drawing.Size(249, 358);
             this.dataGridViewPluginList.TabIndex = 0;
             this.dataGridViewPluginList.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridViewPluginList_DragDrop);
             this.dataGridViewPluginList.DragOver += new System.Windows.Forms.DragEventHandler(this.dataGridViewPluginList_DragOver);
@@ -436,7 +456,7 @@
             this.tabPageQRCode.Location = new System.Drawing.Point(4, 22);
             this.tabPageQRCode.Name = "tabPageQRCode";
             this.tabPageQRCode.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageQRCode.Size = new System.Drawing.Size(255, 374);
+            this.tabPageQRCode.Size = new System.Drawing.Size(255, 364);
             this.tabPageQRCode.TabIndex = 3;
             this.tabPageQRCode.Text = "QR Code";
             this.tabPageQRCode.UseVisualStyleBackColor = true;
@@ -449,7 +469,7 @@
             this.labelQRDescription.Size = new System.Drawing.Size(239, 53);
             this.labelQRDescription.TabIndex = 3;
             this.labelQRDescription.Text = "You can scan the QR code with supported clients to add this MediaPortal automatic" +
-    "ally.";
+                "ally.";
             this.labelQRDescription.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // checkBoxIncludeAuth
@@ -482,15 +502,77 @@
             this.pbQrCode.TabIndex = 0;
             this.pbQrCode.TabStop = false;
             // 
-            // checkBoxShowConnectionMessage
+            // tabPageHardware
             // 
-            this.checkBoxShowConnectionMessage.AutoSize = true;
-            this.checkBoxShowConnectionMessage.Location = new System.Drawing.Point(24, 89);
-            this.checkBoxShowConnectionMessage.Name = "checkBoxShowConnectionMessage";
-            this.checkBoxShowConnectionMessage.Size = new System.Drawing.Size(217, 17);
-            this.checkBoxShowConnectionMessage.TabIndex = 13;
-            this.checkBoxShowConnectionMessage.Text = "Show Notifications for connected Clients";
-            this.checkBoxShowConnectionMessage.UseVisualStyleBackColor = true;
+            this.tabPageHardware.Controls.Add(this.groupBoxHardwareOptions);
+            this.tabPageHardware.Controls.Add(this.comboBoxHardwareDevice);
+            this.tabPageHardware.Controls.Add(this.comboBoxHardwareType);
+            this.tabPageHardware.Controls.Add(this.labelHardwareFAQ);
+            this.tabPageHardware.Location = new System.Drawing.Point(4, 22);
+            this.tabPageHardware.Name = "tabPageHardware";
+            this.tabPageHardware.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageHardware.Size = new System.Drawing.Size(255, 364);
+            this.tabPageHardware.TabIndex = 4;
+            this.tabPageHardware.Text = "Hardware";
+            this.tabPageHardware.UseVisualStyleBackColor = true;
+            // 
+            // labelHardwareFAQ
+            // 
+            this.labelHardwareFAQ.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelHardwareFAQ.Location = new System.Drawing.Point(3, 14);
+            this.labelHardwareFAQ.Name = "labelHardwareFAQ";
+            this.labelHardwareFAQ.Size = new System.Drawing.Size(246, 130);
+            this.labelHardwareFAQ.TabIndex = 9;
+            this.labelHardwareFAQ.Text = resources.GetString("labelHardwareFAQ.Text");
+            // 
+            // comboBoxHardwareType
+            // 
+            this.comboBoxHardwareType.Enabled = false;
+            this.comboBoxHardwareType.FormattingEnabled = true;
+            this.comboBoxHardwareType.Items.AddRange(new object[] {
+            "AV Receiver"});
+            this.comboBoxHardwareType.Location = new System.Drawing.Point(9, 137);
+            this.comboBoxHardwareType.Name = "comboBoxHardwareType";
+            this.comboBoxHardwareType.Size = new System.Drawing.Size(238, 21);
+            this.comboBoxHardwareType.TabIndex = 10;
+            // 
+            // comboBoxHardwareDevice
+            // 
+            this.comboBoxHardwareDevice.FormattingEnabled = true;
+            this.comboBoxHardwareDevice.Location = new System.Drawing.Point(9, 164);
+            this.comboBoxHardwareDevice.Name = "comboBoxHardwareDevice";
+            this.comboBoxHardwareDevice.Size = new System.Drawing.Size(238, 21);
+            this.comboBoxHardwareDevice.TabIndex = 11;
+            this.comboBoxHardwareDevice.SelectedIndexChanged += new System.EventHandler(this.comboBoxHardwareDevice_SelectedIndexChanged);
+            // 
+            // groupBoxHardwareOptions
+            // 
+            this.groupBoxHardwareOptions.Controls.Add(this.label8);
+            this.groupBoxHardwareOptions.Controls.Add(this.textBoxHardwareIp);
+            this.groupBoxHardwareOptions.Location = new System.Drawing.Point(9, 192);
+            this.groupBoxHardwareOptions.Name = "groupBoxHardwareOptions";
+            this.groupBoxHardwareOptions.Size = new System.Drawing.Size(238, 165);
+            this.groupBoxHardwareOptions.TabIndex = 12;
+            this.groupBoxHardwareOptions.TabStop = false;
+            this.groupBoxHardwareOptions.Text = "Hardware Options";
+            this.groupBoxHardwareOptions.Visible = false;
+            // 
+            // textBoxHardwareIp
+            // 
+            this.textBoxHardwareIp.Location = new System.Drawing.Point(116, 34);
+            this.textBoxHardwareIp.Name = "textBoxHardwareIp";
+            this.textBoxHardwareIp.Size = new System.Drawing.Size(118, 20);
+            this.textBoxHardwareIp.TabIndex = 0;
+            this.textBoxHardwareIp.TextChanged += new System.EventHandler(this.textBoxHardwareIp_TextChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 37);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(103, 13);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "Receiver IP address";
             // 
             // SetupForm
             // 
@@ -527,6 +609,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbQrCode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setupFormBindingSource1)).EndInit();
+            this.tabPageHardware.ResumeLayout(false);
+            this.groupBoxHardwareOptions.ResumeLayout(false);
+            this.groupBoxHardwareOptions.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -573,5 +658,12 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericUpDownAutologin;
         private System.Windows.Forms.CheckBox checkBoxShowConnectionMessage;
+        private System.Windows.Forms.TabPage tabPageHardware;
+        private System.Windows.Forms.ComboBox comboBoxHardwareDevice;
+        private System.Windows.Forms.ComboBox comboBoxHardwareType;
+        private System.Windows.Forms.Label labelHardwareFAQ;
+        private System.Windows.Forms.GroupBox groupBoxHardwareOptions;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBoxHardwareIp;
     }
 }
