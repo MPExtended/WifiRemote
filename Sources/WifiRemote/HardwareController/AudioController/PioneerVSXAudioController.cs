@@ -47,6 +47,38 @@ namespace WifiRemote.HardwareController.AudioController
             }
         }
 
+
+        #region IAudioController Methods
+        public void VolumeUp()
+        {
+            sendCommand("VU");
+        }
+
+        public void VolumeDown()
+        {
+            sendCommand("VD");
+        }
+
+        public void ToggleMute()
+        {
+            sendCommand("MZ");
+        }
+
+        /// <summary>
+        /// Sets the volume of the client
+        /// Not possible with Pioneer over LAN.
+        /// </summary>
+        /// <param name="volume">The new volume, ranging from 0 to 100</param>
+        /// <param name="relative">True if the volume should be changed relative to the current volume</param>
+        public void SetVolume(int volume, bool relative)
+        {
+            
+        }
+        #endregion
+
+
+
+        #region Socket events
         void socket_DidClose(AsyncSocket sender)
         {
             WifiRemote.LogMessage("Socket connection to Pioneer receiver closed", WifiRemote.LogType.Debug);
@@ -75,20 +107,6 @@ namespace WifiRemote.HardwareController.AudioController
             WifiRemote.LogMessage("Socket connection to Pioneer receiver read data: " + response, WifiRemote.LogType.Debug);
             socket.Read(AsyncSocket.CRLFData, -1, 0);
         }
-
-        public void VolumeUp()
-        {
-            sendCommand("VU");
-        }
-
-        public void VolumeDown()
-        {
-            sendCommand("VD");
-        }
-
-        public void ToggleMute()
-        {
-            sendCommand("MZ");
-        }
+        #endregion
     }
 }

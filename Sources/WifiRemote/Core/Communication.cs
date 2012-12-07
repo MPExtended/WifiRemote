@@ -191,19 +191,16 @@ namespace WifiRemote
                     button = RemoteButton.VolumeUp;
                     audioController.VolumeUp();
                     return;
-                    break;
 
                 case "voldown":
                     button = RemoteButton.VolumeDown;
                     audioController.VolumeDown();
                     return;
-                    break;
 
                 case "volmute":
                     button = RemoteButton.Mute;
                     audioController.ToggleMute();
                     return;
-                    break;
 
                 case "chup":
                     button = RemoteButton.ChannelUp;
@@ -471,7 +468,7 @@ namespace WifiRemote
         /// <param name="volume">The new volume, ranging from 0 to 100</param>
         internal void SetVolume(int volume)
         {
-            SetVolume(volume, false);
+            audioController.SetVolume(volume, false);
         }
 
         /// <summary>
@@ -481,23 +478,7 @@ namespace WifiRemote
         /// <param name="relative">True if the volume should be changed relative to the current volume</param>
         internal void SetVolume(int volume, bool relative)
         {
-            if (relative)
-            {
-                int currentVolume = 0;
-
-                try
-                {
-                    currentVolume = VolumeHandler.Instance.Volume / (VolumeHandler.Instance.Maximum / 100);
-                }
-                catch (Exception) { }
-
-                volume += currentVolume;
-            }
-
-            if (volume >= 0 && volume <= 100)
-            {
-                VolumeHandler.Instance.Volume = (int)Math.Floor(volume * VolumeHandler.Instance.Maximum / 100.0);
-            }
+            audioController.SetVolume(volume, relative);
         }
 
         /// <summary>
