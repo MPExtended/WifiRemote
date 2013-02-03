@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MediaPortal.Player;
+using WifiRemote.HardwareController;
+using WifiRemote.HardwareController.AudioController;
 
 namespace WifiRemote
 {
@@ -11,6 +13,8 @@ namespace WifiRemote
     /// </summary>
     class MessageVolume : IMessage
     {
+        private AbstractAudioController audioController;
+ 
         public string Type
         {
             get { return "volume"; }
@@ -23,14 +27,7 @@ namespace WifiRemote
         {
             get
             {
-                try
-                {
-                    return VolumeHandler.Instance.Volume / (VolumeHandler.Instance.Maximum / 100);
-                }
-                catch (Exception)
-                {
-                    return 101;
-                }
+                return audioController.Volume();
             }
         }
 
@@ -39,7 +36,15 @@ namespace WifiRemote
         /// </summary>
         public bool IsMuted
         {
-            get { return VolumeHandler.Instance.IsMuted; }
+            get { return audioController.IsMuted(); }
+        }
+
+        /// <summary>
+        /// Constructor. Get AudioController instance
+        /// </summary>
+        public MessageVolume()
+        {
+            audioController = HardwareControllerFactory.Instance.AudioController();
         }
     }
 }

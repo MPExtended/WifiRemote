@@ -25,7 +25,7 @@ namespace WifiRemote
         private int commandDownPauses;
         private bool isCommandDown;
         private StopWatch m_keyDownTimer;
-        private IAudioController audioController;
+        private AbstractAudioController audioController;
 
         private enum RemoteButton
         {
@@ -107,7 +107,7 @@ namespace WifiRemote
         {
             remoteHandler = new InputHandler("WifiRemote");
             m_keyDownTimer = new StopWatch();
-            audioController = HardwareController.HardwareControllerFactory.AudioController();
+            audioController = HardwareController.HardwareControllerFactory.Instance.AudioController();
         }
 
         /// <summary>

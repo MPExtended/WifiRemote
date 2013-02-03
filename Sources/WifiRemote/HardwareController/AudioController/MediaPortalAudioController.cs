@@ -6,19 +6,19 @@ using MediaPortal.Player;
 
 namespace WifiRemote.HardwareController.AudioController
 {
-    class MediaPortalAudioController : IAudioController
+    class MediaPortalAudioController : AbstractAudioController
     {
-        public void VolumeUp()
+        public override void VolumeUp()
         {
             VolumeHandler.Instance.Volume = VolumeHandler.Instance.Next;
         }
 
-        public void VolumeDown()
+        public override void VolumeDown()
         {
             VolumeHandler.Instance.Volume = VolumeHandler.Instance.Previous;
         }
 
-        public void ToggleMute()
+        public override void ToggleMute()
         {
             VolumeHandler.Instance.IsMuted = !VolumeHandler.Instance.IsMuted;
         }
@@ -28,7 +28,7 @@ namespace WifiRemote.HardwareController.AudioController
         /// </summary>
         /// <param name="volume">The new volume, ranging from 0 to 100</param>
         /// <param name="relative">True if the volume should be changed relative to the current volume</param>
-        public void SetVolume(int volume, bool relative)
+        public override void SetVolume(int volume, bool relative)
         {
             if (relative)
             {
@@ -47,6 +47,24 @@ namespace WifiRemote.HardwareController.AudioController
             {
                 VolumeHandler.Instance.Volume = (int)Math.Floor(volume * VolumeHandler.Instance.Maximum / 100.0);
             }
+        }
+
+
+        public override int Volume()
+        {
+            try
+            {
+                return VolumeHandler.Instance.Volume / (VolumeHandler.Instance.Maximum / 100);
+            }
+            catch (Exception)
+            {
+                return 101;
+            }
+        }
+
+        public override bool IsMuted()
+        {
+            return VolumeHandler.Instance.IsMuted;
         }
     }
 }

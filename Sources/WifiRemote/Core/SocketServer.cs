@@ -327,6 +327,7 @@ namespace WifiRemote
         {
             String status = JsonConvert.SerializeObject(statusMessage);
             SendMessageToAllClients(status);
+            SendVolumeToAllClients();
         }
 
         /// <summary>
