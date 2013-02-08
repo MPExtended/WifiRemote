@@ -214,6 +214,14 @@ namespace WifiRemote
             set;
         }
 
+        /// <summary>
+        /// Latest channelId
+        /// </summary>
+        public static int LatestChannelId
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// List of plugins
@@ -305,7 +313,7 @@ namespace WifiRemote
                 WifiRemote.IsAvailableMPExtendedWSS = false;
             }
 
-
+            LatestChannelId = -1;
             Log.Debug(String.Format("{0} Started!", LOG_PREFIX));
             // register event handlers
             GUIWindowManager.OnNewAction += new OnActionHandler(GUIWindowManager_OnNewAction);
@@ -316,6 +324,8 @@ namespace WifiRemote
             g_Player.PlayBackEnded += new g_Player.EndedHandler(g_Player_PlayBackEnded);
             g_Player.PlayBackStopped += new g_Player.StoppedHandler(g_Player_PlayBackStopped);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(g_Player_PlayBackChanged);
+            g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
+
             GUIWindowManager.Receivers += new SendMessageHandler(GUIWindowManager_Receivers);
 
             System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
@@ -580,6 +590,22 @@ namespace WifiRemote
         {
             // Change media info
             SendStatus();
+        }
+
+        /// <summary>
+        /// Mediaportal TV playback changed
+        /// </summary>
+        void g_Player_TVPlayBackChanged()
+        {
+            TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
+            TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
+
+            if (socketServer != null && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
+            {
+                LatestChannelId = current.IdChannel;
+                LogMessage("TV Playback changed!", LogType.Debug);
+                socketServer.SendNowPlayingToAllClients();
+            }            
         }
 
         /// <summary>

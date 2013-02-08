@@ -52,6 +52,15 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// Name of channel
+        /// </summary>
+        public String ChannelName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Name of program
         /// </summary>
         public string ProgramName
@@ -104,7 +113,13 @@ namespace WifiRemote
                 ProgramDescription = recording.Description;
                 ProgramBegin = recording.StartTime;
                 ProgramEnd = recording.EndTime;
-            }                    
+
+                TvDatabase.Channel channel = TvDatabase.Channel.Retrieve(ChannelId);
+                if (channel != null)
+                {
+                    ChannelName = channel.DisplayName;
+                }
+            }                 
         }
 
         public bool IsRecording()
