@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Deusty.Net;
+using WifiRemote.Utility;
 
 namespace WifiRemote.HardwareController.AudioController
 {
@@ -37,32 +38,40 @@ namespace WifiRemote.HardwareController.AudioController
             _port = port;
             _commandQueue = new List<string>();
 
+            // Get receiver status
+            // Setting defaults to -1 volume, not muted and power on
+            _volume = "VU101";
+            _muted = false;
+            _powered = true;
+
+
+            // Observe client connected/disconnected notifications so that we
+            // can connect and disconnect to the receiver. There can only be
+            // one active network connection to the receiver, so we don't want
+            // to block that when no client is connected to WifiRemote.
+            NotificationCenter.Instance.AllClientsDisconnected += new NotificationCenter.AllClientsDisconnectedHandler(AllClientsDisconnected);
+            NotificationCenter.Instance.ClientConnected += new NotificationCenter.ClientConnectedHandler(ClientConnected);
+        }
+
+        private void createSocket()
+        {
             _socket = new AsyncSocket();
             _socket.DidRead += new AsyncSocket.SocketDidRead(socket_DidRead);
             _socket.DidWrite += new AsyncSocket.SocketDidWrite(socket_DidWrite);
             _socket.DidConnect += new AsyncSocket.SocketDidConnect(socket_DidConnect);
             _socket.DidClose += new AsyncSocket.SocketDidClose(socket_DidClose);
-
-            // Get receiver status
-            // Setting defaults to 0 volume, not muted and power on
-            _volume = "VU101";
-            _muted = false;
-            _powered = true;
-
-            // ... current volume
-            sendCommand("?V");
-
-            // ... muted?
-            sendCommand("?M");
-
-            // ... switched on?
-            sendCommand("?P");
         }
 
         private void sendCommand(String command)
         {
             // Prepare command for sending
             command = command + "\r";
+
+            // Create socket
+            if (_socket == null) 
+            {
+                createSocket();
+            }
 
             // Check if connected to receiver
             if (!_socket.SmartConnected)
@@ -78,9 +87,10 @@ namespace WifiRemote.HardwareController.AudioController
                 // Add command to queue for later execution
                 _commandQueue.Add(command);
 
-                if (!_socket.Connect(_ip, _port))
+                Exception error;
+                if (!_socket.Connect(_ip, _port, out error))
                 {
-                    WifiRemote.LogMessage("Failed to connect to Pioneer receiver", WifiRemote.LogType.Error);
+                    WifiRemote.LogMessage("Failed to connect to Pioneer receiver: " + error.Message, WifiRemote.LogType.Error);
                 }
             }
             else
@@ -89,6 +99,18 @@ namespace WifiRemote.HardwareController.AudioController
                 byte[] data = Encoding.ASCII.GetBytes(command);
                 _socket.Write(data, -1, 0);
             }
+        }
+
+        private void prepareReceiverConnection()
+        {
+            // ... current volume
+            sendCommand("?V");
+
+            // ... muted?
+            sendCommand("?M");
+
+            // ... switched on?
+            sendCommand("?P");
         }
 
 
@@ -120,7 +142,7 @@ namespace WifiRemote.HardwareController.AudioController
             catch (Exception e)
             {
                 WifiRemote.LogMessage("Pioneer receiver delivered invalid volume: " + _volume + " with error " + e.Message, WifiRemote.LogType.Error);
-                return 0;
+                return -1;
             }
         }
 
@@ -156,6 +178,7 @@ namespace WifiRemote.HardwareController.AudioController
         #region Socket events
         void socket_DidClose(AsyncSocket sender)
         {
+            _socket = null;
             WifiRemote.LogMessage("Socket connection to Pioneer receiver closed", WifiRemote.LogType.Debug);
         }
 
@@ -200,5 +223,29 @@ namespace WifiRemote.HardwareController.AudioController
         }
         #endregion
 
+        #region Notification observers
+        /// <summary>
+        /// All clients disconnected. Shut down receiver connection.
+        /// </summary>
+        void AllClientsDisconnected()
+        {
+            WifiRemote.LogMessage("Last client disconnected, disconnecting from receiver.", WifiRemote.LogType.Debug);
+            _socket.CloseAfterWriting();
+        }
+
+        /// <summary>
+        /// A new user connected. Establish connection to AV receiver
+        /// if it isn't established already.
+        /// </summary>
+        void ClientConnected()
+        {
+            WifiRemote.LogMessage("Client connected, checking receiver connection ...", WifiRemote.LogType.Debug);
+            if (_socket == null || !_socket.SmartConnected)
+            {
+                WifiRemote.LogMessage("... connecting to receiver!", WifiRemote.LogType.Debug);
+                prepareReceiverConnection();
+            }
+        }
+        #endregion
     }
 }

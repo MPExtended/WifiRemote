@@ -204,6 +204,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Core\Property.cs" />
+    <Compile Include="Utility\NotificationCenter.cs" />
     <Compile Include="Utility\QRCodeGenerator.cs" />
     <Compile Include="Core\RemoteClient.cs" />
     <Compile Include="Core\ServerDescription.cs" />

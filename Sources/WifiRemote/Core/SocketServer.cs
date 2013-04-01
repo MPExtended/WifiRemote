@@ -13,6 +13,7 @@ using WifiRemote.MpExtended;
 using WifiRemote.MPFacade;
 using WifiRemote.MPDialogs;
 using WifiRemote.PluginConnection;
+using WifiRemote.Utility;
 using MediaPortal.Playlists;
 using MediaPortal.Dialogs;
 
@@ -188,8 +189,12 @@ namespace WifiRemote
                 {
                     //socket.CloseAfterReading();
                     socket.Close();
+                    NotificationCenter.Instance.postClientDisconnectedNotification();
                 }
             }
+
+            NotificationCenter.Instance.postAllClientsDisconnectedNotification();
+
 
             isStarted = false;
             listenSocket = null;
@@ -327,7 +332,6 @@ namespace WifiRemote
         {
             String status = JsonConvert.SerializeObject(statusMessage);
             SendMessageToAllClients(status);
-            SendVolumeToAllClients();
         }
 
         /// <summary>
@@ -425,6 +429,9 @@ namespace WifiRemote
                 connectedSockets.Add(newSocket);
             }
 
+            // Post notification of connected client
+            NotificationCenter.Instance.postClientConnectedNotification();
+
             // Send welcome message to client
             WifiRemote.LogMessage("Client connected, sending welcome msg.", WifiRemote.LogType.Debug);
             SendMessageToClient(welcomeMessage, newSocket, true);
@@ -446,6 +453,13 @@ namespace WifiRemote
             {
                 WifiRemote.LogMessage("removing client " + sender.GetRemoteClient().ClientName + " from connected sockets", WifiRemote.LogType.Info);
                 connectedSockets.Remove(sender);
+            }
+
+            // Post disconnected notifications
+            NotificationCenter.Instance.postClientDisconnectedNotification();
+            if (connectedSockets.Count == 0)
+            {
+                NotificationCenter.Instance.postAllClientsDisconnectedNotification();
             }
         }
 
