@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +6,13 @@ using MediaPortal.Video.Database;
 using System.IO;
 using System.Drawing;
 using WifiRemote.MpExtended;
+using TvDatabase;
 
 namespace WifiRemote
 {
-    public class NowPlayingTv : IAdditionalNowPlayingInfo
+    public class NowPlayingRadio : IAdditionalNowPlayingInfo
     {
-        string mediaType = "tv";
+        string mediaType = "radio";
         public string MediaType
         {
             get { return mediaType; }
@@ -19,7 +20,7 @@ namespace WifiRemote
 
         public string MpExtId
         {
-            get { return ChannelId.ToString(); }
+            get { return ChannelId.ToString(); }//????
         }
 
         public int MpExtMediaType
@@ -29,7 +30,7 @@ namespace WifiRemote
 
         public int MpExtProviderId
         {
-            get { return 0; }//no tv providers yet
+            get { return 0; }//no radio providers yet
         }
 
         /// <summary>
@@ -141,31 +142,61 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// <code>true</code> if the program is a web stream
+        /// </summary>
+        public bool IsWebStream
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Url of the program
+        /// </summary>
+        public string CurrentUrl
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public NowPlayingTv()
+        public NowPlayingRadio()
         {
             TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
             TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
-            ChannelId = current.IdChannel;
-            ChannelName = current.DisplayName;
-
-            if (current.CurrentProgram != null)
+            if (current.IsWebstream())
             {
-                CurrentProgramId = current.CurrentProgram.IdProgram;
-                CurrentProgramName = current.CurrentProgram.Title;
-                CurrentProgramDescription = current.CurrentProgram.Description;
-                CurrentProgramBegin = current.CurrentProgram.StartTime;
-                CurrentProgramEnd = current.CurrentProgram.EndTime;
+                IList<TuningDetail> details = current.ReferringTuningDetail();
+                TuningDetail detail = details[0];
+                CurrentProgramName = detail.Name;
+                CurrentProgramId = detail.IdChannel;
+                CurrentUrl = detail.Url;
+
             }
-
-            if (current.NextProgram != null)
+            else
             {
-                NextProgramId = current.NextProgram.IdProgram;
-                NextProgramName = current.NextProgram.Title;
-                NextProgramDescription = current.NextProgram.Description;
-                NextProgramBegin = current.NextProgram.StartTime;
-                NextProgramEnd = current.NextProgram.EndTime;
+                ChannelId = current.IdChannel;
+                ChannelName = current.DisplayName;
+
+                if (current.CurrentProgram != null)
+                {
+                    CurrentProgramId = current.CurrentProgram.IdProgram;
+                    CurrentProgramName = current.CurrentProgram.Title;
+                    CurrentProgramDescription = current.CurrentProgram.Description;
+                    CurrentProgramBegin = current.CurrentProgram.StartTime;
+                    CurrentProgramEnd = current.CurrentProgram.EndTime;
+                }
+
+                if (current.NextProgram != null)
+                {
+                    NextProgramId = current.NextProgram.IdProgram;
+                    NextProgramName = current.NextProgram.Title;
+                    NextProgramDescription = current.NextProgram.Description;
+                    NextProgramBegin = current.NextProgram.StartTime;
+                    NextProgramEnd = current.NextProgram.EndTime;
+                }
             }
 
         }

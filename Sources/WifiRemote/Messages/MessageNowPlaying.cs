@@ -128,6 +128,19 @@ namespace WifiRemote
                             return null;
                         }
                     }
+                    // Radio
+                    if (g_Player.IsRadio)
+                    {
+                        if (!WifiRemote.IsAvailableTVPlugin)
+                        {
+                            WifiRemote.LogMessage("No TVPlugin installed: can't add now playing", WifiRemote.LogType.Error);
+                        }
+                        else
+                        {
+                            WifiRemote.LogMessage("Retrieve NP Radio", WifiRemote.LogType.Debug);
+                            return MpTvServerHelper.GetNowPlayingRadio();                       
+                        }
+                    }
                     // Video
                     else if (g_Player.IsVideo)
                     {
@@ -196,7 +209,7 @@ namespace WifiRemote
                                 }
                             }
                             else
-                            {
+                            {   
                                 return MpTvServerHelper.GetNowPlayingTv();
                             }
                         }

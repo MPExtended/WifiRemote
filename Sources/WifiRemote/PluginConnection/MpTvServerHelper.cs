@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using MediaPortal.GUI.Library;
 using MediaPortal.Player;
-using TvPlugin;
+using TvDatabase;
+using MediaPortal.Util;
 
 namespace WifiRemote.PluginConnection
 {
@@ -15,6 +16,7 @@ namespace WifiRemote.PluginConnection
     {
         protected delegate void PlayRecordingDelegate(int recordingId, int startPos, bool startFullscreen);
         protected delegate void PlayTvChannelDelegate(int channelId, bool startFullscreen);
+        protected delegate void PlayRadioChannelDelegate(int channelId);
 
         /// <summary>
         /// Plays a recording from mp tvserver
@@ -36,11 +38,11 @@ namespace WifiRemote.PluginConnection
             bool success = TvPlugin.TVUtil.PlayRecording(rec, startPos);
 
             if (startFullscreen && success)
-            {
-                WifiRemote.LogMessage("Switching to fullscreen", WifiRemote.LogType.Debug);
-                g_Player.ShowFullScreenWindow();
+                {
+                    WifiRemote.LogMessage("Switching to fullscreen", WifiRemote.LogType.Debug);
+                    g_Player.ShowFullScreenWindowTV();
+                }
             }
-        }
 
 
         /// <summary>
@@ -80,12 +82,68 @@ namespace WifiRemote.PluginConnection
                 if (startFullscreen && success)
                 {
                     WifiRemote.LogMessage("Switching to fullscreen", WifiRemote.LogType.Debug);
-                    g_Player.ShowFullScreenWindow();
+                    g_Player.ShowFullScreenWindowTV();
                 }
             }
             else
             {
                 Log.Warn("Couldn't retrieve channel for id: " + channelId);
+            }
+        }
+
+        /// <summary>
+        /// Play a radio channel
+        /// </summary>
+        /// <param name="channelId">Id of the channel</param>
+        public static void PlayRadioChannel(int channelId)
+        {
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                PlayRadioChannelDelegate d = PlayRadioChannel;
+                GUIGraphicsContext.form.Invoke(d, channelId);
+                return;
+            }
+
+            WifiRemote.LogMessage("Start radio channel " + channelId, WifiRemote.LogType.Debug);
+            TvDatabase.Channel channel = TvDatabase.Channel.Retrieve(channelId);
+
+            if (channel != null)
+            {
+                if (g_Player.Playing && (!g_Player.IsTimeShifting || (g_Player.IsTimeShifting && channel.IsWebstream())))
+                {
+                    WifiRemote.LogMessage("Stopping current media so we can start playing radio", WifiRemote.LogType.Debug);
+                    g_Player.Stop();
+                }
+                bool success;
+                if (channel.IsWebstream())
+                {
+                    IList<TuningDetail> details = channel.ReferringTuningDetail();
+                    TuningDetail detail = details[0];
+                    success = g_Player.PlayAudioStream(detail.Url);
+                }
+                else
+                {
+                    success = TvPlugin.TVHome.ViewChannelAndCheck(channel);
+                }
+
+                string strLogo = Utils.GetCoverArt(Thumbs.Radio, channel.DisplayName);
+                if (string.IsNullOrEmpty(strLogo))
+                {
+                    strLogo = "defaultMyRadioBig.png";
+                }
+
+                GUIPropertyManager.SetProperty("#Play.Current.Thumb", strLogo);
+                
+                if (GUIWindowManager.ActiveWindow != (int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_RADIO && !g_Player.Playing)
+                {
+                    WifiRemote.LogMessage("Radio Window not active, activating it", WifiRemote.LogType.Debug);
+                    MediaPortal.GUI.Library.GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_RADIO);
+                }                       
+                WifiRemote.LogMessage("Started radio channel " + channelId + " Success: " + success, WifiRemote.LogType.Info);
+            }
+            else
+            {
+                Log.Warn("Couldn't retrieve radio channel for id: " + channelId);
             }
         }
 
@@ -132,6 +190,12 @@ namespace WifiRemote.PluginConnection
             NowPlayingRecording recording = new NowPlayingRecording(g_Player.Player.CurrentFile);
             return recording;
         }
-        
+
+        internal static NowPlayingRadio GetNowPlayingRadio()
+        {
+            NowPlayingRadio radio = new NowPlayingRadio();
+            return radio;
+        }
+                
     }
 }

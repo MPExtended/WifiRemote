@@ -32,20 +32,23 @@ namespace WifiRemote.PluginConnection
                 return;
             }
             GUIVideoFiles.Reset(); // reset pincode
-
             ArrayList files = new ArrayList();
-            VideoDatabase.GetFiles(movie.ID, ref files);
 
+            //Code for MediaPortal 1.3 Beta and higher
+            VideoDatabase.GetFilesForMovie(movie.ID, ref files);
             if (files.Count > 1)
             {
-                GUIVideoFiles._stackedMovieFiles = files;
-                GUIVideoFiles._isStacked = true;
-                GUIVideoFiles.MovieDuration(files);
+                GUIVideoFiles.StackedMovieFiles = files;
+                GUIVideoFiles.IsStacked = true;
             }
             else
             {
-                GUIVideoFiles._isStacked = false;
+                GUIVideoFiles.IsStacked = false;
             }
+
+            GUIVideoFiles.MovieDuration(files, false);
+
+
             GUIVideoFiles.PlayMovie(movie.ID, false);
         }
 

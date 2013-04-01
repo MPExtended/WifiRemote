@@ -696,6 +696,23 @@ namespace WifiRemote
                             MpTvServerHelper.PlayTvChannel(channelId, startFullscreen);
                         }
                     }
+                    // play a radio channel on the client
+                    else if (type == "playradiochannel")
+                    {
+                        int channelId = (int)message["ChannelId"];
+                        bool startFullscreen = (message["StartFullscreen"] != null) ? (bool)message["StartFullscreen"] : false;
+                        WifiRemote.LogMessage("playradiochannel: channelId: " + channelId + " fullscreen: " + startFullscreen, WifiRemote.LogType.Debug);
+
+                        if (!WifiRemote.IsAvailableTVPlugin)
+                        {
+                            WifiRemote.LogMessage("No TVPlugin installed: Aborting play radiochannel", WifiRemote.LogType.Error);
+                            return;
+                        }
+                        else
+                        {
+                            MpTvServerHelper.PlayRadioChannel(channelId);
+                        }
+                    }
                     else if (type == "playrecording")
                     {
                         int recordingId = (int)message["RecordingId"];
