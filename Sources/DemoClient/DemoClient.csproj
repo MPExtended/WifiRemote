@@ -51,6 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncSocket.cs" />
+    <Compile Include="Messages\MessageNotification.cs" />
+    <Compile Include="Messages\MessageMediaItem.cs" />
+    <Compile Include="Messages\MessagePlayTvSeries.cs" />
+    <Compile Include="Messages\MessageActivateWindow.cs" />
+    <Compile Include="Messages\MessagePlayMovingPictures.cs" />
     <Compile Include="PlaylistLoadDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,7 +75,7 @@
     <Compile Include="Messages\MessageIdentify.cs" />
     <Compile Include="Messages\MessageRequestNowPlaying.cs" />
     <Compile Include="Messages\MessageStartChannel.cs" />
-    <Compile Include="Messages\MessageVolume.cs" />
+    <Compile Include="Resources\MessageVolume.cs" />
     <Compile Include="PasscodeDialog.cs">
       <SubType>Form</SubType>
     </Compile>

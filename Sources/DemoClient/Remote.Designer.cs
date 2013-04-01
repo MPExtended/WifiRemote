@@ -59,7 +59,12 @@
             this.tVChannelSwitchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQLMusicTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.activateWindowWithParamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playMovingPicturesMovieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playSeriesEpisodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playMPExtendedMediaItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.showTestNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -107,8 +112,8 @@
             // 
             // buttonConnectDetected
             // 
-            this.buttonConnectDetected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonConnectDetected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonConnectDetected.Enabled = false;
             this.buttonConnectDetected.Location = new System.Drawing.Point(4, 337);
             this.buttonConnectDetected.Name = "buttonConnectDetected";
@@ -130,9 +135,9 @@
             // 
             // listBoxServers
             // 
-            this.listBoxServers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxServers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxServers.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxServers.FormattingEnabled = true;
             this.listBoxServers.Location = new System.Drawing.Point(3, 184);
@@ -142,8 +147,8 @@
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Verdana", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.SteelBlue;
@@ -155,8 +160,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.buttonConnect);
             this.groupBox1.Controls.Add(this.textBoxPort);
             this.groupBox1.Controls.Add(this.textBoxAddress);
@@ -326,8 +331,8 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.SteelBlue;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.labelDetail);
@@ -339,8 +344,8 @@
             // 
             // labelDetail
             // 
-            this.labelDetail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelDetail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.labelDetail.AutoEllipsis = true;
             this.labelDetail.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDetail.ForeColor = System.Drawing.Color.White;
@@ -352,8 +357,8 @@
             // 
             // labelStatus
             // 
-            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.labelStatus.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelStatus.ForeColor = System.Drawing.Color.White;
             this.labelStatus.Location = new System.Drawing.Point(3, 4);
@@ -393,7 +398,12 @@
             this.requestNowPlayingInfoToolStripMenuItem,
             this.tVChannelSwitchToolStripMenuItem,
             this.sQLMusicTestToolStripMenuItem,
-            this.loadPlaylistToolStripMenuItem});
+            this.loadPlaylistToolStripMenuItem,
+            this.activateWindowWithParamToolStripMenuItem,
+            this.playMovingPicturesMovieToolStripMenuItem,
+            this.playSeriesEpisodeToolStripMenuItem,
+            this.playMPExtendedMediaItemToolStripMenuItem,
+            this.showTestNotificationToolStripMenuItem});
             this.toolStripDropDownButton1.Image = global::DemoClient.Properties.Resources.options;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -404,7 +414,7 @@
             // 
             this.showConsoleWindowToolStripMenuItem.Image = global::DemoClient.Properties.Resources.application_windows;
             this.showConsoleWindowToolStripMenuItem.Name = "showConsoleWindowToolStripMenuItem";
-            this.showConsoleWindowToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.showConsoleWindowToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.showConsoleWindowToolStripMenuItem.Text = "Show console window";
             this.showConsoleWindowToolStripMenuItem.Click += new System.EventHandler(this.showConsoleWindowToolStripMenuItem_Click);
             // 
@@ -412,7 +422,7 @@
             // 
             this.requestNowPlayingInfoToolStripMenuItem.Image = global::DemoClient.Properties.Resources.movie_blue;
             this.requestNowPlayingInfoToolStripMenuItem.Name = "requestNowPlayingInfoToolStripMenuItem";
-            this.requestNowPlayingInfoToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.requestNowPlayingInfoToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.requestNowPlayingInfoToolStripMenuItem.Text = "Request now playing info";
             this.requestNowPlayingInfoToolStripMenuItem.Click += new System.EventHandler(this.requestNowPlayingInfoToolStripMenuItem_Click);
             // 
@@ -420,7 +430,7 @@
             // 
             this.tVChannelSwitchToolStripMenuItem.Image = global::DemoClient.Properties.Resources.channel_switch;
             this.tVChannelSwitchToolStripMenuItem.Name = "tVChannelSwitchToolStripMenuItem";
-            this.tVChannelSwitchToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.tVChannelSwitchToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.tVChannelSwitchToolStripMenuItem.Text = "TV channel switch";
             this.tVChannelSwitchToolStripMenuItem.Click += new System.EventHandler(this.cmdStartChannel_Click);
             // 
@@ -428,7 +438,7 @@
             // 
             this.sQLMusicTestToolStripMenuItem.Image = global::DemoClient.Properties.Resources.playlist;
             this.sQLMusicTestToolStripMenuItem.Name = "sQLMusicTestToolStripMenuItem";
-            this.sQLMusicTestToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.sQLMusicTestToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.sQLMusicTestToolStripMenuItem.Text = "Add songs to playlist";
             this.sQLMusicTestToolStripMenuItem.Click += new System.EventHandler(this.sQLMusicTestToolStripMenuItem_Click);
             // 
@@ -436,9 +446,37 @@
             // 
             this.loadPlaylistToolStripMenuItem.Image = global::DemoClient.Properties.Resources.playlist_load;
             this.loadPlaylistToolStripMenuItem.Name = "loadPlaylistToolStripMenuItem";
-            this.loadPlaylistToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.loadPlaylistToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.loadPlaylistToolStripMenuItem.Text = "Load playlist";
             this.loadPlaylistToolStripMenuItem.Click += new System.EventHandler(this.loadPlaylistToolStripMenuItem_Click);
+            // 
+            // activateWindowWithParamToolStripMenuItem
+            // 
+            this.activateWindowWithParamToolStripMenuItem.Name = "activateWindowWithParamToolStripMenuItem";
+            this.activateWindowWithParamToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.activateWindowWithParamToolStripMenuItem.Text = "Activate Window with Param";
+            this.activateWindowWithParamToolStripMenuItem.Click += new System.EventHandler(this.activateWindowWithParamToolStripMenuItem_Click);
+            // 
+            // playMovingPicturesMovieToolStripMenuItem
+            // 
+            this.playMovingPicturesMovieToolStripMenuItem.Name = "playMovingPicturesMovieToolStripMenuItem";
+            this.playMovingPicturesMovieToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.playMovingPicturesMovieToolStripMenuItem.Text = "Play MovingPictures movie";
+            this.playMovingPicturesMovieToolStripMenuItem.Click += new System.EventHandler(this.playMovingPicturesMovieToolStripMenuItem_Click);
+            // 
+            // playSeriesEpisodeToolStripMenuItem
+            // 
+            this.playSeriesEpisodeToolStripMenuItem.Name = "playSeriesEpisodeToolStripMenuItem";
+            this.playSeriesEpisodeToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.playSeriesEpisodeToolStripMenuItem.Text = "Play series episode";
+            this.playSeriesEpisodeToolStripMenuItem.Click += new System.EventHandler(this.playSeriesEpisodeToolStripMenuItem_Click);
+            // 
+            // playMPExtendedMediaItemToolStripMenuItem
+            // 
+            this.playMPExtendedMediaItemToolStripMenuItem.Name = "playMPExtendedMediaItemToolStripMenuItem";
+            this.playMPExtendedMediaItemToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.playMPExtendedMediaItemToolStripMenuItem.Text = "Play MPExtended Media Item";
+            this.playMPExtendedMediaItemToolStripMenuItem.Click += new System.EventHandler(this.playMPExtendedMediaItemToolStripMenuItem_Click);
             // 
             // toolStripStatusLabel1
             // 
@@ -446,6 +484,13 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(132, 17);
             this.toolStripStatusLabel1.Text = "Select server to connect";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
+            // 
+            // showTestNotificationToolStripMenuItem
+            // 
+            this.showTestNotificationToolStripMenuItem.Name = "showTestNotificationToolStripMenuItem";
+            this.showTestNotificationToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.showTestNotificationToolStripMenuItem.Text = "Show test notification";
+            this.showTestNotificationToolStripMenuItem.Click += new System.EventHandler(this.showTestNotificationToolStripMenuItem_Click);
             // 
             // Remote
             // 
@@ -509,6 +554,11 @@
         private System.Windows.Forms.ToolStripMenuItem tVChannelSwitchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sQLMusicTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadPlaylistToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem activateWindowWithParamToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playMovingPicturesMovieToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playSeriesEpisodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playMPExtendedMediaItemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showTestNotificationToolStripMenuItem;
     }
 }
 
