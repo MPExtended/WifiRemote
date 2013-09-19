@@ -404,6 +404,18 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// Send the current facade info message if not empty to a specific client
+        /// </summary>
+        /// <param name="sender">The client that should receive the facade info message</param>
+        internal void SendListViewStatusToClient(AsyncSocket sender)
+        {
+            if (currentFacadeInfoMessage != null)
+            {
+                SendMessageToClient(currentFacadeInfoMessage, sender);
+            }
+        }
+
+        /// <summary>
         /// A client connected.
         /// </summary>
         /// <param name="sender"></param>
@@ -1142,6 +1154,9 @@ namespace WifiRemote
             {
                 SendMessageToClient(this.nowPlayingMessage, client);
             }
+
+            // Send facade info to client
+            SendListViewStatusToClient(client);
         }
 
         /// <summary>

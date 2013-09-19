@@ -33,6 +33,7 @@ namespace WifiRemote.Messages
                         SelectedIndex = facade.SelectedListItemIndex;
                         Visible = facade.VisibleFromSkinCondition;
                         Count = facade.Count;
+                        ViewType = facade.CurrentLayout.ToString();
                     }
                     else if (o.GetType() == typeof(GUIMenuControl))
                     {
@@ -41,12 +42,14 @@ namespace WifiRemote.Messages
                         SelectedIndex = menu.FocusedButton;
                         Visible = false;
                         Count = menu.ButtonInfos.Count;
+                        ViewType = "menu";
                     }
                     else
                     {
                         SelectedIndex = 0;
                         Visible = false;
                         Count = 0;
+                        ViewType = null;
                     }
                 }
                 else
@@ -54,6 +57,7 @@ namespace WifiRemote.Messages
                     SelectedIndex = 0;
                     Visible = false;
                     Count = 0;
+                    ViewType = null;
                 }
             }
             catch (Exception ex)
@@ -84,6 +88,11 @@ namespace WifiRemote.Messages
         /// Is the facade visible
         /// </summary>
         public bool Visible { get; set; }
+
+        /// <summary>
+        /// Currently shown view of the facade (e.g. list, thumb, ...)
+        /// </summary>
+        public String ViewType { get; set; }
 
         /// <summary>
         /// Has the facade info changed
