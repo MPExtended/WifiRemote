@@ -19,6 +19,7 @@ using Microsoft.Win32;
 using MediaPortal.Dialogs;
 using WifiRemote.MPDialogs;
 using WifiRemote.Messages;
+using WifiRemote.HardwareController;
 
 namespace WifiRemote
 {
@@ -288,25 +289,37 @@ namespace WifiRemote
         /// </summary>
         public void Start()
         {
+            WifiRemote.LogMessage("Start called", LogType.Error);
+
             // Check if TV plugin is installed. We need to explicitely check for ArgusTV and ForTheRecord here, as those overwrite the
             // TV Plugin with a placeholder assembly that doesn't have any functions.
             WifiRemote.IsAvailableTVPlugin = IsAssemblyAvailable("TVPlugin", new Version(1, 0, 0, 0)) &&
                 !IsAssemblyAvailable("ArgusTV.UI.MediaPortal", null) &&
                 !IsAssemblyAvailable("ForTheRecord.UI.MediaPortal", null);
+            WifiRemote.LogMessage("TV Plugin check done", LogType.Error);
             WifiRemote.IsAvailableMovingPictures = IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
+            WifiRemote.LogMessage("Moving pictures plugin check done", LogType.Error);
             WifiRemote.IsAvailableTVSeries = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
+            WifiRemote.LogMessage("TV Series plugin check done", LogType.Error);
             WifiRemote.IsAvailableFanartHandler = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
+            WifiRemote.LogMessage("Fanart handler plugin check done", LogType.Error);
             WifiRemote.IsAvailableNotificationBar = IsAssemblyAvailable("MPNotificationBar", new Version(0, 8, 2, 1));
+            WifiRemote.LogMessage("Notifications plugin check done", LogType.Error);
 
             // Check for MP-Extended
             if (isMPExtendedRunning())
             {
+                WifiRemote.LogMessage("MPExtended is running", LogType.Error);
                 WifiRemote.IsAvailableMPExtendedMAS = isMPExtendedServiceInstalled("MediaAccessServiceInstalled");
+                WifiRemote.LogMessage("MAS check done", LogType.Error);
                 WifiRemote.IsAvailableMPExtendedTAS = isMPExtendedServiceInstalled("TVAccessServiceInstalled");
+                WifiRemote.LogMessage("TAS check done", LogType.Error);
                 WifiRemote.IsAvailableMPExtendedWSS = isMPExtendedServiceInstalled("StreamingServiceInstalled");
+                WifiRemote.LogMessage("WSS check done", LogType.Error);
             }
             else
             {
+                WifiRemote.LogMessage("MPExtended not running", LogType.Error);
                 // Service not started, no MP-Extended functionality
                 WifiRemote.IsAvailableMPExtendedMAS = false;
                 WifiRemote.IsAvailableMPExtendedTAS = false;
@@ -327,6 +340,7 @@ namespace WifiRemote
             g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
 
             GUIWindowManager.Receivers += new SendMessageHandler(GUIWindowManager_Receivers);
+            HardwareControllerFactory.Instance.AudioController().OnAudioControllerStatusChangedEvent += new EventHandler(WifiRemote_OnAudioControllerStatusChangedEvent); 
 
             System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
@@ -341,6 +355,20 @@ namespace WifiRemote
             }
 
             localizedKeyboard = GUILocalizeStrings.Get(100000 + (int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
+        }
+
+        /// <summary>
+        /// The audio controller hardware changed status (in other words the av receiver 
+        /// changed volume or was muted/unmuted).
+        /// 
+        /// The default MediaPortalAudioController will not broadcast this event, here the
+        /// normal GUIMessages are used.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void WifiRemote_OnAudioControllerStatusChangedEvent(object sender, EventArgs e)
+        {
+            socketServer.SendVolumeToAllClients();
         }
 
         /// <summary>

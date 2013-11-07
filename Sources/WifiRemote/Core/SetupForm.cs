@@ -60,6 +60,9 @@ namespace WifiRemote
             }
         }
 
+        private String audioController;
+        private String audioControllerIpAddress;
+
         public SetupForm()
         {
             InitializeComponent();
@@ -116,6 +119,10 @@ namespace WifiRemote
                     }
                 }
 
+
+                // Load hardware controller config
+                audioController = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "audioController", "MediaPortal");
+                audioControllerIpAddress = reader.GetValueAsString(WifiRemote.PLUGIN_NAME, "audioControllerIpAddress", "");
             }
 
             // Test if Bonjour is installed
@@ -217,6 +224,34 @@ namespace WifiRemote
             nameColumn.Name = "Plugin";
             dataGridViewPluginList.Columns.Add(nameColumn);
 
+
+            // Hardware controller tab
+            // Preselect audio as hardware type
+            if (comboBoxHardwareType.Items.Count > 0)
+            {
+                comboBoxHardwareType.SelectedIndex = 0;
+
+                // Fill available audio hardware controllers
+                comboBoxHardwareDevice.Items.AddRange(HardwareController.HardwareControllerFactory.AvailableAudioControllers.ToArray());
+
+                // Fill ip text field
+                textBoxHardwareIp.Text = audioControllerIpAddress;
+
+                // Select the saved audio hardware controller
+                if (audioController != null)
+                {
+                    int hardwareDeviceItemIndex = comboBoxHardwareDevice.Items.IndexOf(audioController);
+                    if (hardwareDeviceItemIndex >= 0)
+                    {
+                        comboBoxHardwareDevice.SelectedIndex = hardwareDeviceItemIndex;
+                    }
+                    else
+                    {
+                        // Select default (MediaPortal)
+                        comboBoxHardwareDevice.SelectedIndex = 0;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -299,6 +334,12 @@ namespace WifiRemote
                 }
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "savedPlugins", String.Join("|", pluginIdsToSave.ToArray()));
                 xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "ignoredPlugins", String.Join("|", ignoredPluginsList.ConvertAll<string>(x => x.ToString()).ToArray()));
+
+                xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "audioController", audioController);
+                if (audioController != HardwareController.HardwareControllerFactory.AvailableAudioControllers.FirstOrDefault())
+                {
+                    xmlwriter.SetValue(WifiRemote.PLUGIN_NAME, "audioControllerIpAddress", audioControllerIpAddress);
+                }
             }
         }
 
@@ -853,6 +894,31 @@ namespace WifiRemote
                 GenerateBarcode();
             }
         }
+
+        /// <summary>
+        /// Hardware tab: device changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void comboBoxHardwareDevice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Todo: Once there are more hardware types than only audio this needs to depend on the
+            //       selected type
+            groupBoxHardwareOptions.Visible = (comboBoxHardwareDevice.SelectedIndex != 0);
+            audioController = (String)comboBoxHardwareDevice.SelectedItem;
+        }
+
+        /// <summary>
+        /// Hardware ip address text box value was changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void textBoxHardwareIp_TextChanged(object sender, EventArgs e)
+        {
+            // Todo: Once there are more hardware types than only audio this needs to depend on the
+            //       selected type
+            audioControllerIpAddress = textBoxHardwareIp.Text;
+        }
         #endregion
 
 
@@ -926,5 +992,7 @@ namespace WifiRemote
         }        
 
         #endregion
+
+
     }
 }

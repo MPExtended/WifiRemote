@@ -57,6 +57,14 @@ namespace DemoClient.Messages
             }
         }
 
+        public bool ShowPlaylist
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public String AutologinKey
         {
             get;

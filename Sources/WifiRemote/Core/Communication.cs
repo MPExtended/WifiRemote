@@ -12,6 +12,7 @@ using System.IO;
 using TvPlugin;
 using WifiRemote.PluginConnection;
 using MediaPortal.Playlists;
+using WifiRemote.HardwareController.AudioController;
 
 namespace WifiRemote
 {
@@ -24,6 +25,7 @@ namespace WifiRemote
         private int commandDownPauses;
         private bool isCommandDown;
         private StopWatch m_keyDownTimer;
+        private AbstractAudioController audioController;
 
         private enum RemoteButton
         {
@@ -105,6 +107,7 @@ namespace WifiRemote
         {
             remoteHandler = new InputHandler("WifiRemote");
             m_keyDownTimer = new StopWatch();
+            audioController = HardwareController.HardwareControllerFactory.Instance.AudioController();
         }
 
         /// <summary>
@@ -186,15 +189,18 @@ namespace WifiRemote
 
                 case "volup":
                     button = RemoteButton.VolumeUp;
-                    break;
+                    audioController.VolumeUp();
+                    return;
 
                 case "voldown":
                     button = RemoteButton.VolumeDown;
-                    break;
+                    audioController.VolumeDown();
+                    return;
 
                 case "volmute":
                     button = RemoteButton.Mute;
-                    break;
+                    audioController.ToggleMute();
+                    return;
 
                 case "chup":
                     button = RemoteButton.ChannelUp;
@@ -462,7 +468,7 @@ namespace WifiRemote
         /// <param name="volume">The new volume, ranging from 0 to 100</param>
         internal void SetVolume(int volume)
         {
-            SetVolume(volume, false);
+            audioController.SetVolume(volume, false);
         }
 
         /// <summary>
@@ -472,23 +478,7 @@ namespace WifiRemote
         /// <param name="relative">True if the volume should be changed relative to the current volume</param>
         internal void SetVolume(int volume, bool relative)
         {
-            if (relative)
-            {
-                int currentVolume = 0;
-
-                try
-                {
-                    currentVolume = VolumeHandler.Instance.Volume / (VolumeHandler.Instance.Maximum / 100);
-                }
-                catch (Exception) { }
-
-                volume += currentVolume;
-            }
-
-            if (volume >= 0 && volume <= 100)
-            {
-                VolumeHandler.Instance.Volume = (int)Math.Floor(volume * VolumeHandler.Instance.Maximum / 100.0);
-            }
+            audioController.SetVolume(volume, relative);
         }
 
         /// <summary>
@@ -595,7 +585,5 @@ namespace WifiRemote
                 g_Player.SeekRelative(position);
             }
         }
-
-
     }
 }
