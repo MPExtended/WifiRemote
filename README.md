@@ -1,7 +1,7 @@
 # WifiRemote MediaPortal Plugin
 
 ### What is WifiRemote
-WifiRemote is a process plugin for the popular opensource mediacenter software "[http://www.team-mediaportal.com MediaPortal]".
+WifiRemote is a process plugin for the popular opensource mediacenter software "[MediaPortal](http://www.team-mediaportal.com)".
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it.
 
@@ -17,13 +17,13 @@ Please copy the WifiRemote.xml file to your MediaPortal custom keymaps folder.
 ### Building a client
 If you want to build a client app for this plugin please contact me via PM on the MediaPortal forum (user Shukuyen). In the future I will add complete information on how to build a client app to the wiki. I am developing a client app for iPhone myself, DieBagger is developing an Android remote app.
 
-[http://code.google.com/p/wifiremote/wiki/APIDocumentation A list of messages sent from and to WifiRemote is available here.]
+[A list of messages sent from and to WifiRemote is available here.](http://code.google.com/p/wifiremote/wiki/APIDocumentation)
 
 ### Acknowledgements
 WifiRemote uses the following libraries:
-  * [http://code.google.com/p/dotnetasyncsocket/ DotNetAsyncSocket]
-  * [http://code.google.com/p/zeroconfignetservices/ ZeroConfigNetServices]
-  * [http://james.newtonking.com/pages/json-net.aspx Json.NET by James Newton-King]
-  * [http://code.google.com/p/zxing/ ZXing ("Zebra Crossing") Barcodes]
+  * [DotNetAsyncSocket](http://code.google.com/p/dotnetasyncsocket/)
+  * [ZeroConfigNetServices](http://code.google.com/p/zeroconfignetservices/)
+  * [Json.NET by James Newton-King](http://james.newtonking.com/pages/json-net.aspx)
+  * [Barcodes ("Zebra Crossing")](http://code.google.com/p/zxing/ ZXing)
 
-Huge thanks go to [http://code.google.com/u/martinvanderboon/ martinvanderboon] for his [http://code.google.com/p/ipimp/ iPimp project], an advanced web based remote control and even streaming client. I ended up rewriting and using a lot more code from his MPClientController plugin than I thought possible when starting this project. Thanks!
+Huge thanks go to [martinvanderboon](http://code.google.com/u/martinvanderboon/) for his [iPimp project](http://code.google.com/p/ipimp/), an advanced web based remote control and even streaming client. I ended up rewriting and using a lot more code from his MPClientController plugin than I thought possible when starting this project. Thanks!
