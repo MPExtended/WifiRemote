@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MediaPortal.Music.Database;
+using MediaPortal.Database;
 using WifiRemote.MPPlayList;
 using System.IO;
 using MediaPortal.Playlists;
@@ -22,7 +23,8 @@ namespace WifiRemote.PluginConnection
         public static void PlayMusicTrack(int trackId, int startPos)
         {
             List<Song> songs = new List<Song>();
-            string sql = "select * from tracks where idTrack=" + trackId;
+
+            string sql = String.Format("select * from tracks where idTrack={0}", trackId);
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
 
             if (songs.Count > 0)
@@ -40,7 +42,9 @@ namespace WifiRemote.PluginConnection
         public static void PlayAlbum(String albumArtist, String album, int startPos)
         {
             List<Song> songs = new List<Song>();
-            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%' AND strAlbum LIKE '%" + album + "%' order by iTrack ASC";
+            string sql = String.Format("select * from tracks where strAlbumArtist like '%{0}%' AND strAlbum LIKE '%{1}%' order by iTrack ASC",
+                DatabaseUtility.RemoveInvalidChars(albumArtist),
+                DatabaseUtility.RemoveInvalidChars(album));
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
 
             if (songs.Count > 0)
@@ -64,7 +68,8 @@ namespace WifiRemote.PluginConnection
         internal static void PlayArtist(string albumArtist, int startPos)
         {
             List<Song> songs = new List<Song>();
-            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%'";
+            string sql = String.Format("select * from tracks where strAlbumArtist like '%{0}%'",
+                DatabaseUtility.RemoveInvalidChars(albumArtist));
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
 
             if (songs.Count > 0)
@@ -212,6 +217,7 @@ namespace WifiRemote.PluginConnection
 
             List<Song> songs = new List<Song>();
             string sql = "select * from tracks where idTrack=" + trackId;
+            DatabaseUtility.RemoveInvalidChars(sql);
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
 
             if (songs.Count > 0)
@@ -232,7 +238,9 @@ namespace WifiRemote.PluginConnection
         {
             List<PlayListItem> returnList = new List<PlayListItem>();
             List<Song> songs = new List<Song>();
-            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%' AND strAlbum LIKE '%" + album + "%'";
+            string sql = String.Format("select * from tracks where strAlbumArtist like '%{0}%' AND strAlbum LIKE '%{1}%'",
+                DatabaseUtility.RemoveInvalidChars(albumArtist),
+                DatabaseUtility.RemoveInvalidChars(album));
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
 
             if (songs.Count > 0)
@@ -254,7 +262,8 @@ namespace WifiRemote.PluginConnection
         {
             List<PlayListItem> returnList = new List<PlayListItem>();
             List<Song> songs = new List<Song>();
-            string sql = "select * from tracks where strAlbumArtist like '%" + albumArtist + "%'"; 
+            string sql = String.Format("select * from tracks where strAlbumArtist like '%{0}%'",
+                DatabaseUtility.RemoveInvalidChars(albumArtist));
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
 
             if (songs.Count > 0)
