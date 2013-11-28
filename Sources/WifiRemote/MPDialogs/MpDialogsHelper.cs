@@ -33,6 +33,11 @@ namespace WifiRemote.MPDialogs
         public const int MOPI_PIN_ID = 9915;
 
         /// <summary>
+        /// Id of the Trakt rating dialog
+        /// </summary>
+        public const int TRAKT_RATING_ID = 87300;
+
+        /// <summary>
         /// Is a dialog currently shown
         /// </summary>
         public static bool IsDialogShown { get; set; }
@@ -99,6 +104,13 @@ namespace WifiRemote.MPDialogs
                     return GetDialogMovingPicturesPin();
                 }
             }
+            if (WifiRemote.IsAvailableTrakt)
+            {
+                if (TraktHelper.IsTraktRatingDialog(dialog))
+                {
+                    return GetDialogTraktRating();
+                }
+            }
             return null;
         }
 
@@ -125,7 +137,7 @@ namespace WifiRemote.MPDialogs
         }
 
         /// <summary>
-        /// Get WifiRemote representation of the MpTvSeries rating dialog
+        /// Get WifiRemote representation of the MpMovingPictures rating dialog
         /// </summary>
         /// <returns>WifiRemote Dialog Instance</returns>
         public static MpDialogMovingPicturesRating GetDialogMovingPicturesRating()
@@ -136,7 +148,7 @@ namespace WifiRemote.MPDialogs
         }
 
         /// <summary>
-        /// Get WifiRemote representation of the MpTvSeries pin dialog
+        /// Get WifiRemote representation of the MpMovingPictures pin dialog
         /// </summary>
         /// <returns>WifiRemote Dialog Instance</returns>
         public static MpDialogMovingPicturesPin GetDialogMovingPicturesPin()
@@ -144,6 +156,17 @@ namespace WifiRemote.MPDialogs
             Cornerstone.MP.GUIPinCodeDialog menu = (Cornerstone.MP.GUIPinCodeDialog)GUIWindowManager.GetWindow(MOPI_PIN_ID);
             MpDialogMovingPicturesPin pinDialog = new MpDialogMovingPicturesPin(menu);
             return pinDialog;
+        }
+
+        /// <summary>
+        /// Get WifiRemote representation of the MpTrakt rating dialog
+        /// </summary>
+        /// <returns>WifiRemote Dialog Instance</returns>
+        public static MpDialogTraktRating GetDialogTraktRating()
+        {
+            TraktPlugin.GUI.GUIRateDialog menu = (TraktPlugin.GUI.GUIRateDialog)GUIWindowManager.GetWindow(TRAKT_RATING_ID);
+            MpDialogTraktRating ratingDialog = new MpDialogTraktRating(menu);
+            return ratingDialog;
         }
 
         /// <summary>

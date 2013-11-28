@@ -167,6 +167,15 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// <code>true</code> if trakt plugin is available
+        /// </summary>
+        public static bool IsAvailableTrakt
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// <code>true</code> if Fanart Handler is available
         /// </summary>
         public static bool IsAvailableFanartHandler
@@ -295,6 +304,7 @@ namespace WifiRemote
                 !IsAssemblyAvailable("ForTheRecord.UI.MediaPortal", null);
             WifiRemote.IsAvailableMovingPictures = IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
             WifiRemote.IsAvailableTVSeries = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
+            WifiRemote.IsAvailableTrakt = IsAssemblyAvailable("TraktPlugin", new Version(3, 0));
             WifiRemote.IsAvailableFanartHandler = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
             WifiRemote.IsAvailableNotificationBar = IsAssemblyAvailable("MPNotificationBar", new Version(0, 8, 2, 1));
 
