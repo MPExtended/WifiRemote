@@ -101,6 +101,14 @@ namespace WifiRemote.MPDialogs
                         diag.HandleAction(action, index);
                     }
                 }
+                else if (dialogId == MpDialogsHelper.TRAKT_RATING_ID)
+                {
+                    if (WifiRemote.IsAvailableTrakt)
+                    {
+                        MpDialogTraktRating dialog = MpDialogsHelper.GetDialogTraktRating();
+                        dialog.HandleAction(action, index);
+                    }
+                }
             }
         }
     }
