@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -57,17 +57,17 @@
     </Reference>
     <Reference Include="Core, Version=1.1.8.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
+      <HintPath>..\..\Libs\Core.dll</HintPath>
     </Reference>
     <Reference Include="Cornerstone">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Cornerstone.dll</HintPath>
+      <HintPath>..\..\Libs\Cornerstone.dll</HintPath>
     </Reference>
     <Reference Include="Cornerstone.MP">
-      <HintPath>..\..\..\Libs\Cornerstone.MP.dll</HintPath>
+      <HintPath>..\..\Libs\Cornerstone.MP.dll</HintPath>
     </Reference>
     <Reference Include="Databases, Version=1.1.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
+      <HintPath>..\..\Libs\Databases.dll</HintPath>
     </Reference>
     <Reference Include="Dialogs">
       <HintPath>..\..\Libs\Dialogs.dll</HintPath>
@@ -120,11 +120,11 @@
     </Reference>
     <Reference Include="Utils, Version=1.1.8.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
+      <HintPath>..\..\Libs\Utils.dll</HintPath>
     </Reference>
     <Reference Include="WindowPlugins, Version=1.2.1.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\WindowPlugins.dll</HintPath>
+      <HintPath>..\..\Libs\WindowPlugins.dll</HintPath>
     </Reference>
     <Reference Include="ZeroconfService">
       <HintPath>..\..\Libs\ZeroconfService.dll</HintPath>
