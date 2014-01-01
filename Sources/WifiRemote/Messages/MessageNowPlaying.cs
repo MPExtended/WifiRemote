@@ -158,11 +158,7 @@ namespace WifiRemote
                             // MyVideos movie
                             if (movie.ID > 0)
                             {
-#if COMPILE_FOR_1_2_0 || COMPILE_FOR_1_1_2 // MyVideos extended info available since MediaPortal 1.1.2 (Rev 26532)
                                 return new NowPlayingVideo(movie);
-#else
-                                return null;
-#endif
                             }
                             else
                             // MovingPictures, TVSeries or something else
