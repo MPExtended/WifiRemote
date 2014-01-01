@@ -10,7 +10,6 @@ using MediaPortal.Util;
 using System.Net.NetworkInformation;
 using System.Collections;
 using System.Drawing;
-using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Collections.Generic;
@@ -839,26 +838,6 @@ namespace WifiRemote
             }
         }
 
-
-        /// <summary>
-        /// Returns an image as its byte array representation.
-        /// Used to make images encodable in JSON.
-        /// </summary>
-        /// <param name="img"></param>
-        /// <returns></returns>
-        public static byte[] imageToByteArray(Image img, System.Drawing.Imaging.ImageFormat format)
-        {
-            byte[] byteArray = new byte[0];
-            using (MemoryStream stream = new MemoryStream())
-            {
-                img.Save(stream, format);
-                stream.Close();
-                byteArray = stream.ToArray();
-            }
-
-            return byteArray;
-        }
-
         #endregion
 
         #region WifiRemote methods
@@ -1002,7 +981,7 @@ namespace WifiRemote
 
                                 if (icon != null)
                                 {
-                                    iconBytes = WifiRemote.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
+                                    iconBytes = ImageHelper.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
                                 }
                             }
                         }

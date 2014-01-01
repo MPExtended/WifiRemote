@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -151,6 +151,7 @@
     <Compile Include="Messages\MessagePlugins.cs" />
     <Compile Include="Messages\MessageProperties.cs" />
     <Compile Include="Messages\MessagePropertyChanged.cs" />
+    <Compile Include="Messages\MessageScreenshot.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingRadio.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingRecording.cs" />
     <Compile Include="Messages\Now Playing\NowPlayingTv.cs" />
@@ -209,6 +210,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Core\Property.cs" />
+    <Compile Include="Utility\ImageHelper.cs" />
     <Compile Include="Utility\QRCodeGenerator.cs" />
     <Compile Include="Core\RemoteClient.cs" />
     <Compile Include="Core\ServerDescription.cs" />
