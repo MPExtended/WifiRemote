@@ -1202,6 +1202,13 @@ namespace WifiRemote
 
             // Send facade info to client
             SendListViewStatusToClient(client);
+
+            // Inform client about open dialogs
+            if (MpDialogsHelper.IsDialogShown)
+            {
+                MessageDialog msg = MpDialogsHelper.GetDialogMessage(MpDialogsHelper.CurrentDialog);
+                SendMessageToClient(msg, client);
+            }
         }
 
         /// <summary>
