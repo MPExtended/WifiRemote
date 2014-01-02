@@ -238,7 +238,8 @@ namespace WifiRemote.MPPlayList
             PlayListType plType = GetTypeFromString(type);
             WifiRemote.LogMessage("plType:" + plType, WifiRemote.LogType.Debug);
             WifiRemote.LogMessage("currentType:" + PlayListPlayer.SingletonPlayer.CurrentPlaylistType , WifiRemote.LogType.Debug);
-            if(plType == PlayListPlayer.SingletonPlayer.CurrentPlaylistType){
+            if (plType == PlayListPlayer.SingletonPlayer.CurrentPlaylistType)
+            {
                 PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
                 playListPlayer.RepeatPlaylist = repeat;
                 RefreshPlaylistIfVisible();
