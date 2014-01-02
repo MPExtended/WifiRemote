@@ -108,6 +108,8 @@ namespace WifiRemote.MPPlayList
 
                 MessagePlaylistDetails returnPlaylist = new MessagePlaylistDetails();
                 returnPlaylist.PlaylistType = playlistType;
+                returnPlaylist.PlaylistName = PlaylistHelper.GetPlaylistName(playlistType);
+                returnPlaylist.PlaylistRepeat = PlaylistHelper.GetPlaylistRepeat(playlistType);
                 returnPlaylist.PlaylistItems = items;
 
                 socketServer.SendMessageToClient(returnPlaylist, sender);
@@ -157,6 +159,24 @@ namespace WifiRemote.MPPlayList
                     WifiRemote.LogMessage("Must specify a name to save a playlist", WifiRemote.LogType.Warn);
                 }
 
+            }
+            else if (action.Equals("shuffle"))
+            {
+                PlaylistHelper.Shuffle(playlistType);
+            }
+            else if (action.Equals("repeat"))
+            {
+                WifiRemote.LogMessage("Playlist action repeat", WifiRemote.LogType.Debug);
+                if (message["Repeat"] != null)
+                {
+                    bool repeat =  (bool)message["Repeat"];
+                    PlaylistHelper.Repeat(playlistType, repeat);
+                }
+                else
+                {
+                    WifiRemote.LogMessage("Must specify repeat to change playlist repeat mode", WifiRemote.LogType.Warn);
+                }
+                
             }
         }
     }

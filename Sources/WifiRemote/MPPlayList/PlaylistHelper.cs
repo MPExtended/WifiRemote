@@ -229,6 +229,23 @@ namespace WifiRemote.MPPlayList
         }
 
         /// <summary>
+        /// Set repeat if type is of the current playlist type
+        /// </summary>
+        /// <param name="type">Type of the playlist</param>
+        public static void Repeat(string type, bool repeat)
+        {
+            WifiRemote.LogMessage("Set playlist repeat:" + repeat, WifiRemote.LogType.Debug);
+            PlayListType plType = GetTypeFromString(type);
+            WifiRemote.LogMessage("plType:" + plType, WifiRemote.LogType.Debug);
+            WifiRemote.LogMessage("currentType:" + PlayListPlayer.SingletonPlayer.CurrentPlaylistType , WifiRemote.LogType.Debug);
+            if(plType == PlayListPlayer.SingletonPlayer.CurrentPlaylistType){
+                PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
+                playListPlayer.RepeatPlaylist = repeat;
+                RefreshPlaylistIfVisible();
+            }
+        }
+
+        /// <summary>
         /// Returns a playlistitem from a song
         /// 
         /// Note: this method is available in MediaPortal 1.2 in 
@@ -327,6 +344,31 @@ namespace WifiRemote.MPPlayList
             }
 
             RefreshPlaylistIfVisible();
+        }
+
+        /// <summary>
+        /// Retrieves the name of the playlist
+        /// </summary>
+        /// <param name="type">Type of the playlist</param>
+        public static String GetPlaylistName(String type)
+        {
+            PlayListType plType = GetTypeFromString(type);
+            PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
+            PlayList playList = playListPlayer.GetPlaylist(plType);
+            WifiRemote.LogMessage("Playlist name test:" + playList.Name, WifiRemote.LogType.Debug);
+            
+            return playList.Name;
+        }
+
+        /// <summary>
+        /// Retrieves the repeat mode of the playlist
+        /// </summary>
+        /// <param name="type">Type of the playlist</param>
+        public static bool GetPlaylistRepeat(String type)
+        {
+            PlayListType plType = GetTypeFromString(type);
+            PlayListPlayer playListPlayer = PlayListPlayer.SingletonPlayer;
+            return playListPlayer.RepeatPlaylist;
         }
 
         /// <summary>
