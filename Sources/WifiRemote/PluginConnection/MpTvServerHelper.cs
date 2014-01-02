@@ -149,7 +149,8 @@ namespace WifiRemote.PluginConnection
                 {
                     // TV card radio channel
                     WifiRemote.LogMessage("Play TV card radio channel", WifiRemote.LogType.Debug);
-                    if (g_Player.IsRadio && g_Player.Playing)//Check if same channel is alrady playing
+                    //Check if same channel is alrady playing
+                    if (g_Player.IsRadio && g_Player.Playing)
                     {
                         Channel currentlyPlaying = TvPlugin.TVHome.Navigator.Channel;
                         if (currentlyPlaying != null && currentlyPlaying.IdChannel == channel.IdChannel)
