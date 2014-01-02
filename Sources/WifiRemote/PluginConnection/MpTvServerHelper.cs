@@ -145,8 +145,9 @@ namespace WifiRemote.PluginConnection
                     success = g_Player.PlayAudioStream(detail.Url);
                     GUIPropertyManager.SetProperty("#Play.Current.Title", channel.DisplayName);
                 }
-                else// TV card radio channel
+                else
                 {
+                    // TV card radio channel
                     WifiRemote.LogMessage("Play TV card radio channel", WifiRemote.LogType.Debug);
                     if (g_Player.IsRadio && g_Player.Playing)//Check if same channel is alrady playing
                     {
