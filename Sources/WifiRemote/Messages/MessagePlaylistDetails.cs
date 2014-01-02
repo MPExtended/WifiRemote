@@ -17,6 +17,16 @@ namespace WifiRemote.Messages
         }
 
         /// <summary>
+        /// Repeat mode of the playlist
+        /// </summary>
+        public bool PlaylistRepeat { get; set; }
+
+        /// <summary>
+        /// Name of the playlist
+        /// </summary>
+        public String PlaylistName { get; set; }
+
+        /// <summary>
         /// Type of the playlist (currently supported: music, video)
         /// </summary>
         public String PlaylistType { get; set; }
