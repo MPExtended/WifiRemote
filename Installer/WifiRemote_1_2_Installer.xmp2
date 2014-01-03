@@ -215,7 +215,7 @@ New in 0.8:
 
 </VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/Release_0_8/WifiRemote_0.8.mpe1</OnlineLocation>
+    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8/WifiRemote_0.8.mpe1</OnlineLocation>
     <ReleaseDate>2014-01-03T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
     <Location>WifiRemote_0.8.mpe1</Location>
