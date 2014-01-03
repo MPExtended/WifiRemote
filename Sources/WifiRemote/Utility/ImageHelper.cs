@@ -191,7 +191,7 @@ namespace WifiRemote
             }
 
             Image image = (width > 0) ? ImageHelper.ResizedImage(Screenshot, width) : Screenshot;
-            return ImageHelper.imageToByteArray(image, System.Drawing.Imaging.ImageFormat.Png);
+            return ImageHelper.imageToByteArray(image, System.Drawing.Imaging.ImageFormat.Jpeg);
         }
 
         protected void setupFileSystemWatcher()
