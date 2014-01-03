@@ -58,12 +58,13 @@ namespace WifiRemote.MPDialogs
                     String t = GetSingleLabel(dialog, control);
                     if (t != null && !t.Equals(""))
                     {
-                        text.Append(t);
                         if (index > 0)
                         {
                             text.AppendLine();
                         }
                         index++;
+
+                        text.Append(t);
                     }
                 }
 
@@ -81,20 +82,38 @@ namespace WifiRemote.MPDialogs
             GUIControlCollection coll = dialog.controlList;
             foreach (GUIControl c in coll)
             {
-                if (c.GetID == control)
+                if (c.GetType() == typeof(GUIGroup))
                 {
-                    if (c.GetType() == typeof(GUILabelControl))
+                    foreach (GUIControl subControl in ((GUIGroup)c).Children)
                     {
-                        GUILabelControl l = (GUILabelControl)c;
-                        return l.Label;
-                    }
-                    else if (c.GetType() == typeof(GUIFadeLabel))
-                    {
-                        GUIFadeLabel l = (GUIFadeLabel)c;
-                        return l.Label;
+                        if (subControl.GetID == control)
+                        {
+                            return GetSingleLabelFromControl(subControl);
+                        }
                     }
                 }
+                else if (c.GetID == control)
+                {
+                    return GetSingleLabelFromControl(c);
+                }
             }
+
+            return null;
+        }
+
+        private string GetSingleLabelFromControl(GUIControl control)
+        {
+            if (control.GetType() == typeof(GUILabelControl))
+            {
+                GUILabelControl label = (GUILabelControl)control;
+                return label.Label;
+            }
+            else if (control.GetType() == typeof(GUIFadeLabel))
+            {
+                GUIFadeLabel label = (GUIFadeLabel)control;
+                return label.Label;
+            }
+
             return null;
         }
 

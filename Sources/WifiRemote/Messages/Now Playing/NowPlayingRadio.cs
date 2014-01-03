@@ -7,6 +7,7 @@ using System.IO;
 using System.Drawing;
 using WifiRemote.MpExtended;
 using TvDatabase;
+using MediaPortal.GUI.Library;
 
 namespace WifiRemote
 {
@@ -46,6 +47,15 @@ namespace WifiRemote
         /// Name of the current channel
         /// </summary>
         public string ChannelName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Name of the current artits
+        /// </summary>
+        public string ArtistName
         {
             get;
             set;
@@ -165,20 +175,26 @@ namespace WifiRemote
         public NowPlayingRadio()
         {
             TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
-            TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
-            if (current.IsWebstream())
-            {
-                IList<TuningDetail> details = current.ReferringTuningDetail();
-                TuningDetail detail = details[0];
-                CurrentProgramName = detail.Name;
-                CurrentProgramId = detail.IdChannel;
-                CurrentUrl = detail.Url;
+            TvDatabase.Channel current = TvPlugin.Radio.CurrentChannel;
 
+            if (current != null && current.IsWebstream())
+            {
+                if (current.ReferringTuningDetail() != null && current.ReferringTuningDetail().Count > 0)
+                {
+                    IList<TuningDetail> details = current.ReferringTuningDetail();
+                    TuningDetail detail = details[0];
+                    CurrentProgramName = detail.Name;
+                    CurrentProgramId = detail.IdChannel;
+                    CurrentUrl = detail.Url;
+                    ChannelName = GUIPropertyManager.GetProperty("#Play.Current.Album");
+                    ArtistName = GUIPropertyManager.GetProperty("#Play.Current.Artist");                
+                }
             }
-            else
+            else if (current != null && !current.IsWebstream())
             {
                 ChannelId = current.IdChannel;
                 ChannelName = current.DisplayName;
+                ArtistName = GUIPropertyManager.GetProperty("#Play.Current.Artist");                
 
                 if (current.CurrentProgram != null)
                 {

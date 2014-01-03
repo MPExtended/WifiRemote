@@ -109,37 +109,65 @@ namespace WifiRemote.PluginConnection
 
             if (channel != null)
             {
-                if (g_Player.Playing && (!g_Player.IsTimeShifting || (g_Player.IsTimeShifting && channel.IsWebstream())))
+                if (GUIWindowManager.ActiveWindow != (int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_RADIO)
                 {
-                    WifiRemote.LogMessage("Stopping current media so we can start playing radio", WifiRemote.LogType.Debug);
-                    g_Player.Stop();
-                }
-                bool success;
-                if (channel.IsWebstream())
-                {
-                    IList<TuningDetail> details = channel.ReferringTuningDetail();
-                    TuningDetail detail = details[0];
-                    success = g_Player.PlayAudioStream(detail.Url);
-                }
-                else
-                {
-                    success = TvPlugin.TVHome.ViewChannelAndCheck(channel);
+                    WifiRemote.LogMessage("Radio Window not active, activating it", WifiRemote.LogType.Debug);
+                    MediaPortal.GUI.Library.GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_RADIO);
                 }
 
+                GUIPropertyManager.RemovePlayerProperties();
+                GUIPropertyManager.SetProperty("#Play.Current.ArtistThumb", channel.DisplayName);
+                GUIPropertyManager.SetProperty("#Play.Current.Album", channel.DisplayName);
+                GUIPropertyManager.SetProperty("#Play.Current.Title", channel.DisplayName);
+
+                GUIPropertyManager.SetProperty("#Play.Current.Title", channel.DisplayName);
                 string strLogo = Utils.GetCoverArt(Thumbs.Radio, channel.DisplayName);
                 if (string.IsNullOrEmpty(strLogo))
                 {
                     strLogo = "defaultMyRadioBig.png";
                 }
-
                 GUIPropertyManager.SetProperty("#Play.Current.Thumb", strLogo);
-                
-                if (GUIWindowManager.ActiveWindow != (int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_RADIO && !g_Player.Playing)
+
+                if (g_Player.Playing && !channel.IsWebstream())
                 {
-                    WifiRemote.LogMessage("Radio Window not active, activating it", WifiRemote.LogType.Debug);
-                    MediaPortal.GUI.Library.GUIWindowManager.ActivateWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_RADIO);
-                }                       
-                WifiRemote.LogMessage("Started radio channel " + channelId + " Success: " + success, WifiRemote.LogType.Info);
+                    if (!g_Player.IsTimeShifting || (g_Player.IsTimeShifting && channel.IsWebstream()))
+                    {
+                        WifiRemote.LogMessage("Stopping current media so we can start playing radio", WifiRemote.LogType.Debug);
+                        g_Player.Stop();
+                    }
+                }
+                bool success = false;
+                if (channel.IsWebstream())
+                {
+                    IList<TuningDetail> details = channel.ReferringTuningDetail();
+                    TuningDetail detail = details[0];
+                    WifiRemote.LogMessage("Play webStream:" +detail.Name +  ", url:" + detail.Url, WifiRemote.LogType.Debug);
+                    success = g_Player.PlayAudioStream(detail.Url);
+                    GUIPropertyManager.SetProperty("#Play.Current.Title", channel.DisplayName);
+                }
+                else
+                {
+                    // TV card radio channel
+                    WifiRemote.LogMessage("Play TV card radio channel", WifiRemote.LogType.Debug);
+                    //Check if same channel is alrady playing
+                    if (g_Player.IsRadio && g_Player.Playing)
+                    {
+                        Channel currentlyPlaying = TvPlugin.TVHome.Navigator.Channel;
+                        if (currentlyPlaying != null && currentlyPlaying.IdChannel == channel.IdChannel)
+                        {
+                            WifiRemote.LogMessage("Already playing TV card radio channel with id:" + channel.IdChannel + ", do not tune again", WifiRemote.LogType.Debug);
+                        }
+                        else
+                        {
+                            success = TvPlugin.TVHome.ViewChannelAndCheck(channel);
+                        }
+                    }
+                    else
+                    {
+                        success = TvPlugin.TVHome.ViewChannelAndCheck(channel);
+                    }   
+                }                 
+                WifiRemote.LogMessage("Started radio channel " + channelId + " Success: " + success, WifiRemote.LogType.Debug);
             }
             else
             {

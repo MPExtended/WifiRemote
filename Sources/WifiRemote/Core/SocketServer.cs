@@ -42,6 +42,8 @@ namespace WifiRemote
         private List<AsyncSocket> connectedSockets;
         private AuthMethod allowedAuth;
         private List<AutoLoginToken> loginTokens;
+        private Dictionary<AsyncSocket, int> socketsWaitingForScreenshot;
+        private ImageHelper imageHelper;
 
         private MessageWelcome welcomeMessage;
         private MessageStatus statusMessage;
@@ -416,6 +418,25 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// Send the current screenshot to the client as byte array
+        /// </summary>
+        public void SendScreenshotToClient(AsyncSocket sender, int width, ImageHelperError error)
+        {
+            MessageScreenshot screenshot = new MessageScreenshot();
+
+            if (error != null)
+            {
+                screenshot.Error = error;
+            }
+            else
+            {
+                screenshot.Screenshot = imageHelper.resizedScreenshot(width);
+            }
+
+            SendMessageToClient(screenshot, sender);
+        }
+
+        /// <summary>
         /// A client connected.
         /// </summary>
         /// <param name="sender"></param>
@@ -769,6 +790,30 @@ namespace WifiRemote
                             SendImageToClient(sender, path, (string)message["UserTag"], imageWidth, imageHeight);
                         }
                     }
+                    // screenshot action
+                    else if (type == "screenshot")
+                    {
+                        if (socketsWaitingForScreenshot == null)
+                        {
+                            socketsWaitingForScreenshot = new Dictionary<AsyncSocket, int>();
+                        }
+
+                        // Width to resize the image to, 0 to keep original width
+                        int imageWidth = (message["Width"] != null) ? (int)message["Width"] : 0;
+
+                        // Requests are added to a "waiting queue" because taking the screenshot happens 
+                        // async.
+                        socketsWaitingForScreenshot.Add(sender, imageWidth);
+
+                        if (imageHelper == null)
+                        {
+                            imageHelper = new ImageHelper();
+                            imageHelper.ScreenshotReady += new ImageHelper.ScreenshotReadyCallback(imageHelperScreenshotReady);
+                            imageHelper.ScreenshotFailed += new ImageHelper.ScreenshotFailedCallback(imageHelperScreenshotFailed);
+                        }
+
+                        imageHelper.TakeScreenshot();
+                    }
                     //playlist actions
                     else if (type == "playlist")
                     {
@@ -821,7 +866,7 @@ namespace WifiRemote
                     else if (type == "showdialog")
                     {
                         ShowDialogMessageHandler.HandleShowDialogMessage(message, this, sender);
-                        
+
                     }
                     else
                     {
@@ -1157,6 +1202,13 @@ namespace WifiRemote
 
             // Send facade info to client
             SendListViewStatusToClient(client);
+
+            // Inform client about open dialogs
+            if (MpDialogsHelper.IsDialogShown)
+            {
+                MessageDialog msg = MpDialogsHelper.GetDialogMessage(MpDialogsHelper.CurrentDialog);
+                SendMessageToClient(msg, client);
+            }
         }
 
         /// <summary>
@@ -1178,6 +1230,33 @@ namespace WifiRemote
             }
 
             return hash.ToString();
+        }
+
+        /// <summary>
+        /// A requested screenshot is ready, send it to all interested clients
+        /// </summary>
+        void imageHelperScreenshotReady()
+        {
+            foreach (var pair in socketsWaitingForScreenshot)
+            {
+                SendScreenshotToClient(pair.Key, pair.Value, null);
+            }
+
+            socketsWaitingForScreenshot = null;
+        }
+
+        /// <summary>
+        /// The screenshot could not be taken. Inform clients.
+        /// </summary>
+        /// <param name="error"></param>
+        void imageHelperScreenshotFailed(ImageHelperError error)
+        {
+            foreach (var pair in socketsWaitingForScreenshot)
+            {
+                SendScreenshotToClient(pair.Key, pair.Value, error);
+            }
+
+            socketsWaitingForScreenshot = null;
         }
     }
 }

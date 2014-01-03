@@ -10,7 +10,6 @@ using MediaPortal.Util;
 using System.Net.NetworkInformation;
 using System.Collections;
 using System.Drawing;
-using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Collections.Generic;
@@ -167,6 +166,15 @@ namespace WifiRemote
         }
 
         /// <summary>
+        /// <code>true</code> if trakt plugin is available
+        /// </summary>
+        public static bool IsAvailableTrakt
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// <code>true</code> if Fanart Handler is available
         /// </summary>
         public static bool IsAvailableFanartHandler
@@ -295,6 +303,7 @@ namespace WifiRemote
                 !IsAssemblyAvailable("ForTheRecord.UI.MediaPortal", null);
             WifiRemote.IsAvailableMovingPictures = IsAssemblyAvailable("MovingPictures", new Version(1, 0, 6, 1116));
             WifiRemote.IsAvailableTVSeries = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
+            WifiRemote.IsAvailableTrakt = IsAssemblyAvailable("TraktPlugin", new Version(3, 0));
             WifiRemote.IsAvailableFanartHandler = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
             WifiRemote.IsAvailableNotificationBar = IsAssemblyAvailable("MPNotificationBar", new Version(0, 8, 2, 1));
 
@@ -829,26 +838,6 @@ namespace WifiRemote
             }
         }
 
-
-        /// <summary>
-        /// Returns an image as its byte array representation.
-        /// Used to make images encodable in JSON.
-        /// </summary>
-        /// <param name="img"></param>
-        /// <returns></returns>
-        public static byte[] imageToByteArray(Image img, System.Drawing.Imaging.ImageFormat format)
-        {
-            byte[] byteArray = new byte[0];
-            using (MemoryStream stream = new MemoryStream())
-            {
-                img.Save(stream, format);
-                stream.Close();
-                byteArray = stream.ToArray();
-            }
-
-            return byteArray;
-        }
-
         #endregion
 
         #region WifiRemote methods
@@ -992,7 +981,7 @@ namespace WifiRemote
 
                                 if (icon != null)
                                 {
-                                    iconBytes = WifiRemote.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
+                                    iconBytes = ImageHelper.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
                                 }
                             }
                         }

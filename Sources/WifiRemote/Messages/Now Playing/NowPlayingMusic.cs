@@ -88,7 +88,7 @@ namespace WifiRemote
             Track = song.Track;
             TrackTotal = song.TrackTotal;
             URL = song.URL;
-            WebImage = song.WebImage;
+            WebImage = String.Empty;
             Year = song.Year;
 
             ImageName = MediaPortal.Util.Utils.GetAlbumThumbName(song.Artist, song.Album);

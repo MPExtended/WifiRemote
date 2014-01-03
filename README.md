@@ -15,9 +15,15 @@ At the moment you can build the plugin in Visual Studio and run it on your HTPC,
 Please copy the WifiRemote.xml file to your MediaPortal custom keymaps folder.
 
 ### Building a client
-If you want to build a client app for this plugin please contact me via PM on the MediaPortal forum (user Shukuyen). In the future I will add complete information on how to build a client app to the wiki. I am developing a client app for iPhone myself, DieBagger is developing an Android remote app.
+You should start by taking a look at the DemoClient app, included in the WifiRemote solution.
+This app shows how you can discover a server via Bonjour, connect to it, issue commands and receive messages. It also introduces the concept of the autologin key. The DemoClient app is written in C# but should be relatively easy to understand. If you have questions about this please contact me via PM on the MediaPortal forum (user Shukuyen).
 
-[A list of messages sent from and to WifiRemote is available here.](http://code.google.com/p/wifiremote/wiki/APIDocumentation)
+JSON messages sent from your client to WifiRemote are called commands. You can find a list of available commands here:
+http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/17_Extensions/3_Plugins/WifiRemote/Commands
+
+WifiRemote will send JSON messages to your client, a list can be found here:
+http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/17_Extensions/3_Plugins/WifiRemote/Messages
+
 
 ### Acknowledgements
 WifiRemote uses the following libraries:
