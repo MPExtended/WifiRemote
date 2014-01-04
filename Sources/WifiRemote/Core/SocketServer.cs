@@ -571,8 +571,13 @@ namespace WifiRemote
                 // The client is already authentificated or we don't need authentification
                 if (type != null && client.IsAuthenticated && type != "identify")
                 {
-                    // Turn on display
-                    keybd_event(VK_LSHIFT, 0x45, KEYEVENTF_KEYUP, 0);
+                    // Turn on display if screen saver is active
+                    if (GUIGraphicsContext.BlankScreen)
+                    {
+                        WifiRemote.LogMessage("Blank screen active, turn on screen", WifiRemote.LogType.Debug);
+                        GUIGraphicsContext.BlankScreen = false;
+                        GUIGraphicsContext.ResetLastActivity();
+                    }
 
                     // Send a command
                     if (type == "command")
