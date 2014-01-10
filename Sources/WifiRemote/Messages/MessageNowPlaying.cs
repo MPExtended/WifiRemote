@@ -187,27 +187,20 @@ namespace WifiRemote
                             }
                         }
                     }
-                    else if (g_Player.IsTV)
+                    else if (g_Player.IsTV && WifiRemote.IsAvailableTVPlugin)
                     {
-                        if (!WifiRemote.IsAvailableTVPlugin)
+                        if (g_Player.IsTVRecording)
                         {
-                            WifiRemote.LogMessage("No TVPlugin installed: can't add now playing", WifiRemote.LogType.Error);
+                            NowPlayingRecording recording = MpTvServerHelper.GetNowPlayingRecording();
+
+                            if (recording.IsRecording())
+                            {
+                                return recording;
+                            }
                         }
                         else
                         {
-                            if (g_Player.IsTVRecording)
-                            {
-                                NowPlayingRecording recording = MpTvServerHelper.GetNowPlayingRecording();
-
-                                if (recording.IsRecording())
-                                {
-                                    return recording;
-                                }
-                            }
-                            else
-                            {   
-                                return MpTvServerHelper.GetNowPlayingTv();
-                            }
+                            return MpTvServerHelper.GetNowPlayingTv();
                         }
                     }
                 }

@@ -333,7 +333,14 @@ namespace WifiRemote
             g_Player.PlayBackEnded += new g_Player.EndedHandler(g_Player_PlayBackEnded);
             g_Player.PlayBackStopped += new g_Player.StoppedHandler(g_Player_PlayBackStopped);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(g_Player_PlayBackChanged);
-            g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
+
+            // Only subscribe to the tv channel changed callback if the tv plugin is installed.
+            // Argus users will experience crashes otherwise.
+            if (WifiRemote.IsAvailableTVPlugin)
+            {
+                g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
+            }
+
 
             GUIWindowManager.Receivers += new SendMessageHandler(GUIWindowManager_Receivers);
 
