@@ -110,6 +110,10 @@
     <Reference Include="TraktPlugin">
       <HintPath>..\..\Libs\TraktPlugin.dll</HintPath>
     </Reference>
+    <Reference Include="TvControl, Version=1.6.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\TvControl.dll</HintPath>
+    </Reference>
     <Reference Include="TVDatabase, Version=1.1.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\TVDatabase.dll</HintPath>

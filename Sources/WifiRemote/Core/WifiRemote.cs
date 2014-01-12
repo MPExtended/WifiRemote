@@ -18,6 +18,7 @@ using Microsoft.Win32;
 using MediaPortal.Dialogs;
 using WifiRemote.MPDialogs;
 using WifiRemote.Messages;
+using WifiRemote.PluginConnection;
 
 namespace WifiRemote
 {
@@ -613,10 +614,9 @@ namespace WifiRemote
         /// </summary>
         void g_Player_TVPlayBackChanged()
         {
-            TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
-            TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
+            TvDatabase.Channel current = MpTvServerHelper.GetCurrentTimeShiftingTVChannel();
 
-            if (socketServer != null && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
+            if (socketServer != null && current != null && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
             {
                 LatestChannelId = current.IdChannel;
                 LogMessage("TV Playback changed!", LogType.Debug);
