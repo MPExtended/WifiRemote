@@ -6,6 +6,7 @@ using MediaPortal.Video.Database;
 using System.IO;
 using System.Drawing;
 using WifiRemote.MpExtended;
+using WifiRemote.PluginConnection;
 
 namespace WifiRemote
 {
@@ -145,29 +146,31 @@ namespace WifiRemote
         /// </summary>
         public NowPlayingTv()
         {
-            TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
-            TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
-            ChannelId = current.IdChannel;
-            ChannelName = current.DisplayName;
-
-            if (current.CurrentProgram != null)
+            TvDatabase.Channel current = MpTvServerHelper.GetCurrentTimeShiftingTVChannel();
+            if (current != null)
             {
-                CurrentProgramId = current.CurrentProgram.IdProgram;
-                CurrentProgramName = current.CurrentProgram.Title;
-                CurrentProgramDescription = current.CurrentProgram.Description;
-                CurrentProgramBegin = current.CurrentProgram.StartTime;
-                CurrentProgramEnd = current.CurrentProgram.EndTime;
-            }
 
-            if (current.NextProgram != null)
-            {
-                NextProgramId = current.NextProgram.IdProgram;
-                NextProgramName = current.NextProgram.Title;
-                NextProgramDescription = current.NextProgram.Description;
-                NextProgramBegin = current.NextProgram.StartTime;
-                NextProgramEnd = current.NextProgram.EndTime;
-            }
+                ChannelId = current.IdChannel;
+                ChannelName = current.DisplayName;
 
+                if (current.CurrentProgram != null)
+                {
+                    CurrentProgramId = current.CurrentProgram.IdProgram;
+                    CurrentProgramName = current.CurrentProgram.Title;
+                    CurrentProgramDescription = current.CurrentProgram.Description;
+                    CurrentProgramBegin = current.CurrentProgram.StartTime;
+                    CurrentProgramEnd = current.CurrentProgram.EndTime;
+                }
+
+                if (current.NextProgram != null)
+                {
+                    NextProgramId = current.NextProgram.IdProgram;
+                    NextProgramName = current.NextProgram.Title;
+                    NextProgramDescription = current.NextProgram.Description;
+                    NextProgramBegin = current.NextProgram.StartTime;
+                    NextProgramEnd = current.NextProgram.EndTime;
+                }
+            }
         }
     }
 }
