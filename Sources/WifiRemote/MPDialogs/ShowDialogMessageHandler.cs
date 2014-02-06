@@ -33,6 +33,10 @@ namespace WifiRemote.MPDialogs
                     //show dialog in new thread so we don't block the tcp thread
                     new Thread(new ParameterizedThreadStart(ShowYesNoThreaded)).Start(new object[] { dialogId, title, text, socketServer, sender });
                 }
+                else if (dialogType.Equals("ok"))
+                {
+                    new Thread(new ParameterizedThreadStart(ShowOkDialogThreaded)).Start(new object[] { title, text });
+                }
                 else if (dialogType.Equals("yesnoselect"))
                 {
                     List<String> options = new List<String>();
@@ -46,7 +50,7 @@ namespace WifiRemote.MPDialogs
                     }
 
                     //show dialog in new thread so we don't block the tcp thread
-                    new Thread(new ParameterizedThreadStart(ShowYesNoThenSelectThreaded)).Start(new object[] { dialogId, title, text, options, socketServer, sender });    
+                    new Thread(new ParameterizedThreadStart(ShowYesNoThenSelectThreaded)).Start(new object[] { dialogId, title, text, options, socketServer, sender });
                 }
                 else if (dialogType.Equals("select"))
                 {
@@ -82,6 +86,12 @@ namespace WifiRemote.MPDialogs
         {
             object[] parameters = (object[])pars;
             ShowDialogHelper.ShowYesNoDialog((string)parameters[0], (string)parameters[1], (string)parameters[2], (SocketServer)parameters[3], (Deusty.Net.AsyncSocket)parameters[4]);
+        }
+
+        private static void ShowOkDialogThreaded(object pars)
+        {
+            object[] parameters = (object[])pars;
+            ShowDialogHelper.ShowOkDialog((string)parameters[0], (string)parameters[1]);
         }
 
         /// <summary>

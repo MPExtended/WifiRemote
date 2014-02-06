@@ -38,6 +38,24 @@ namespace WifiRemote.MPDialogs
                 socketServer.SendMessageToClient(result, sender);
             }
         }
+
+        /// <summary>
+        /// Show an ok dialog in MediaPortal
+        /// </summary>
+        /// <param name="title">Dialog title</param>
+        /// <param name="text">Dialog text</param>
+        internal static void ShowOkDialog(string title, string text)
+        {
+            GUIDialogOK dlg = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+            if (dlg != null)
+            {
+                dlg.Reset();
+                dlg.SetHeading(title);
+                dlg.SetLine(1, text);
+                dlg.DoModal(GUIWindowManager.ActiveWindow);
+            }
+        }
+
         /// <summary>
         /// Show a select dialog in MediaPortal. After that, send the result to the sender.
         /// </summary>
