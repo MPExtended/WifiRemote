@@ -14,7 +14,10 @@ using MediaPortal.Common.Utils;
 [assembly: UsesSubsystem("MP.Plugins.Music")]
 [assembly: UsesSubsystem("MP.Plugins.Videos")]
 [assembly: UsesSubsystem("MP.Plugins.TV")]
-[assembly: UsesSubsystem("MP.TVE")]
+
+// Makes the plugin incompatible when no tv server installed
+// Need to find a solution for that.
+// [assembly: UsesSubsystem("MP.TVE")]
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
