@@ -187,7 +187,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>0</Major>
       <Minor>8</Minor>
-      <Build>0</Build>
+      <Build>1</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
@@ -197,28 +197,17 @@ Click Next to continue or Cancel to exit Setup.</Value>
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
     <VersionDescription>Developers: The WifiRemote source code moved to github! Please go to https://github.com/MPExtended/WifiRemote to check it out and feel free to fork and submit pull requests!
 
-New in 0.8:
-- api level increased to 14
-- MediaPortal 1.6 only, switched to .NET 4
-- Request a screenshot with the screenshot command
-- Fixed missing text in dialogs
-- Fixed crash related to music db changes in MediaPortal 1.6 (thanks, sebastiii!)
-- Fixed crash when encountering music with special chars in it (thanks, Martin K.!)
-- Added Artist to now playing radio message (thanks, johanj!)
-- Added methods for setting playlist repeat and shuffle (thanks, johanj!)
-- Improved starting radio channel (thanks, johanj!)
-- Send open dialogs to connecting clients
-- Send facade info to connecting clients
-- Added ViewType property to FacadeInfo message
-- Added support for the trakt plugin rating dialog
-
-
-</VersionDescription>
+New in 0.8.1:
+- api level increased to 15
+- added "ok" dialog to ShowDialogs
+- fixed tv now playing message braking zero button for switching to previous channels (thanks johanj!)
+- fixed crash when using MediaPortal screen blanking (thanks johanj!)
+- added MediaPortal compatibility checks</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8/WifiRemote_0.8.mpe1</OnlineLocation>
-    <ReleaseDate>2014-01-03T20:16:04</ReleaseDate>
+    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.1/WifiRemote_0.8.1.mpe1</OnlineLocation>
+    <ReleaseDate>2014-02-15T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>WifiRemote_0.8.mpe1</Location>
+    <Location>WifiRemote_0.8.1.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
