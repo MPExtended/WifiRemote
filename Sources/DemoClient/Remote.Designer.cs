@@ -60,6 +60,7 @@
             this.sQLMusicTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.showOKDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -393,7 +394,8 @@
             this.requestNowPlayingInfoToolStripMenuItem,
             this.tVChannelSwitchToolStripMenuItem,
             this.sQLMusicTestToolStripMenuItem,
-            this.loadPlaylistToolStripMenuItem});
+            this.loadPlaylistToolStripMenuItem,
+            this.showOKDialogToolStripMenuItem});
             this.toolStripDropDownButton1.Image = global::DemoClient.Properties.Resources.options;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -446,6 +448,13 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(132, 17);
             this.toolStripStatusLabel1.Text = "Select server to connect";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
+            // 
+            // showOKDialogToolStripMenuItem
+            // 
+            this.showOKDialogToolStripMenuItem.Name = "showOKDialogToolStripMenuItem";
+            this.showOKDialogToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.showOKDialogToolStripMenuItem.Text = "Show OK Dialog";
+            this.showOKDialogToolStripMenuItem.Click += new System.EventHandler(this.showOKDialogToolStripMenuItem_Click);
             // 
             // Remote
             // 
@@ -509,6 +518,7 @@
         private System.Windows.Forms.ToolStripMenuItem tVChannelSwitchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sQLMusicTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadPlaylistToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showOKDialogToolStripMenuItem;
     }
 }
 

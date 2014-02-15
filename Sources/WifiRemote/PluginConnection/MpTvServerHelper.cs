@@ -6,6 +6,7 @@ using MediaPortal.GUI.Library;
 using MediaPortal.Player;
 using TvDatabase;
 using MediaPortal.Util;
+using TvPlugin;
 
 namespace WifiRemote.PluginConnection
 {
@@ -224,6 +225,20 @@ namespace WifiRemote.PluginConnection
             NowPlayingRadio radio = new NowPlayingRadio();
             return radio;
         }
-                
+
+        internal static TvDatabase.Channel GetCurrentTimeShiftingTVChannel()
+        {
+            if (TVHome.Connected && TVHome.Card.IsTimeShifting)
+            {
+                 int id = TVHome.Card.IdChannel;
+                 if (id >= 0)
+                 {
+                     TvDatabase.Channel current = TvDatabase.Channel.Retrieve(id);
+                     return current;
+                 }
+            }    
+            return null;
+        }
+        
     }
 }

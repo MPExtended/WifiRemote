@@ -18,6 +18,7 @@ using Microsoft.Win32;
 using MediaPortal.Dialogs;
 using WifiRemote.MPDialogs;
 using WifiRemote.Messages;
+using WifiRemote.PluginConnection;
 
 namespace WifiRemote
 {
@@ -333,7 +334,14 @@ namespace WifiRemote
             g_Player.PlayBackEnded += new g_Player.EndedHandler(g_Player_PlayBackEnded);
             g_Player.PlayBackStopped += new g_Player.StoppedHandler(g_Player_PlayBackStopped);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(g_Player_PlayBackChanged);
-            g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
+
+            // Only subscribe to the tv channel changed callback if the tv plugin is installed.
+            // Argus users will experience crashes otherwise.
+            if (WifiRemote.IsAvailableTVPlugin)
+            {
+                g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
+            }
+
 
             GUIWindowManager.Receivers += new SendMessageHandler(GUIWindowManager_Receivers);
 
@@ -606,10 +614,9 @@ namespace WifiRemote
         /// </summary>
         void g_Player_TVPlayBackChanged()
         {
-            TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
-            TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
+            TvDatabase.Channel current = MpTvServerHelper.GetCurrentTimeShiftingTVChannel();
 
-            if (socketServer != null && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
+            if (socketServer != null && current != null && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
             {
                 LatestChannelId = current.IdChannel;
                 LogMessage("TV Playback changed!", LogType.Debug);

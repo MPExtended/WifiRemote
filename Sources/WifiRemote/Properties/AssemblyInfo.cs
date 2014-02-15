@@ -7,11 +7,17 @@ using MediaPortal.Common.Utils;
 // Version Compatibility
 // http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/18_Contribute/6_Plugins/Plugin_Related_Changes/1.1.0_to_1.2.0/Version_Compatibility
 [assembly: CompatibleVersion("1.5.100.0", "1.1.6.27644")]
-//[assembly: UsesSubsystem("MP.DB.Music")]
-//[assembly: UsesSubsystem("MP.DB.Videos")]
-//[assembly: UsesSubsystem("MP.Config")]
-//[assembly: UsesSubsystem("MP.Input.Mapping")]
-//[assembly: UsesSubsystem("MP.Players")]
+[assembly: UsesSubsystem("MP.SkinEngine")]
+[assembly: UsesSubsystem("MP.Input")]
+[assembly: UsesSubsystem("MP.Players")]
+[assembly: UsesSubsystem("MP.Config")]
+[assembly: UsesSubsystem("MP.Plugins.Music")]
+[assembly: UsesSubsystem("MP.Plugins.Videos")]
+[assembly: UsesSubsystem("MP.Plugins.TV")]
+
+// Makes the plugin incompatible when no tv server installed
+// Need to find a solution for that.
+// [assembly: UsesSubsystem("MP.TVE")]
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
@@ -43,5 +49,5 @@ using MediaPortal.Common.Utils;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.8.0.0")]
-[assembly: AssemblyFileVersion("0.8.0.0")]
+[assembly: AssemblyVersion("0.8.1.0")]
+[assembly: AssemblyFileVersion("0.8.1.0")]

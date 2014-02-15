@@ -573,6 +573,12 @@ namespace WifiRemote
                 {
                     // Turn on display
                     keybd_event(VK_LSHIFT, 0x45, KEYEVENTF_KEYUP, 0);
+                    if (GUIGraphicsContext.BlankScreen)
+                    {
+                        WifiRemote.LogMessage("Blank screen active, turn on screen", WifiRemote.LogType.Debug);
+                        GUIGraphicsContext.BlankScreen = false;
+                        GUIGraphicsContext.ResetLastActivity();
+                    }
 
                     // Send a command
                     if (type == "command")
@@ -914,6 +920,13 @@ namespace WifiRemote
 
                             // Turn on display
                             keybd_event(VK_LSHIFT, 0x45, KEYEVENTF_KEYUP, 0);
+                            if (GUIGraphicsContext.BlankScreen)
+                            {
+                                WifiRemote.LogMessage("Blank screen active, turn on screen", WifiRemote.LogType.Debug);
+                                GUIGraphicsContext.BlankScreen = false;
+                                GUIGraphicsContext.ResetLastActivity();
+                            }
+
 
                             if (WifiRemote.IsAvailableNotificationBar && ShowNotifications)
                             {

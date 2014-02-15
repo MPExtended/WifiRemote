@@ -430,6 +430,11 @@ namespace DemoClient
             SendCommand(new MessageRequestNowPlaying(), socket);
         }
 
+        private void showOKDialogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendCommand(new MessageShowDialog(), socket);
+        }
+
         private void showConsoleWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (logWindow.Visible)
@@ -659,5 +664,7 @@ namespace DemoClient
         }
 
         #endregion
+
+
     }
 }
