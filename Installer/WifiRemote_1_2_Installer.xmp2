@@ -203,7 +203,7 @@ New in 0.8.2.1:
 - Added "TvPluginInstalled" boolean to welcome message
 - Fixed order of tracks when playing multi-disc albums (thanks, Kucheek!)</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.1/WifiRemote_0.8.1.mpe1</OnlineLocation>
+    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.2.1/WifiRemote_0.8.2.1.mpe1</OnlineLocation>
     <ReleaseDate>2014-02-20T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
     <Location>WifiRemote_0.8.2.1.mpe1</Location>
