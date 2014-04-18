@@ -28,7 +28,7 @@ namespace WifiRemote.MPFacade
             if (action.Equals("get"))
             {
                 MessageFacade returnMessage = new MessageFacade();
-                if (currentPlugin.GetType() == typeof(GUIHome))
+                if (currentPlugin.GetType() == typeof(MediaPortal.GUI.Home.GUIHome))
                 {
                     GUIMenuControl menu = (GUIMenuControl)currentPlugin.GetControl(50);
                     List<FacadeItem> items = MpFacadeHelper.GetHomeItems(menu);
@@ -51,7 +51,7 @@ namespace WifiRemote.MPFacade
             }
             else if (action.Equals("setselected"))
             {
-                if (currentPlugin.GetType() == typeof(GUIHome))
+                if (currentPlugin.GetType() == typeof(MediaPortal.GUI.Home.GUIHome))
                 {
 
                 }
@@ -64,7 +64,7 @@ namespace WifiRemote.MPFacade
             }
             else if (action.Equals("getselected"))
             {
-                if (currentPlugin.GetType() == typeof(GUIHome))
+                if (currentPlugin.GetType() == typeof(MediaPortal.GUI.Home.GUIHome))
                 {
                     //TODO: find a way to retrieve the currently selected home button
                 }
@@ -76,7 +76,7 @@ namespace WifiRemote.MPFacade
             }
             else if (action.Equals("getcount"))
             {
-                if (currentPlugin.GetType() == typeof(GUIHome))
+                if (currentPlugin.GetType() == typeof(MediaPortal.GUI.Home.GUIHome))
                 {
                     GUIMenuControl menu = (GUIMenuControl)currentPlugin.GetControl(50);
                     int count = menu.ButtonInfos.Count;
@@ -90,7 +90,7 @@ namespace WifiRemote.MPFacade
             else if (action.Equals("select"))
             {
                 int selected = (int)message["SelectedIndex"];
-                if (currentPlugin.GetType() == typeof(GUIHome))
+                if (currentPlugin.GetType() == typeof(MediaPortal.GUI.Home.GUIHome))
                 {
                     GUIMenuControl menu = (GUIMenuControl)currentPlugin.GetControl(50);
                     MenuButtonInfo info = menu.ButtonInfos[selected];
@@ -109,7 +109,7 @@ namespace WifiRemote.MPFacade
             else if (action.Equals("context"))
             {
                 int selected = (int)message["SelectedIndex"];
-                if (currentPlugin.GetType() == typeof(GUIHome))
+                if (currentPlugin.GetType() == typeof(MediaPortal.GUI.Home.GUIHome))
                 {
                     GUIMenuControl menu = (GUIMenuControl)currentPlugin.GetControl(50);
                     MenuButtonInfo info = menu.ButtonInfos[selected];
