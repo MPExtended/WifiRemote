@@ -169,7 +169,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
           <Revision>27644</Revision>
         </MaxVersion>
         <WarnOnly>false</WarnOnly>
-        <Message>This version of WifiRemote requires MediaPortal 1.6 or higher!</Message>
+        <Message>This version of WifiRemote requires MediaPortal 1.7 or higher!</Message>
         <Name>MediaPortal</Name>
       </DependencyItem>
     </Items>
@@ -187,8 +187,8 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>0</Major>
       <Minor>8</Minor>
-      <Build>1</Build>
-      <Revision>0</Revision>
+      <Build>2</Build>
+      <Revision>1</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
 
@@ -197,17 +197,16 @@ Click Next to continue or Cancel to exit Setup.</Value>
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
     <VersionDescription>Developers: The WifiRemote source code moved to github! Please go to https://github.com/MPExtended/WifiRemote to check it out and feel free to fork and submit pull requests!
 
-New in 0.8.1:
-- api level increased to 15
-- added "ok" dialog to ShowDialogs
-- fixed tv now playing message braking zero button for switching to previous channels (thanks johanj!)
-- fixed crash when using MediaPortal screen blanking (thanks johanj!)
-- added MediaPortal compatibility checks</VersionDescription>
+New in 0.8.2.1:
+- Bumped server version to 16
+- compatibility to MediaPortal 1.7 (prerelease). Please note that this version will not run on MediaPortal 1.6 or below!
+- Added "TvPluginInstalled" boolean to welcome message
+- Fixed order of tracks when playing multi-disc albums (thanks, Kucheek!)</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.1/WifiRemote_0.8.1.mpe1</OnlineLocation>
-    <ReleaseDate>2014-02-15T20:16:04</ReleaseDate>
+    <ReleaseDate>2014-02-20T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>WifiRemote_0.8.1.mpe1</Location>
+    <Location>WifiRemote_0.8.2.1.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -260,14 +259,14 @@ New in 0.8.1:
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{5c4acac1-409f-40b4-bdcb-fb143f49472d}-installer_logo.gif</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{f8441df4-6758-40d9-91ef-1f5ebb7bf065}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{76c05d6b-86b7-4bbc-9b74-e13e536cba88}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{d09d5367-e8b6-4a52-b8ab-30b481b39e86}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
