@@ -238,7 +238,7 @@ namespace WifiRemote.PluginConnection
         {
             List<PlayListItem> returnList = new List<PlayListItem>();
             List<Song> songs = new List<Song>();
-            string sql = String.Format("select * from tracks where strAlbumArtist like '%{0}%' AND strAlbum LIKE '%{1}%'",
+            string sql = String.Format("select * from tracks where strAlbumArtist like '%{0}%' AND strAlbum LIKE '%{1}%' order by iDisc,iTrack ASC",
                 DatabaseUtility.RemoveInvalidChars(albumArtist),
                 DatabaseUtility.RemoveInvalidChars(album));
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
