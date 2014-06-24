@@ -94,7 +94,14 @@ namespace WifiRemote
                     int i;
                     if (int.TryParse(savedPluginStrings[j], out i))
                     {
-                        savedPlugins.Add(i, savedPluginStrings[j + 1]);
+                        try
+                        {
+                            savedPlugins.Add(i, savedPluginStrings[j + 1]);
+                        }
+                        catch (Exception e)
+                        {
+                            WifiRemote.LogMessage("Adding saved plugin from config failed: " + e.Message, WifiRemote.LogType.Debug);
+                        }
                     }
                 }
 
@@ -112,7 +119,14 @@ namespace WifiRemote
                     int i;
                     if (int.TryParse(pluginId, out i))
                     {
-                        ignoredPluginsList.Add(i);
+                        try
+                        {
+                            ignoredPluginsList.Add(i);
+                        }
+                        catch (Exception e)
+                        {
+                            WifiRemote.LogMessage("Adding ignored plugin from config failed: " + e.Message, WifiRemote.LogType.Debug);
+                        }
                     }
                 }
 
