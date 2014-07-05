@@ -290,7 +290,7 @@ namespace WifiRemote.MpExtended
                         {
                             if (type == MpExtendedMediaTypes.TVEpisode)
                             {
-                                TVSeriesHelper.ShowEpisodeDetails(Int32.Parse(playInfo["ShowId"]), Int32.Parse(playInfo["SeasonIndex"]), playInfo["Id"]);
+                                TVSeriesHelper.ShowEpisodeDetails(Int32.Parse(playInfo["ShowId"]), Int32.Parse(playInfo["SeasonIndex"]), Int32.Parse(playInfo["Id"]));
                             }
                             else if (type == MpExtendedMediaTypes.TVSeason)
                             {
