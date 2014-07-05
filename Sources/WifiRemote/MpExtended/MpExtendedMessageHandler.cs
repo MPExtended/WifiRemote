@@ -39,7 +39,7 @@ namespace WifiRemote.MpExtended
                 else if (action.Equals("show"))
                 {
                     //show the item details in mediaportal (without starting playback)
-                    WifiRemote.LogMessage("play mediaitem: ItemId: " + itemId + ", itemType: " + itemType + ", providerId: " + providerId, WifiRemote.LogType.Debug);
+                    WifiRemote.LogMessage("show mediaitem: ItemId: " + itemId + ", itemType: " + itemType + ", providerId: " + providerId, WifiRemote.LogType.Debug);
              
                     MpExtendedHelper.ShowMediaItem(itemId, itemType, providerId, values);
                 }
