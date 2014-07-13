@@ -62,7 +62,6 @@ namespace WifiRemote
         public const string PLUGIN_NAME = "WifiRemote";
         public const string LOG_PREFIX = "[WIFI_REMOTE] ";
         public const int DEFAULT_PORT = 8017;
-        public const int SERVER_VERSION = 1;
         private const int UPDATE_INTERVAL = 1000;
 
         private const string MP_EXTENDED_SERVICE = "MPExtended Service";
