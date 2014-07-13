@@ -301,18 +301,31 @@ namespace WifiRemote.PluginConnection
         /// <returns>Playlist item</returns>
         internal static MediaPortal.Playlists.PlayListItem CreatePlaylistItemFromMusicFile(string file)
         {
-            FileInfo info = new FileInfo(file);
+            FileInfo info = null;
             MediaPortal.Playlists.PlayListItem item = new MediaPortal.Playlists.PlayListItem();
-            item.Description = info.Name;
-            item.FileName = info.FullName;
-            item.Type = PlayListItem.PlayListItemType.Audio;
-            MusicDatabase mpMusicDb = MusicDatabase.Instance;
-            Song song = new Song();
-            bool inDb = mpMusicDb.GetSongByFileName(item.FileName, ref song);
 
-            if (inDb)
+            try
             {
-                 item.Duration = song.Duration;
+                info = new FileInfo(file);
+            }
+            catch (Exception e)
+            {
+                WifiRemote.LogMessage("Error loading music item from file: " + e.Message, WifiRemote.LogType.Error);
+            }
+
+            if (info != null)
+            {
+                item.Description = info.Name;
+                item.FileName = info.FullName;
+                item.Type = PlayListItem.PlayListItemType.Audio;
+                MusicDatabase mpMusicDb = MusicDatabase.Instance;
+                Song song = new Song();
+                bool inDb = mpMusicDb.GetSongByFileName(item.FileName, ref song);
+
+                if (inDb)
+                {
+                    item.Duration = song.Duration;
+                }
             }
             
             return item;
