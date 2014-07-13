@@ -338,9 +338,19 @@ namespace WifiRemote.PluginConnection
         /// <returns>Playlist item</returns>
         internal static List<MediaPortal.Playlists.PlayListItem> CreatePlaylistItemFromMusicFolder(string folder, string[] extensions)
         {
-            DirectoryInfo info = new DirectoryInfo(folder);
+            FileInfo[] files = null;
             List<MediaPortal.Playlists.PlayListItem> returnList = new List<MediaPortal.Playlists.PlayListItem>();
-            FileInfo[] files = info.GetFiles();
+
+            try
+            {
+                DirectoryInfo info = new DirectoryInfo(folder);
+                files = info.GetFiles();
+            }
+            catch (Exception e)
+            {
+                WifiRemote.LogMessage("Error fetching music files from folder: " + e.Message, WifiRemote.LogType.Error);
+            }
+
             if (files != null)
             {
                 foreach (FileInfo f in files)
