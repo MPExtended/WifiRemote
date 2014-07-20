@@ -148,6 +148,10 @@
     <Compile Include="Core\AuthMethod.cs" />
     <Compile Include="Core\AutoLoginToken.cs" />
     <Compile Include="Core\Communication.cs" />
+    <Compile Include="HardwareController\AudioController\AbstractAudioController.cs" />
+    <Compile Include="HardwareController\AudioController\MediaPortalAudioController.cs" />
+    <Compile Include="HardwareController\AudioController\PioneerVSXAudioController.cs" />
+    <Compile Include="HardwareController\HardwareControllerFactory.cs" />
     <Compile Include="Messages\MessageDialog.cs" />
     <Compile Include="Messages\MessageDialogResult.cs" />
     <Compile Include="Messages\MessageFacade.cs" />
@@ -220,6 +224,7 @@
     </Compile>
     <Compile Include="Core\Property.cs" />
     <Compile Include="Utility\ImageHelper.cs" />
+    <Compile Include="Utility\NotificationCenter.cs" />
     <Compile Include="Utility\QRCodeGenerator.cs" />
     <Compile Include="Core\RemoteClient.cs" />
     <Compile Include="Core\ServerDescription.cs" />
