@@ -52,6 +52,11 @@ namespace WifiRemote
             }
         }
 
+        public Boolean TvPluginInstalled
+        {
+            get { return WifiRemote.IsAvailableTVPlugin; }
+        }
+
         /// <summary>
         /// Contructor.
         /// </summary>
