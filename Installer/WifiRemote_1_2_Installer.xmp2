@@ -168,8 +168,8 @@ Click Next to continue or Cancel to exit Setup.</Value>
           <Build>6</Build>
           <Revision>27644</Revision>
         </MaxVersion>
-        <WarnOnly>true</WarnOnly>
-        <Message>This version of WifiRemote requires MediaPortal 1.2.0 Beta or higher!</Message>
+        <WarnOnly>false</WarnOnly>
+        <Message>This version of WifiRemote requires MediaPortal 1.7 or higher!</Message>
         <Name>MediaPortal</Name>
       </DependencyItem>
     </Items>
@@ -181,13 +181,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Name>WifiRemote</Name>
     <Id>d2277c74-fdce-4146-9e23-d080d1799f72</Id>
     <Author>Shukuyen, DieBagger</Author>
-    <HomePage>http://code.google.com/p/wifiremote/</HomePage>
+    <HomePage>https://github.com/MPExtended/WifiRemote</HomePage>
     <ForumPage>http://forum.team-mediaportal.com/mediaportal-plugins-47/wifiremote-tcp-remote-control-server-0-1-2011-05-05-a-96251</ForumPage>
-    <UpdateUrl>http://wifiremote.googlecode.com/svn/trunk/Installer/update.xml</UpdateUrl>
+    <UpdateUrl>https://raw.github.com/MPExtended/WifiRemote/master/Installer/update.xml</UpdateUrl>
     <Version>
       <Major>0</Major>
-      <Minor>7</Minor>
-      <Build>1</Build>
+      <Minor>8</Minor>
+      <Build>3</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
@@ -195,14 +195,21 @@ Click Next to continue or Cancel to exit Setup.</Value>
 
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-    <VersionDescription>- fixes problems with installed 4tr/argus tv plugins (oxan)
-- Improve playback of playlist items (albums, artists, folders), reduce ui
-refreshing (DieBagger)</VersionDescription>
+    <VersionDescription>Developers: The WifiRemote source code moved to github! Please go to https://github.com/MPExtended/WifiRemote to check it out and feel free to fork and submit pull requests!
+
+New in 0.8.3:
+- Bumped server version to 17
+- Added possibility to add music to playlist from file (thanks johanj)
+- Added possibility to add music to playlist from folder (thanks johanj)
+- Fixed order of tracks when adding albums to playlist (thanks, Kucheek)
+- Fixed crash that could happen when the Bonjour service was tried to be published multiple times with bad timing
+- Fixed crash when plugins with identical IDs are read from MediaPortal config
+</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.6.1.mpe1</OnlineLocation>
-    <ReleaseDate>2012-11-25T20:16:04</ReleaseDate>
+    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.3/WifiRemote_0.8.3.mpe1</OnlineLocation>
+    <ReleaseDate>2014-07-20T20:16:04</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
-    <Location>WifiRemote_0.7.1.mpe1</Location>
+    <Location>WifiRemote_0.8.3.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -255,14 +262,14 @@ refreshing (DieBagger)</VersionDescription>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{f8f8413e-7b79-4951-a9e2-dc8617a03a55}-installer_logo.gif</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{cf47e085-348f-4453-8e4d-04559470a98a}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{5ab6c11c-a4ab-4d16-a13d-8f87806b783f}-logo_radio.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{7e158b2e-5e3c-4f7f-bd28-cf6cecbafb9e}-logo_radio.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -270,7 +277,7 @@ refreshing (DieBagger)</VersionDescription>
   <ProjectSettings>
     <FolderGroups />
     <ProjectFilename>WifiRemote_1_2_Installer.xmp2</ProjectFilename>
-    <UpdatePath1>D:\Documents\Visual Studio 2010\Projects\PluginDev\WifiRemote\WifiRemote\Installer\update.xml</UpdatePath1>
+    <UpdatePath1>D:\temp\wifiremote\Installer\update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
   </ProjectSettings>

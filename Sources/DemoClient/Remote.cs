@@ -430,6 +430,11 @@ namespace DemoClient
             SendCommand(new MessageRequestNowPlaying(), socket);
         }
 
+        private void showOKDialogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendCommand(new MessageShowDialog(), socket);
+        }
+
         private void showConsoleWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (logWindow.Visible)
@@ -472,38 +477,6 @@ namespace DemoClient
                 MessagePlayMusicSql musicSql = new MessagePlayMusicSql(plDialog.GetPlaylistName(), plDialog.Shuffle(), plDialog.Autoplay());
                 SendCommand(musicSql, socket);
             }
-        }
-
-        private void activateWindowWithParamToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Open moving pictures window with unwatched movies category
-            MessageActivateWindow message = new MessageActivateWindow();
-            message.Window = 96742;
-            message.Parameter = "categoryname:${UnwatchedMovies}";
-            SendCommand(message, socket);
-        }
-
-        private void playMovingPicturesMovieToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Play a moving pictures movie
-            MessagePlayMovingPictures message = new MessagePlayMovingPictures();
-            SendCommand(message, socket);
-        }
-
-        private void playSeriesEpisodeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SendCommand(new MessagePlayTvSeries(), socket);
-        }
-
-
-        private void playMPExtendedMediaItemToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SendCommand(new MessageMediaItem(), socket);
-        }
-
-        private void showTestNotificationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SendCommand(new MessageNotification(), socket);
         }
 
         #endregion
@@ -691,7 +664,6 @@ namespace DemoClient
         }
 
         #endregion
-
 
 
     }

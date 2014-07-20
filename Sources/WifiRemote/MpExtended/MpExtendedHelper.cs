@@ -211,7 +211,6 @@ namespace WifiRemote.MpExtended
                         playlistType = PlayListType.PLAYLIST_VIDEO;
                         if (type == MpExtendedMediaTypes.File)
                         {
-                            //TODO: fill myvideos db information instead of just playing the file
 
                             items.Add(MpVideosHelper.CreatePlaylistItemFromVideoFile(playInfo["Path"]));
                         }
@@ -225,12 +224,12 @@ namespace WifiRemote.MpExtended
                         playlistType = PlayListType.PLAYLIST_MUSIC;
                         if (type == MpExtendedMediaTypes.File)
                         {
-                            //MpMusicHelper.PlayFile(playInfo["Path"], startPos);
+                            items.Add(MpMusicHelper.CreatePlaylistItemFromMusicFile(playInfo["Path"]));
                         }
                         else if (type == MpExtendedMediaTypes.Folder)
                         {
-                            //string[] extensions = playInfo["Extensions"].Split('|');
-                            //MpMusicHelper.PlayAllFilesInFolder(playInfo["Path"], extensions, startPos);
+                            string[] extensions = playInfo["Extensions"].Split('|');
+                            items = MpMusicHelper.CreatePlaylistItemFromMusicFolder(playInfo["Path"], extensions);
                         }
                         break;
                     default:
@@ -353,7 +352,7 @@ namespace WifiRemote.MpExtended
                         {
                             if (!WifiRemote.IsAvailableTVPlugin)
                             {
-                                WifiRemote.LogMessage("No TVPlugin installed: Aborting playrecording", WifiRemote.LogType.Error);
+                                WifiRemote.LogMessage("No TVPlugin installed: Aborting showrecording", WifiRemote.LogType.Error);
                                 return;
                             }
 
@@ -363,7 +362,7 @@ namespace WifiRemote.MpExtended
                         {
                             if (!WifiRemote.IsAvailableTVPlugin)
                             {
-                                WifiRemote.LogMessage("No TVPlugin installed: Aborting playchannel", WifiRemote.LogType.Error);
+                                WifiRemote.LogMessage("No TVPlugin installed: Aborting showchannel", WifiRemote.LogType.Error);
                                 return;
                             }
 
@@ -378,7 +377,7 @@ namespace WifiRemote.MpExtended
             }
             catch (Exception ex)
             {
-                WifiRemote.LogMessage("Error during play of MediaItem: " + ex.ToString(), WifiRemote.LogType.Error);
+                WifiRemote.LogMessage("Error during show of MediaItem: " + ex.ToString(), WifiRemote.LogType.Error);
             }
         }
     }

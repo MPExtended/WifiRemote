@@ -39,15 +39,15 @@ namespace WifiRemote.MpExtended
                 else if (action.Equals("show"))
                 {
                     //show the item details in mediaportal (without starting playback)
-                    WifiRemote.LogMessage("play mediaitem: ItemId: " + itemId + ", itemType: " + itemType + ", providerId: " + providerId, WifiRemote.LogType.Debug);
-
+                    WifiRemote.LogMessage("show mediaitem: ItemId: " + itemId + ", itemType: " + itemType + ", providerId: " + providerId, WifiRemote.LogType.Debug);
+             
                     MpExtendedHelper.ShowMediaItem(itemId, itemType, providerId, values);
                 }
                 else if (action.Equals("enqueue"))
                 {
                     //enqueue the mpextended item to the currently active playlist
                     WifiRemote.LogMessage("enqueue mediaitem: ItemId: " + itemId + ", itemType: " + itemType + ", providerId: " + providerId, WifiRemote.LogType.Debug);
-
+ 
                     int startIndex = (message["StartIndex"] != null) ? (int)message["StartIndex"] : -1;
 
                     PlayListType playlistType = PlayListType.PLAYLIST_VIDEO;

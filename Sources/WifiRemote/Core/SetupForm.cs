@@ -97,7 +97,14 @@ namespace WifiRemote
                     int i;
                     if (int.TryParse(savedPluginStrings[j], out i))
                     {
-                        savedPlugins.Add(i, savedPluginStrings[j + 1]);
+                        try
+                        {
+                            savedPlugins.Add(i, savedPluginStrings[j + 1]);
+                        }
+                        catch (Exception e)
+                        {
+                            WifiRemote.LogMessage("Adding saved plugin from config failed: " + e.Message, WifiRemote.LogType.Debug);
+                        }
                     }
                 }
 
@@ -115,7 +122,14 @@ namespace WifiRemote
                     int i;
                     if (int.TryParse(pluginId, out i))
                     {
-                        ignoredPluginsList.Add(i);
+                        try
+                        {
+                            ignoredPluginsList.Add(i);
+                        }
+                        catch (Exception e)
+                        {
+                            WifiRemote.LogMessage("Adding ignored plugin from config failed: " + e.Message, WifiRemote.LogType.Debug);
+                        }
                     }
                 }
 
@@ -179,8 +193,8 @@ namespace WifiRemote
                         pluginsDataSource.Add(new WindowPlugin(aSavedPlugin.Value, 
                                                                aSavedPlugin.Key, 
                                                                (plugin.ActiveImage != null) 
-                                                                    ? WifiRemote.imageToByteArray(plugin.ActiveImage, System.Drawing.Imaging.ImageFormat.Png) 
-                                                                    : WifiRemote.imageToByteArray(Properties.Resources.NoPluginImage, System.Drawing.Imaging.ImageFormat.Png),
+                                                                    ? ImageHelper.imageToByteArray(plugin.ActiveImage, System.Drawing.Imaging.ImageFormat.Png)
+                                                                    : ImageHelper.imageToByteArray(Properties.Resources.NoPluginImage, System.Drawing.Imaging.ImageFormat.Png),
                                                                !ignoredPluginsList.Contains(aSavedPlugin.Key)));
                     }
                     break;
@@ -553,9 +567,9 @@ namespace WifiRemote
             {
                 pluginsDataSource.Add(
                     new WindowPlugin(plugin.SetupForm.PluginName(), 
-                                     plugin.WindowId, 
-                                     (plugin.ActiveImage != null) ? WifiRemote.imageToByteArray(plugin.ActiveImage, System.Drawing.Imaging.ImageFormat.Png) 
-                                                                  : WifiRemote.imageToByteArray(Properties.Resources.NoPluginImage, System.Drawing.Imaging.ImageFormat.Png),
+                                     plugin.WindowId,
+                                     (plugin.ActiveImage != null) ? ImageHelper.imageToByteArray(plugin.ActiveImage, System.Drawing.Imaging.ImageFormat.Png)
+                                                                  : ImageHelper.imageToByteArray(Properties.Resources.NoPluginImage, System.Drawing.Imaging.ImageFormat.Png),
                                      !ignoredPluginsList.Contains(plugin.WindowId)));
             }
         }

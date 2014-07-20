@@ -158,11 +158,7 @@ namespace WifiRemote
                             // MyVideos movie
                             if (movie.ID > 0)
                             {
-#if COMPILE_FOR_1_2_0 || COMPILE_FOR_1_1_2 // MyVideos extended info available since MediaPortal 1.1.2 (Rev 26532)
                                 return new NowPlayingVideo(movie);
-#else
-                                return null;
-#endif
                             }
                             else
                             // MovingPictures, TVSeries or something else
@@ -191,27 +187,20 @@ namespace WifiRemote
                             }
                         }
                     }
-                    else if (g_Player.IsTV)
+                    else if (g_Player.IsTV && WifiRemote.IsAvailableTVPlugin)
                     {
-                        if (!WifiRemote.IsAvailableTVPlugin)
+                        if (g_Player.IsTVRecording)
                         {
-                            WifiRemote.LogMessage("No TVPlugin installed: can't add now playing", WifiRemote.LogType.Error);
+                            NowPlayingRecording recording = MpTvServerHelper.GetNowPlayingRecording();
+
+                            if (recording.IsRecording())
+                            {
+                                return recording;
+                            }
                         }
                         else
                         {
-                            if (g_Player.IsTVRecording)
-                            {
-                                NowPlayingRecording recording = MpTvServerHelper.GetNowPlayingRecording();
-
-                                if (recording.IsRecording())
-                                {
-                                    return recording;
-                                }
-                            }
-                            else
-                            {   
-                                return MpTvServerHelper.GetNowPlayingTv();
-                            }
+                            return MpTvServerHelper.GetNowPlayingTv();
                         }
                     }
                 }

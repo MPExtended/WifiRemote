@@ -10,7 +10,7 @@ namespace WifiRemote
     class MessageWelcome : IMessage
     {
         string type = "welcome";
-        int server_version = 13;
+        int server_version = 17;
         AuthMethod authMethod = AuthMethod.UserPassword;
 
         /// <summary>
@@ -50,6 +50,11 @@ namespace WifiRemote
                     {"WSS", WifiRemote.IsAvailableMPExtendedWSS}
                 };
             }
+        }
+
+        public Boolean TvPluginInstalled
+        {
+            get { return WifiRemote.IsAvailableTVPlugin; }
         }
 
         /// <summary>

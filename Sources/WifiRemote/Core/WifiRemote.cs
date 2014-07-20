@@ -20,6 +20,7 @@ using MediaPortal.Dialogs;
 using WifiRemote.MPDialogs;
 using WifiRemote.Messages;
 using WifiRemote.HardwareController;
+using WifiRemote.PluginConnection;
 
 namespace WifiRemote
 {
@@ -63,7 +64,6 @@ namespace WifiRemote
         public const string PLUGIN_NAME = "WifiRemote";
         public const string LOG_PREFIX = "[WIFI_REMOTE] ";
         public const int DEFAULT_PORT = 8017;
-        public const int SERVER_VERSION = 1;
         private const int UPDATE_INTERVAL = 1000;
 
         private const string MP_EXTENDED_SERVICE = "MPExtended Service";
@@ -109,6 +109,11 @@ namespace WifiRemote
         /// </summary>
         private UInt16 port;
 
+        /// <summary>
+        /// <code>true</code> if the publishService is in the process of publishing the NetService
+        /// </summary>
+        private bool servicePublishing = false;
+        
         /// <summary>
         /// <code>true</code> if the service is advertised via Bonjour
         /// </summary>
@@ -162,6 +167,15 @@ namespace WifiRemote
         /// <code>true</code> if TV-Series is available
         /// </summary>
         public static bool IsAvailableTVSeries
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// <code>true</code> if trakt plugin is available
+        /// </summary>
+        public static bool IsAvailableTrakt
         {
             get;
             set;
@@ -301,6 +315,7 @@ namespace WifiRemote
             WifiRemote.LogMessage("Moving pictures plugin check done", LogType.Error);
             WifiRemote.IsAvailableTVSeries = IsAssemblyAvailable("MP-TVSeries", new Version(2, 6, 3, 1242));
             WifiRemote.LogMessage("TV Series plugin check done", LogType.Error);
+            WifiRemote.IsAvailableTrakt = IsAssemblyAvailable("TraktPlugin", new Version(3, 0));
             WifiRemote.IsAvailableFanartHandler = IsAssemblyAvailable("FanartHandler", new Version(2, 2, 1, 19191));
             WifiRemote.LogMessage("Fanart handler plugin check done", LogType.Error);
             WifiRemote.IsAvailableNotificationBar = IsAssemblyAvailable("MPNotificationBar", new Version(0, 8, 2, 1));
@@ -337,7 +352,14 @@ namespace WifiRemote
             g_Player.PlayBackEnded += new g_Player.EndedHandler(g_Player_PlayBackEnded);
             g_Player.PlayBackStopped += new g_Player.StoppedHandler(g_Player_PlayBackStopped);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(g_Player_PlayBackChanged);
-            g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
+
+            // Only subscribe to the tv channel changed callback if the tv plugin is installed.
+            // Argus users will experience crashes otherwise.
+            if (WifiRemote.IsAvailableTVPlugin)
+            {
+                g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
+            }
+
 
             GUIWindowManager.Receivers += new SendMessageHandler(GUIWindowManager_Receivers);
             HardwareControllerFactory.Instance.AudioController().OnAudioControllerStatusChangedEvent += new EventHandler(WifiRemote_OnAudioControllerStatusChangedEvent); 
@@ -625,10 +647,9 @@ namespace WifiRemote
         /// </summary>
         void g_Player_TVPlayBackChanged()
         {
-            TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
-            TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
+            TvDatabase.Channel current = MpTvServerHelper.GetCurrentTimeShiftingTVChannel();
 
-            if (socketServer != null && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
+            if (socketServer != null && current != null && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
             {
                 LatestChannelId = current.IdChannel;
                 LogMessage("TV Playback changed!", LogType.Debug);
@@ -730,6 +751,12 @@ namespace WifiRemote
         /// </summary>
         private void PublishBonjourService()
         {
+            if (servicePublishing)
+            {
+                WifiRemote.LogMessage("Already in the process of publishing the Bonjour service. Aborting publish ...", LogType.Debug);
+                return;
+            }
+
             // Test if Bonjour is installed
             try
             {
@@ -744,6 +771,8 @@ namespace WifiRemote
                 disableBonjour = true;
                 return;
             }
+
+            servicePublishing = true;
 
             publishService = new NetService(domain, serviceType, serviceName, port);
 
@@ -801,6 +830,7 @@ namespace WifiRemote
         void publishService_DidNotPublishService(NetService service, DNSServiceException exception)
         {
             LogMessage(String.Format("Bonjour publish error: {0}", exception.Message), LogType.Error);
+            servicePublishing = false;
         }
 
         /// <summary>
@@ -810,6 +840,7 @@ namespace WifiRemote
         void publishService_DidPublishService(NetService service)
         {
             LogMessage("Published Service via Bonjour!", LogType.Info);
+            servicePublishing = false;
             servicePublished = true;
         }
 
@@ -855,26 +886,6 @@ namespace WifiRemote
             {
                 return "MediaPortal Wifi Remote";
             }
-        }
-
-
-        /// <summary>
-        /// Returns an image as its byte array representation.
-        /// Used to make images encodable in JSON.
-        /// </summary>
-        /// <param name="img"></param>
-        /// <returns></returns>
-        public static byte[] imageToByteArray(Image img, System.Drawing.Imaging.ImageFormat format)
-        {
-            byte[] byteArray = new byte[0];
-            using (MemoryStream stream = new MemoryStream())
-            {
-                img.Save(stream, format);
-                stream.Close();
-                byteArray = stream.ToArray();
-            }
-
-            return byteArray;
         }
 
         #endregion
@@ -1020,7 +1031,7 @@ namespace WifiRemote
 
                                 if (icon != null)
                                 {
-                                    iconBytes = WifiRemote.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
+                                    iconBytes = ImageHelper.imageToByteArray(icon, System.Drawing.Imaging.ImageFormat.Png);
                                 }
                             }
                         }
