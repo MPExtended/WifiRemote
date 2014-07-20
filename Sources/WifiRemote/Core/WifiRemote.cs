@@ -62,7 +62,6 @@ namespace WifiRemote
         public const string PLUGIN_NAME = "WifiRemote";
         public const string LOG_PREFIX = "[WIFI_REMOTE] ";
         public const int DEFAULT_PORT = 8017;
-        public const int SERVER_VERSION = 1;
         private const int UPDATE_INTERVAL = 1000;
 
         private const string MP_EXTENDED_SERVICE = "MPExtended Service";
@@ -108,6 +107,11 @@ namespace WifiRemote
         /// </summary>
         private UInt16 port;
 
+        /// <summary>
+        /// <code>true</code> if the publishService is in the process of publishing the NetService
+        /// </summary>
+        private bool servicePublishing = false;
+        
         /// <summary>
         /// <code>true</code> if the service is advertised via Bonjour
         /// </summary>
@@ -718,6 +722,12 @@ namespace WifiRemote
         /// </summary>
         private void PublishBonjourService()
         {
+            if (servicePublishing)
+            {
+                WifiRemote.LogMessage("Already in the process of publishing the Bonjour service. Aborting publish ...", LogType.Debug);
+                return;
+            }
+
             // Test if Bonjour is installed
             try
             {
@@ -732,6 +742,8 @@ namespace WifiRemote
                 disableBonjour = true;
                 return;
             }
+
+            servicePublishing = true;
 
             publishService = new NetService(domain, serviceType, serviceName, port);
 
@@ -789,6 +801,7 @@ namespace WifiRemote
         void publishService_DidNotPublishService(NetService service, DNSServiceException exception)
         {
             LogMessage(String.Format("Bonjour publish error: {0}", exception.Message), LogType.Error);
+            servicePublishing = false;
         }
 
         /// <summary>
@@ -798,6 +811,7 @@ namespace WifiRemote
         void publishService_DidPublishService(NetService service)
         {
             LogMessage("Published Service via Bonjour!", LogType.Info);
+            servicePublishing = false;
             servicePublished = true;
         }
 

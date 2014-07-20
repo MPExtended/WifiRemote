@@ -10,7 +10,7 @@ namespace WifiRemote
     class MessageWelcome : IMessage
     {
         string type = "welcome";
-        int server_version = 16;
+        int server_version = 17;
         AuthMethod authMethod = AuthMethod.UserPassword;
 
         /// <summary>

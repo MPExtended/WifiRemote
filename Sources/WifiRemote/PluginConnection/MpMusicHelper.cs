@@ -238,7 +238,7 @@ namespace WifiRemote.PluginConnection
         {
             List<PlayListItem> returnList = new List<PlayListItem>();
             List<Song> songs = new List<Song>();
-            string sql = String.Format("select * from tracks where strAlbumArtist like '%{0}%' AND strAlbum LIKE '%{1}%'",
+            string sql = String.Format("select * from tracks where strAlbumArtist like '%{0}%' AND strAlbum LIKE '%{1}%' order by iDisc,iTrack ASC",
                 DatabaseUtility.RemoveInvalidChars(albumArtist),
                 DatabaseUtility.RemoveInvalidChars(album));
             MusicDatabase.Instance.GetSongsByFilter(sql, out songs, "tracks");
@@ -273,6 +273,95 @@ namespace WifiRemote.PluginConnection
                     returnList.Add(PlaylistHelper.ToPlayListItem(s));
                 }
             }
+            return returnList;
+        }
+
+        /// <summary>
+        /// Checks if filename has a valid extension
+        /// </summary>
+        /// <param name="filename">Filename to check</param>
+        /// <param name="extensions">Valid extensions</param>
+        /// <returns></returns>
+        private static bool IsValidExtension(string filename, string[] extensions)
+        {
+            foreach (string e in extensions)
+            {
+                if (filename.EndsWith(e, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Create playlist item from a file
+        /// </summary>
+        /// <param name="file">Path to file</param>
+        /// <returns>Playlist item</returns>
+        internal static MediaPortal.Playlists.PlayListItem CreatePlaylistItemFromMusicFile(string file)
+        {
+            FileInfo info = null;
+            MediaPortal.Playlists.PlayListItem item = new MediaPortal.Playlists.PlayListItem();
+
+            try
+            {
+                info = new FileInfo(file);
+            }
+            catch (Exception e)
+            {
+                WifiRemote.LogMessage("Error loading music item from file: " + e.Message, WifiRemote.LogType.Error);
+            }
+
+            if (info != null)
+            {
+                item.Description = info.Name;
+                item.FileName = info.FullName;
+                item.Type = PlayListItem.PlayListItemType.Audio;
+                MusicDatabase mpMusicDb = MusicDatabase.Instance;
+                Song song = new Song();
+                bool inDb = mpMusicDb.GetSongByFileName(item.FileName, ref song);
+
+                if (inDb)
+                {
+                    item.Duration = song.Duration;
+                }
+            }
+            
+            return item;
+        }
+
+        /// <summary>
+        /// Create playlist item from a folder
+        /// </summary>
+        /// <param name="folder">Path to folder</param>
+        /// <returns>Playlist item</returns>
+        internal static List<MediaPortal.Playlists.PlayListItem> CreatePlaylistItemFromMusicFolder(string folder, string[] extensions)
+        {
+            FileInfo[] files = null;
+            List<MediaPortal.Playlists.PlayListItem> returnList = new List<MediaPortal.Playlists.PlayListItem>();
+
+            try
+            {
+                DirectoryInfo info = new DirectoryInfo(folder);
+                files = info.GetFiles();
+            }
+            catch (Exception e)
+            {
+                WifiRemote.LogMessage("Error fetching music files from folder: " + e.Message, WifiRemote.LogType.Error);
+            }
+
+            if (files != null)
+            {
+                foreach (FileInfo f in files)
+                {
+                    if (IsValidExtension(f.FullName, extensions))
+                    {
+                        returnList.Add(CreatePlaylistItemFromMusicFile(f.FullName));
+                    }
+                }
+            }
+
             return returnList;
         }
     }
