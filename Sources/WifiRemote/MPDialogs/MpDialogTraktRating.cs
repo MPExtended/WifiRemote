@@ -16,7 +16,7 @@ namespace WifiRemote.MPDialogs
             this.DialogType = dialog.GetModuleName();
             this.DialogId = dialog.GetID;
             this.Rating = ratingFromTraktRateValue(dialog.Rated);
-            this.ShowAdvancedRatings = dialog.ShowAdvancedRatings;
+            this.ShowAdvancedRatings = true;
             GetHeading(dialog, 1);
             GetText(dialog, 2, 3, 4, 5);
 
