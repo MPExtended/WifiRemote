@@ -435,6 +435,24 @@ namespace DemoClient
             SendCommand(new MessageShowDialog(), socket);
         }
 
+        private void playVideoFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Video Files(*.mp4;*.mkv;*.avi)|*.mp4;*.mkv;*.avi|All Files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = false;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                String fileName = openFileDialog.FileName;
+                if (!String.IsNullOrEmpty(fileName))
+                {
+                    SendCommand(new MessagePlayVideo(fileName), socket);
+                }
+            }
+        }
+
         private void showConsoleWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (logWindow.Visible)
@@ -664,7 +682,5 @@ namespace DemoClient
         }
 
         #endregion
-
-
     }
 }

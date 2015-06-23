@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncSocket.cs" />
+    <Compile Include="Messages\MessagePlayVideo.cs" />
     <Compile Include="Messages\MessageShowDialog.cs" />
     <Compile Include="PlaylistLoadDialog.cs">
       <SubType>Form</SubType>

@@ -59,8 +59,9 @@
             this.tVChannelSwitchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQLMusicTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.showOKDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.playVideoFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -395,7 +396,8 @@
             this.tVChannelSwitchToolStripMenuItem,
             this.sQLMusicTestToolStripMenuItem,
             this.loadPlaylistToolStripMenuItem,
-            this.showOKDialogToolStripMenuItem});
+            this.showOKDialogToolStripMenuItem,
+            this.playVideoFileToolStripMenuItem});
             this.toolStripDropDownButton1.Image = global::DemoClient.Properties.Resources.options;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -442,6 +444,13 @@
             this.loadPlaylistToolStripMenuItem.Text = "Load playlist";
             this.loadPlaylistToolStripMenuItem.Click += new System.EventHandler(this.loadPlaylistToolStripMenuItem_Click);
             // 
+            // showOKDialogToolStripMenuItem
+            // 
+            this.showOKDialogToolStripMenuItem.Name = "showOKDialogToolStripMenuItem";
+            this.showOKDialogToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.showOKDialogToolStripMenuItem.Text = "Show OK Dialog";
+            this.showOKDialogToolStripMenuItem.Click += new System.EventHandler(this.showOKDialogToolStripMenuItem_Click);
+            // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
@@ -449,12 +458,12 @@
             this.toolStripStatusLabel1.Text = "Select server to connect";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
-            // showOKDialogToolStripMenuItem
+            // playVideoFileToolStripMenuItem
             // 
-            this.showOKDialogToolStripMenuItem.Name = "showOKDialogToolStripMenuItem";
-            this.showOKDialogToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.showOKDialogToolStripMenuItem.Text = "Show OK Dialog";
-            this.showOKDialogToolStripMenuItem.Click += new System.EventHandler(this.showOKDialogToolStripMenuItem_Click);
+            this.playVideoFileToolStripMenuItem.Name = "playVideoFileToolStripMenuItem";
+            this.playVideoFileToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.playVideoFileToolStripMenuItem.Text = "Play video file";
+            this.playVideoFileToolStripMenuItem.Click += new System.EventHandler(this.playVideoFileToolStripMenuItem_Click);
             // 
             // Remote
             // 
@@ -519,6 +528,7 @@
         private System.Windows.Forms.ToolStripMenuItem sQLMusicTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadPlaylistToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOKDialogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playVideoFileToolStripMenuItem;
     }
 }
 
