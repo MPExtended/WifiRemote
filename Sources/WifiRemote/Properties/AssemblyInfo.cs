@@ -8,16 +8,6 @@ using MediaPortal.Common.Utils;
 // http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/18_Contribute/6_Plugins/Plugin_Related_Changes/1.1.0_to_1.2.0/Version_Compatibility
 #region MediaPortal Compatibility
 [assembly: CompatibleVersion("1.6.100.0")]
-[assembly: UsesSubsystem("MP.SkinEngine")]
-[assembly: UsesSubsystem("MP.Input")]
-[assembly: UsesSubsystem("MP.Players")]
-[assembly: UsesSubsystem("MP.Config")]
-[assembly: UsesSubsystem("MP.Plugins.Music")]
-[assembly: UsesSubsystem("MP.Plugins.Videos")]
-[assembly: UsesSubsystem("MP.Plugins.TV")]
-// Makes the plugin incompatible when no tv server installed
-// Need to find a solution for that.
-// [assembly: UsesSubsystem("MP.TVE")]
 #endregion
 
 
