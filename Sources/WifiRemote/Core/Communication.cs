@@ -491,6 +491,9 @@ namespace WifiRemote
             }
         }
 
+
+        protected delegate void PlayVideoFileDelegate(string video, int position, string fileHandler);
+
         /// <summary>
         /// Plays the local file on the MediaPortal client
         /// </summary>
@@ -498,43 +501,52 @@ namespace WifiRemote
         /// <param name="position">Start position</param>
         internal void PlayVideoFile(string video, int position, string fileHandler)
         {
-            if (video != null && File.Exists(video))
+            // This needs to be called on the main thread
+            if (GUIGraphicsContext.form.InvokeRequired)
             {
-                WifiRemote.LogMessage("Play video file: " + video + ", pos: " + position, WifiRemote.LogType.Debug);
-                // from MP-TvSeries code:
-                // sometimes it takes up to 30+ secs to go to fullscreen even though the video is already playing
-                // lets force fullscreen here
-                // note: MP might still be unresponsive during this time, but at least we are in fullscreen and can see video should this happen
-                // I haven't actually found out why it happens, but I strongly believe it has something to do with the video database and the player doing something in the background
-                // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)           
-                GUIGraphicsContext.IsFullScreenVideo = true;
-                GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
-
-                // Play File
-                MediaPortal.Player.g_Player.MediaType handler;
-                switch (fileHandler)
+                PlayVideoFileDelegate d = PlayVideoFile;
+                GUIGraphicsContext.form.Invoke(d, new object[] { video, position, fileHandler });
+            }
+            else
+            {
+                if (video != null && File.Exists(video))
                 {
-                    case "recording":
-                        handler = g_Player.MediaType.Recording;
-                        break;
+                    WifiRemote.LogMessage("Play video file: " + video + ", pos: " + position, WifiRemote.LogType.Debug);
+                    // from MP-TvSeries code:
+                    // sometimes it takes up to 30+ secs to go to fullscreen even though the video is already playing
+                    // lets force fullscreen here
+                    // note: MP might still be unresponsive during this time, but at least we are in fullscreen and can see video should this happen
+                    // I haven't actually found out why it happens, but I strongly believe it has something to do with the video database and the player doing something in the background
+                    // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)           
+                    GUIGraphicsContext.IsFullScreenVideo = true;
+                    GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
 
-                    case "tv":
-                        handler = g_Player.MediaType.TV;
-                        break;
+                    // Play File
+                    MediaPortal.Player.g_Player.MediaType handler;
+                    switch (fileHandler)
+                    {
+                        case "recording":
+                            handler = g_Player.MediaType.Recording;
+                            break;
 
-                    case "video":
-                    default:
-                        handler = g_Player.MediaType.Video;
-                        break;
+                        case "tv":
+                            handler = g_Player.MediaType.TV;
+                            break;
+
+                        case "video":
+                        default:
+                            handler = g_Player.MediaType.Video;
+                            break;
+                    }
+
+
+                    g_Player.Play(video, handler);
+                    if (position != 0)
+                    {
+                        g_Player.SeekAbsolute(position);
+                    }
+                    g_Player.ShowFullScreenWindowVideo();
                 }
-
-
-                g_Player.Play(video, handler);
-                if (position != 0)
-                {
-                    g_Player.SeekAbsolute(position);
-                }
-                g_Player.ShowFullScreenWindowVideo();
             }
         }
 
