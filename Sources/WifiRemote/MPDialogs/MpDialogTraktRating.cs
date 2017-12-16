@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TraktPlugin;
 
 namespace WifiRemote.MPDialogs
 {
@@ -25,43 +21,41 @@ namespace WifiRemote.MPDialogs
             this.AvailableActions.Add("confirmrating");
         }
 
-        private int ratingFromTraktRateValue(TraktPlugin.TraktAPI.TraktRateValue rateValue) 
+        private int ratingFromTraktRateValue(TraktAPI.Enums.TraktRateValue rateValue) 
         {
             switch (rateValue)
             {
-                case TraktPlugin.TraktAPI.TraktRateValue.unrate:
+                case TraktAPI.Enums.TraktRateValue.unrate:
                     return 0;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.one:
-                case TraktPlugin.TraktAPI.TraktRateValue.hate:
+                case TraktAPI.Enums.TraktRateValue.one:
                     return 1;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.two:
+                case TraktAPI.Enums.TraktRateValue.two:
                     return 2;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.three:
+                case TraktAPI.Enums.TraktRateValue.three:
                     return 3;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.four:
+                case TraktAPI.Enums.TraktRateValue.four:
                     return 4;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.five:
+                case TraktAPI.Enums.TraktRateValue.five:
                     return 5;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.six:
+                case TraktAPI.Enums.TraktRateValue.six:
                     return 6;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.seven:
+                case TraktAPI.Enums.TraktRateValue.seven:
                     return 7;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.eight:
+                case TraktAPI.Enums.TraktRateValue.eight:
                     return 8;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.nine:
+                case TraktAPI.Enums.TraktRateValue.nine:
                     return 9;
 
-                case TraktPlugin.TraktAPI.TraktRateValue.ten:
-                case TraktPlugin.TraktAPI.TraktRateValue.love:
+                case TraktAPI.Enums.TraktRateValue.ten:
                     return 10;
             }
 
