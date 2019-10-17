@@ -117,7 +117,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.XML" />
     <Reference Include="TraktAPI">
-      <HintPath>.\..\Libs\TraktAPI.dll</HintPath>
+      <HintPath>..\..\Libs\TraktAPI.dll</HintPath>
     </Reference>
     <Reference Include="TraktPlugin">
       <HintPath>..\..\Libs\TraktPlugin.dll</HintPath>
