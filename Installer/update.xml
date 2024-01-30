@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ExtensionCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ExtensionCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Items>
     <PackageClass>
       <Version>2.0</Version>
@@ -40,20 +40,21 @@
             <Type>MediaPortal</Type>
             <Id />
             <MinVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MinVersion>
             <MaxVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MaxVersion>
             <WarnOnly>false</WarnOnly>
             <Message>requires MediaPortal version 1.1.6.27644 to 1.1.6.27644.</Message>
             <Name>MediaPortal</Name>
+            <Condition>None</Condition>
           </DependencyItem>
         </Items>
       </Dependencies>
@@ -84,6 +85,7 @@ It publishes a Bonjour Service on your local network which allows clients (for e
         <OnlineLocation>http://wifiremote.googlecode.com/files/WifiRemote_0.7.1.mpe1</OnlineLocation>
         <ReleaseDate>2012-11-25T14:00:00</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
+        <PlatformCompatibility>x86</PlatformCompatibility>
         <Location>Versions\WifiRemote_0.7.1.mpe1</Location>
         <Params>
           <Items>
@@ -159,20 +161,21 @@ It publishes a Bonjour Service on your local network which allows clients (for e
             <Type>MediaPortal</Type>
             <Id />
             <MinVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MinVersion>
             <MaxVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MaxVersion>
             <WarnOnly>false</WarnOnly>
             <Message>This version of WifiRemote requires MediaPortal 1.6 or higher!</Message>
             <Name>MediaPortal</Name>
+            <Condition>None</Condition>
           </DependencyItem>
         </Items>
       </Dependencies>
@@ -220,6 +223,7 @@ New in 0.8:
         <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8/WifiRemote_0.8.mpe1</OnlineLocation>
         <ReleaseDate>2014-01-03T20:16:04</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
+        <PlatformCompatibility>x86</PlatformCompatibility>
         <Location>WifiRemote_0.8.mpe1</Location>
         <Params>
           <Items>
@@ -295,20 +299,21 @@ New in 0.8:
             <Type>MediaPortal</Type>
             <Id />
             <MinVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MinVersion>
             <MaxVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MaxVersion>
             <WarnOnly>false</WarnOnly>
             <Message>This version of WifiRemote requires MediaPortal 1.6 or higher!</Message>
             <Name>MediaPortal</Name>
+            <Condition>None</Condition>
           </DependencyItem>
         </Items>
       </Dependencies>
@@ -345,6 +350,7 @@ New in 0.8.1:
         <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.1/WifiRemote_0.8.1.mpe1</OnlineLocation>
         <ReleaseDate>2014-02-15T20:16:04</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
+        <PlatformCompatibility>x86</PlatformCompatibility>
         <Location>WifiRemote_0.8.1.mpe1</Location>
         <Params>
           <Items>
@@ -420,20 +426,21 @@ New in 0.8.1:
             <Type>MediaPortal</Type>
             <Id />
             <MinVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MinVersion>
             <MaxVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MaxVersion>
             <WarnOnly>false</WarnOnly>
             <Message>This version of WifiRemote requires MediaPortal 1.7 or higher!</Message>
             <Name>MediaPortal</Name>
+            <Condition>None</Condition>
           </DependencyItem>
         </Items>
       </Dependencies>
@@ -466,6 +473,7 @@ New in 0.8.2:
         <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.1/WifiRemote_0.8.1.mpe1</OnlineLocation>
         <ReleaseDate>2014-02-20T20:16:04</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
+        <PlatformCompatibility>x86</PlatformCompatibility>
         <Location>WifiRemote_0.8.2.mpe1</Location>
         <Params>
           <Items>
@@ -541,20 +549,21 @@ New in 0.8.2:
             <Type>MediaPortal</Type>
             <Id />
             <MinVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MinVersion>
             <MaxVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MaxVersion>
             <WarnOnly>false</WarnOnly>
             <Message>This version of WifiRemote requires MediaPortal 1.7 or higher!</Message>
             <Name>MediaPortal</Name>
+            <Condition>None</Condition>
           </DependencyItem>
         </Items>
       </Dependencies>
@@ -590,6 +599,7 @@ New in 0.8.2.1:
         <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.2.1/WifiRemote_0.8.2.1.mpe1</OnlineLocation>
         <ReleaseDate>2014-02-20T20:16:04</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
+        <PlatformCompatibility>x86</PlatformCompatibility>
         <Location>WifiRemote_0.8.2.1.mpe1</Location>
         <Params>
           <Items>
@@ -665,20 +675,21 @@ New in 0.8.2.1:
             <Type>MediaPortal</Type>
             <Id />
             <MinVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MinVersion>
             <MaxVersion>
-              <Major>1</Major>
-              <Minor>1</Minor>
-              <Build>6</Build>
-              <Revision>27644</Revision>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
             </MaxVersion>
             <WarnOnly>false</WarnOnly>
             <Message>This version of WifiRemote requires MediaPortal 1.7 or higher!</Message>
             <Name>MediaPortal</Name>
+            <Condition>None</Condition>
           </DependencyItem>
         </Items>
       </Dependencies>
@@ -717,7 +728,128 @@ New in 0.8.3:
         <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.3/WifiRemote_0.8.3.mpe1</OnlineLocation>
         <ReleaseDate>2014-07-20T20:16:04</ReleaseDate>
         <Tags>remote, wifi, json, client control</Tags>
+        <PlatformCompatibility>x86</PlatformCompatibility>
         <Location>WifiRemote_0.8.3.mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value />
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Plugins%\process\WifiRemote.dll</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value />
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Default">
+            <DisplayName>Default</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Default</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="plugin_files">
+            <DisplayName>plugin_files</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>plugin_files</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="config_files">
+            <DisplayName>config_files</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>config_files</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message />
+            <Name>MediaPortal</Name>
+            <Condition>None</Condition>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items />
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>WifiRemote</Name>
+        <Id>d2277c74-fdce-4146-9e23-d080d1799f72</Id>
+        <Author>Shukuyen, DieBagger</Author>
+        <HomePage>https://github.com/MPExtended/WifiRemote</HomePage>
+        <ForumPage>http://forum.team-mediaportal.com/mediaportal-plugins-47/wifiremote-tcp-remote-control-server-0-1-2011-05-05-a-96251</ForumPage>
+        <UpdateUrl>https://raw.github.com/MPExtended/WifiRemote/master/Installer/update.xml</UpdateUrl>
+        <Version>
+          <Major>0</Major>
+          <Minor>8</Minor>
+          <Build>5</Build>
+          <Revision>1</Revision>
+        </Version>
+        <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
+
+
+
+It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
+        <VersionDescription>Library Update, AnyCPU fresh build</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.5.1/WifiRemote_0.8.5.1.mpe1</OnlineLocation>
+        <ReleaseDate>2024-01-30T20:16:04</ReleaseDate>
+        <Tags>remote, wifi, json, client control</Tags>
+        <PlatformCompatibility>AnyCPU</PlatformCompatibility>
+        <Location>WifiRemote_0.8.5.1.mpe1</Location>
         <Params>
           <Items>
             <SectionParam Name="Online Icon">
