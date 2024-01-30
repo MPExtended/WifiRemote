@@ -18,8 +18,8 @@ using MediaPortal.Common.Utils;
 [assembly: AssemblyDescription("WifiRemote process plugin for MediaPortal")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Team MediaPortal")]
+[assembly: AssemblyCopyright("Copyright © 2011 - 2018 MPExtended, 2020-2024 Team MediaPortal")]
 [assembly: AssemblyProduct("WifiRemote")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -41,5 +41,5 @@ using MediaPortal.Common.Utils;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.8.3.1")]
-[assembly: AssemblyFileVersion("0.8.3.1")]
+[assembly: AssemblyVersion("0.8.5.1")]
+[assembly: AssemblyFileVersion("0.8.5.1")]

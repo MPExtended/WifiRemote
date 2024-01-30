@@ -1,0 +1,14 @@
+# build output
+[Bb]in
+[Oo]bj
+[Dd]ebug
+[Rr]elease
+
+# user-specific files
+*.suo
+*.user
+*.log
+
+# misc
+[Tt]humbs.db
+.vs/

@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DemoClient")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("Team MediaPortal")]
+[assembly: AssemblyCopyright("Copyright © 2011 - 2018 MPExtended, 2020-2024 Team MediaPortal")]
 [assembly: AssemblyProduct("DemoClient")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
