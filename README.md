@@ -1,3 +1,9 @@
+[![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/MPExtended/WifiRemote?include_prereleases)](https://github.com/MPExtended/WifiRemote/releases)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/downloads-pre/MPExtended/WifiRemote/latest/total?label=release@downloads)](https://github.com/MPExtended/WifiRemote/releases)
+[![WiFiRemote x86](https://img.shields.io/badge/WiFiRemote-x86-orange?logo=windows&logoColor=white)](https://github.com/MPExtended/WifiRemote/releases)[![WiFiRemote x64](https://img.shields.io/badge/x64-blue?logoColor=white)](https://github.com/MPExtended/WifiRemote/releases)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+
+
 # WifiRemote MediaPortal Plugin
 
 ### What is WifiRemote
