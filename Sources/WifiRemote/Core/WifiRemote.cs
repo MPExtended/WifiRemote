@@ -39,6 +39,7 @@ namespace WifiRemote
     /// Project contributors:
     ///     * Shukuyen
     ///     * DieBagger
+    ///     * ajs
     ///     
     /// 
     /// NOTE:
@@ -255,7 +256,7 @@ namespace WifiRemote
 
         public string Author()
         {
-            return "Shukuyen, DieBagger";
+            return "Shukuyen, DieBagger, ajs";
         }
 
         public void ShowPlugin()
