@@ -1,8 +1,9 @@
+[![MP AnyCPU](https://img.shields.io/badge/MP-AnyCPU-blue?logo=windows&logoColor=white)](https://github.com/MPExtended/WifiRemote/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/MPExtended/WifiRemote/build.yml?logo=github)](https://github.com/MPExtended/WifiRemote/actions)
+[![GitHub](https://img.shields.io/github/license/MPExtended/WifiRemote?color=blue)](https://github.com/MPExtended/WifiRemote/blob/master/LICENSE)
 [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/MPExtended/WifiRemote?include_prereleases)](https://github.com/MPExtended/WifiRemote/releases)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/downloads-pre/MPExtended/WifiRemote/latest/total?label=release@downloads)](https://github.com/MPExtended/WifiRemote/releases)
-[![WiFiRemote x86](https://img.shields.io/badge/WiFiRemote-x86-orange?logo=windows&logoColor=white)](https://github.com/MPExtended/WifiRemote/releases)[![WiFiRemote x64](https://img.shields.io/badge/x64-blue?logoColor=white)](https://github.com/MPExtended/WifiRemote/releases)
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
-
 
 # WifiRemote MediaPortal Plugin
 

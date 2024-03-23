@@ -18,7 +18,7 @@
         <Description>plugin_files</Description>
         <Files>
           <Items>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="None">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>Files\WifiRemote.dll</LocalFileName>
@@ -35,7 +35,7 @@
         <Description>config_files</Description>
         <Files>
           <Items>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="None">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>Files\WifiRemote.xml</LocalFileName>
@@ -189,20 +189,22 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>0</Major>
       <Minor>8</Minor>
       <Build>5</Build>
-      <Revision>1</Revision>
+      <Revision>272</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
 
 
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-    <VersionDescription>Library Update, AnyCPU fresh build</VersionDescription>
+    <VersionDescription>Library Update
+AnyCPU fresh build
+Migrate to Github Action</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/0.8.3/WifiRemote_0.8.3.mpe1</OnlineLocation>
-    <ReleaseDate>2024-01-30T20:16:04</ReleaseDate>
+    <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/[Version]/WifiRemote-[Version].mpe1</OnlineLocation>
+    <ReleaseDate>2024-03-23T18:12:05.5326804+02:00</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
     <PlatformCompatibility>AnyCPU</PlatformCompatibility>
-    <Location>WifiRemote_0.8.5.1.mpe1</Location>
+    <Location>WifiRemote-[Version].mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -237,28 +239,28 @@ It publishes a Bonjour Service on your local network which allows clients (for e
   </GeneralInfo>
   <UniqueFileList>
     <Items>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="None">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>Files\WifiRemote.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{47ebbed8-e5ed-48ae-a744-0ebb6b7edb28}-WifiRemote.dll</ZipFileName>
         <DestinationFilename>%Base%\plugins\process\WifiRemote.dll</DestinationFilename>
       </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="None">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>Files\WifiRemote.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{79fa7c59-61fd-4b3f-ac4c-01609d154548}-WifiRemote.xml</ZipFileName>
         <DestinationFilename>%Base%\defaults\InputDeviceMappings\WifiRemote.xml</DestinationFilename>
       </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true" Condition="None">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>installer_logo.gif</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{8be9dac6-a424-4c43-9507-eccb9d71a05d}-installer_logo.gif</ZipFileName>
         <DestinationFilename />
       </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true" Condition="None">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>logo_radio.png</LocalFileName>
