@@ -236,6 +236,8 @@ jobs:
       - xml
     permissions:
       contents: write
+    outputs:
+      changes: ${{ needs.mpe.outputs.changes }}
     
     runs-on: ubuntu-latest
     
