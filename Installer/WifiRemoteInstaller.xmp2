@@ -184,7 +184,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Author>Shukuyen, DieBagger, ajs</Author>
     <HomePage>https://github.com/MPExtended/WifiRemote</HomePage>
     <ForumPage>http://forum.team-mediaportal.com/mediaportal-plugins-47/wifiremote-tcp-remote-control-server-0-1-2011-05-05-a-96251</ForumPage>
-    <UpdateUrl>https://raw.github.com/MPExtended/WifiRemote/master/Installer/update.xml</UpdateUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/MPExtended/WifiRemote/develop/Installer/update.xml</UpdateUrl>
     <Version>
       <Major>0</Major>
       <Minor>8</Minor>
