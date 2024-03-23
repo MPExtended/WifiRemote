@@ -189,7 +189,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>0</Major>
       <Minor>8</Minor>
       <Build>5</Build>
-      <Revision>272</Revision>
+      <Revision>0</Revision>
     </Version>
     <ExtensionDescription>WifiRemote is a process plugin for the popular opensource mediacenter software "MediaPortal".
 

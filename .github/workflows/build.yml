@@ -83,7 +83,7 @@ jobs:
     if: ${{ needs.changes.outputs.changes == 'true' }}
     uses: andrewjswan/MPE/.github/workflows/codeql.yml@master
     with:
-      build-path: WiFiRemote\Installer
+      build-path: Installer
     needs: 
       - build
       - changes
@@ -165,7 +165,7 @@ jobs:
       - name: Get Release Version Description
         if: ${{ success() && needs.changes.outputs.changes == 'true' }}
         run: |
-          call ..\..\MPE\XPath\xpath.cmd "update.xml" "//Items/PackageClass/GeneralInfo/VersionDescription" last > description.txt
+          call ..\MPE\XPath\xpath.cmd "update.xml" "//Items/PackageClass/GeneralInfo/VersionDescription" last > description.txt
         working-directory: ${{ github.workspace }}\Installer
         shell: cmd
 
