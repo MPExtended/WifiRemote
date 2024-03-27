@@ -21,6 +21,11 @@ COPY /Y ..\Sources\WifiRemote\Resources\WifiRemote.xml Files\
 :: Get version from DLL
 FOR /F "tokens=*" %%i IN ('Tools\sigcheck.exe /accepteula /nobanner /n "Files\WifiRemote.dll"') DO (SET version=%%i)
 
-:: Build MPE1
-"%PROGS%\Team MediaPortal\MediaPortal\MPEMaker.exe" WifiRemoteInstaller.xmp2 /B /V=%version% /UpdateXML
+:: Temp xmp2 file
+copy WifiRemoteInstaller.xmp2 WifiRemoteInstallerTemp.xmp2
 
+:: Build MPE1
+"%PROGS%\Team MediaPortal\MediaPortal\MPEMaker.exe" WifiRemoteInstallerTemp.xmp2 /B /V=%version% /UpdateXML
+
+:: Cleanup
+del WifiRemoteInstallerTemp.xmp2
