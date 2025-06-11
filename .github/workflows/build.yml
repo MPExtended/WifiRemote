@@ -65,13 +65,13 @@ jobs:
     outputs:
       changes: ${{ steps.changes.outputs.xmp }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: dorny/paths-filter@v3
-      id: changes
-      with:
-        filters: |
-          xmp:
-            - '**.xmp2'
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            xmp:
+              - '**.xmp2'
 
   codeql:
     name: CodeQL
@@ -220,8 +220,8 @@ jobs:
       - name: Delete XML Artifact
         uses: geekyeggo/delete-artifact@v5
         with:
-            name: WiFiRemote XML
-            failOnError: false
+          name: WiFiRemote XML
+          failOnError: false
 
   release:
     name: WiFi Remote / Release
