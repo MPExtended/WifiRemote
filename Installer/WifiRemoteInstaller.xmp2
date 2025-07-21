@@ -196,12 +196,11 @@ Click Next to continue or Cancel to exit Setup.</Value>
 
 
 It publishes a Bonjour Service on your local network which allows clients (for example an iPhone or Android app) to list all found MediaPortal installations and connect to it. </ExtensionDescription>
-    <VersionDescription>Library Update
-AnyCPU fresh build
-Migrate to Github Action</VersionDescription>
+    <VersionDescription>.Net Framework 4.7.2
+AnyCPU fresh build</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>https://github.com/MPExtended/WifiRemote/releases/download/[Version]/WifiRemote-[Version].mpe1</OnlineLocation>
-    <ReleaseDate>2024-03-23T23:23:23+02:00</ReleaseDate>
+    <ReleaseDate>2025-07-21T23:23:23+02:00</ReleaseDate>
     <Tags>remote, wifi, json, client control</Tags>
     <PlatformCompatibility>AnyCPU</PlatformCompatibility>
     <Location>WifiRemote-[Version].mpe1</Location>
