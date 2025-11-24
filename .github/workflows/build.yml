@@ -27,7 +27,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Git Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -65,7 +65,7 @@ jobs:
     outputs:
       changes: ${{ steps.changes.outputs.xmp }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: dorny/paths-filter@v3
         id: changes
         with:
@@ -104,7 +104,7 @@ jobs:
           key: plugin
 
       - name: Git Checkout / MPE / XPath
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Mediaportal-Plugin-Team/Mediaportal-Tools
           path: MPE
@@ -202,7 +202,7 @@ jobs:
       changes: ${{ needs.mpe.outputs.changes }}
     steps:
       - name: Git Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
