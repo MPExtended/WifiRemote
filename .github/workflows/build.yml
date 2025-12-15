@@ -54,7 +54,7 @@ jobs:
           if-no-files-found: error
 
       - name: Save cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: ${{ github.workspace }}
           key: plugin
@@ -98,7 +98,7 @@ jobs:
       changes: ${{ needs.changes.outputs.changes }}
     steps:
       - name: Restore cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ${{ github.workspace }}
           key: plugin
